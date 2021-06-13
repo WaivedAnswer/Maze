@@ -1,14 +1,18 @@
 .game-board {
    display: grid;
-   width: 60px;
-   height: 520px;
+   width: 600px;
+   height: 600px;
    margin: auto;
 }
+
 .tile {
    border-style: solid;
 }
 
 .tile-selected {
-  border-style: solid;
   background-color: aqua;
+}
+
+.tile-exit {
+   background-color: orangered;
 }

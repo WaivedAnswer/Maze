@@ -1,7 +1,17 @@
-const Tile = ({ num, selected }) => {
+import { TileType } from "../models/tile"
+
+const Tile = ({ num, selected, type }) => {
+    let className
+    if (selected) {
+        className = 'tile-selected'
+    } else if (type === TileType.EXIT) {
+        className = 'tile-exit'
+    } else {
+        className = 'tile'
+    }
+
     return (
-        <div className={selected ? 'tile-selected' : 'tile'}>
-            {num}
+        <div className={className}>
         </div>
     )
 }

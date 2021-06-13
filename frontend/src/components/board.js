@@ -1,57 +1,28 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Grid from 'react-css-grid'
 import Tile from './tile'
 import gameService from './../services/game'
+import isEqual from "lodash.isequal"
 
-
-const tiles = []
-for (let i = 0; i < 20; i++) {
-    tiles.push(i)
-}
-
-
-
-const Board = () => {
-    const [selectedId, setSelectedId] = useState(0)
-    const [updatedTiles, setTiles] = useState(tiles)
-    let handler = {
-        id: 'board-updates',
-        handle: (json) => {
-            if (json.type === 'selected-id') {
-                setSelectedId(parseInt(json.data.newSelectedId))
-            }
-            else if (json.type === 'board-update') {
-                setTiles(json.data.tiles.map(strTile => parseInt(strTile)))
-            }
-        }
-    }
-
-    gameService.addHandler(handler)
-
-    const moveDown = () => {
-        const newSelectedId = selectedId + 1
-        gameService.send(`${newSelectedId}`)
-        //setSelectedId(selectedId + 1)
-    }
-    const moveUp = () => {
-        const newSelectedId = selectedId - 1
-        gameService.send(`${newSelectedId}`)
-        //setSelectedId(newSelectedId)
-    }
-
+const Board = ({ updatedTiles: grid, coord }) => {
     const handleKeyPress = (event) => {
         if (event.key === 's') {
-            moveDown()
+            gameService.send('DOWN')
         } else if (event.key === 'w') {
-            moveUp()
+            gameService.send('UP')
+        } else if (event.key === 'a') {
+            gameService.send('LEFT')
+        } else if (event.key === 'd') {
+            gameService.send('RIGHT')
         }
     }
 
     return (
         <div className="game-board" onKeyPress={handleKeyPress} tabIndex={0}>
-            <Grid width={50} gap={0}>
-                {updatedTiles.map(
-                    tile => <Tile num={tile} key={tile} selected={selectedId === tile} />
+            <Grid width={600 / grid.length} gap={0}>
+                {grid.map(
+                    row => row.map(tile =>
+                        <Tile num={tile.coord.toString()} key={tile.coord.toString()} type={tile.type} selected={isEqual(coord, tile.coord)} />)
                 )}
             </Grid>
         </div>

@@ -21,7 +21,6 @@ connection.onmessage = function (message) {
         return
     }
 
-    console.log(handlers.length)
     for (let handler of handlers) {
         handler.handle(json)
     }

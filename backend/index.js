@@ -6,6 +6,26 @@ const http = require('http')
 
 const clients = []
 
+const dimensions = 10
+const inBounds = (selected) => {
+    return selected >= 0 && selected < dimensions
+}
+
+
+const getPos = (xVal, yVal) => {
+    return {
+        x: xVal,
+        y: yVal
+    }
+}
+
+let complete = false
+
+let selectedY = 0
+let selectedX = 0
+
+let exit = getPos(0, 7)
+
 
 /**
  * HTTP server
@@ -33,6 +53,7 @@ const send = (obj) => {
     }
 }
 
+
 // This callback function is called every time someone
 // tries to connect to the WebSocket server
 wsServer.on('request', function (request) {
@@ -44,18 +65,51 @@ wsServer.on('request', function (request) {
 
     logger.info(`${new Date()} Connection accepted.`)
 
-    // if (history.length > 0) {
-    //     connection.sendUTF(
-    //         JSON.stringify({ type: 'history', data: history }))
-    // }
-    // user sent some message
+    send({
+        type: 'board-update',
+        data: {
+            height: dimensions,
+            width: dimensions,
+            pos: getPos(selectedX, selectedY),
+            exit: exit
+        }
+    })
+
     connection.on('message', function (message) {
+        logger.info(message)
         if (message.type === 'utf8') {
             logger.info(`${new Date()} Received Message: ${message.utf8Data}`)
+            if (complete) {
+                return
+            }
+
+            if (message.utf8Data === 'UP') {
+                const updatedPos = selectedY - 1
+                if (inBounds(updatedPos)) {
+                    selectedY = updatedPos
+                }
+            } else if (message.utf8Data === 'DOWN') {
+                const updatedPos = selectedY + 1
+                if (inBounds(updatedPos)) {
+                    selectedY = updatedPos
+                }
+            } else if (message.utf8Data === 'LEFT') {
+                const updatedPos = selectedX - 1
+                if (inBounds(updatedPos)) {
+                    selectedX = updatedPos
+                }
+            } else if (message.utf8Data === 'RIGHT') {
+                const updatedPos = selectedX + 1
+                if (inBounds(updatedPos)) {
+                    selectedX = updatedPos
+                }
+            }
+
+            const currPos = getPos(selectedX, selectedY)
 
             var obj = {
                 time: (new Date()).getTime(),
-                newSelectedId: (message.utf8Data),
+                pos: currPos
             }
 
             // broadcast message to all connected clients
@@ -64,17 +118,12 @@ wsServer.on('request', function (request) {
                 data: obj
             })
 
-            const range = Math.ceil(Math.random() * 20)
-            logger.info(range)
-            const tiles = [...Array(range).keys()]
-            logger.info(tiles)
-
-            send({
-                type: 'board-update',
-                data: {
-                    tiles: tiles
-                }
-            })
+            if (currPos.x === exit.x && currPos.y === exit.y) {
+                send({
+                    type: 'win'
+                })
+                complete = true
+            }
         }
     })
     // user disconnected
