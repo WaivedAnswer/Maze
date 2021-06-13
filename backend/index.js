@@ -19,10 +19,17 @@ const getPos = (xVal, yVal) => {
     }
 }
 
+
 let complete = false
 
 let selectedY = 0
 let selectedX = 0
+
+const reset = () => {
+    selectedX = 0
+    selectedY = 0
+    complete = false
+}
 
 let exit = getPos(0, 7)
 
@@ -79,6 +86,10 @@ wsServer.on('request', function (request) {
         logger.info(message)
         if (message.type === 'utf8') {
             logger.info(`${new Date()} Received Message: ${message.utf8Data}`)
+            if (message.utf8Data === 'RESET') {
+                reset()
+            }
+
             if (complete) {
                 return
             }

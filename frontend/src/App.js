@@ -47,9 +47,16 @@ function App() {
   }
   gameService.addHandler(handler)
 
+  const reset = (_) => {
+    gameService.send('RESET')
+  }
+
   return (
     <div className="App">
       <Board updatedTiles={updatedTiles} coord={coord} />
+      <button onClick={reset}>
+        Reset
+      </button>
     </div>
   );
 }
