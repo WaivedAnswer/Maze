@@ -9,7 +9,6 @@ const Tile = ({ token, type, onTokenSelected }) => {
     } else {
         className = 'tile'
     }
-    console.log(token)
 
     const onClick = () => {
         if (token) {

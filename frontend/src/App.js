@@ -41,12 +41,15 @@ function App() {
     id: 'app-updates',
     handle: (json) => {
       if (json.type === 'selected-id') {
+        console.log(json)
         setTokens(getTokens(json.data.tokens))
       } else if (json.type === 'board-update') {
         setTiles(getTiles(json.data))
         setTokens(getTokens(json.data.tokens))
       } else if (json.type === 'win') {
         alert("You have won the game!")
+      } else if (json.type === 'movements') {
+        gameService.setMovements(json.data.movements)
       }
     }
   }

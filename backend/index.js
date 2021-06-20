@@ -3,6 +3,9 @@ const config = require('./utils/config')
 const logger = require('./utils/logger')
 const webSocketServer = require('websocket').server
 const http = require('http')
+
+const sampleSize = require('lodash.samplesize')
+
 const { Coordinate } = require('./models/coordinate')
 
 const clients = []
@@ -102,6 +105,13 @@ wsServer.on('request', function (request) {
         }
     })
 
+    connection.send(JSON.stringify({
+        type: 'movements',
+        data: {
+            movements: sampleSize(Object.keys(movementCommands), 3)
+        }
+    }))
+
     connection.on('message', function (message) {
         logger.info(message)
         if (message.type === 'utf8') {
@@ -133,7 +143,7 @@ wsServer.on('request', function (request) {
                 }
             }
 
-
+            logger.info(`Client count is: ${clients.length}`)
             updateTokens()
             checkWin()
         }

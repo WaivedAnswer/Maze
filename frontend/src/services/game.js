@@ -6,6 +6,7 @@ connection.onopen = function () {
 };
 
 let handlers = []
+let allowedMovements = []
 
 connection.onerror = function (error) {
     console.log('Sorry, but there\'s some problem with your '
@@ -41,6 +42,10 @@ const send = (message) => {
     connection.send(message)
 }
 
+const setMovements = (movements) => {
+    allowedMovements = movements
+}
+
 const sendBasicCommand = (command) => {
     connection.send(JSON.stringify(
         {
@@ -49,24 +54,31 @@ const sendBasicCommand = (command) => {
     ))
 }
 
+const sendMovement = (command) => {
+    if (!allowedMovements.includes(command)) {
+        return
+    }
+    sendBasicCommand(command)
+}
+
 const reset = () => {
     sendBasicCommand('RESET')
 }
 
 const moveRight = () => {
-    sendBasicCommand('RIGHT')
+    sendMovement('RIGHT')
 }
 
 const moveLeft = () => {
-    sendBasicCommand('LEFT')
+    sendMovement('LEFT')
 }
 
 const moveDown = () => {
-    sendBasicCommand('DOWN')
+    sendMovement('DOWN')
 }
 
 const moveUp = () => {
-    sendBasicCommand('UP')
+    sendMovement('UP')
 }
 
 export default {
@@ -75,6 +87,7 @@ export default {
     moveLeft,
     moveDown,
     moveUp,
+    setMovements,
     reset,
     addHandler
 }
