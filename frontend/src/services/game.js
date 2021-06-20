@@ -41,7 +41,40 @@ const send = (message) => {
     connection.send(message)
 }
 
+const sendBasicCommand = (command) => {
+    connection.send(JSON.stringify(
+        {
+            type: command
+        }
+    ))
+}
+
+const reset = () => {
+    sendBasicCommand('RESET')
+}
+
+const moveRight = () => {
+    sendBasicCommand('RIGHT')
+}
+
+const moveLeft = () => {
+    sendBasicCommand('LEFT')
+}
+
+const moveDown = () => {
+    sendBasicCommand('DOWN')
+}
+
+const moveUp = () => {
+    sendBasicCommand('UP')
+}
+
 export default {
     send,
+    moveRight,
+    moveLeft,
+    moveDown,
+    moveUp,
+    reset,
     addHandler
 }

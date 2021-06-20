@@ -4,17 +4,30 @@ import Tile from './tile'
 import gameService from './../services/game'
 import isEqual from "lodash.isequal"
 
-const Board = ({ updatedTiles: grid, coord }) => {
+const Board = ({ grid, tokens }) => {
     const handleKeyPress = (event) => {
         if (event.key === 's') {
-            gameService.send('DOWN')
+            gameService.moveDown()
         } else if (event.key === 'w') {
-            gameService.send('UP')
+            gameService.moveUp()
         } else if (event.key === 'a') {
-            gameService.send('LEFT')
+            gameService.moveLeft()
         } else if (event.key === 'd') {
-            gameService.send('RIGHT')
+            gameService.moveRight()
         }
+    }
+
+    const onTokenSelected = (token) => {
+        gameService.send(JSON.stringify(
+            {
+                type: "SELECTED",
+                selected: token.id
+            }
+        ))
+    }
+
+    const getToken = (tileCoord) => {
+        return tokens.filter(token => isEqual(token.coord, tileCoord))[0]
     }
 
     return (
@@ -22,7 +35,10 @@ const Board = ({ updatedTiles: grid, coord }) => {
             <Grid width={600 / grid.length} gap={0}>
                 {grid.map(
                     row => row.map(tile =>
-                        <Tile num={tile.coord.toString()} key={tile.coord.toString()} type={tile.type} selected={isEqual(coord, tile.coord)} />)
+                        <Tile key={tile.coord.toString()}
+                            type={tile.type}
+                            token={getToken(tile.coord)}
+                            onTokenSelected={onTokenSelected} />)
                 )}
             </Grid>
         </div>

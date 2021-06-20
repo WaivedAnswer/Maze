@@ -5,6 +5,7 @@ import gameService from './services/game'
 import Coordinate from './models/coordinate'
 import { Tile, TileType } from './models/tile'
 import isEqual from "lodash.isequal"
+import Token from './models/token'
 
 
 const getCoordinate = (pos) => {
@@ -28,18 +29,22 @@ const getTiles = (initData) => {
   return grid
 }
 
+const getTokens = (tokens) => {
+  return tokens.map((pos, idx) => new Token(idx, getCoordinate(pos)))
+}
+
 function App() {
   const [updatedTiles, setTiles] = useState([[]])
-  const [coord, setCoord] = useState(new Coordinate(0, 0))
+  const [tokens, setTokens] = useState([])
 
   let handler = {
     id: 'app-updates',
     handle: (json) => {
       if (json.type === 'selected-id') {
-        setCoord(getCoordinate(json.data.pos))
+        setTokens(getTokens(json.data.tokens))
       } else if (json.type === 'board-update') {
-        setCoord(getCoordinate(json.data.pos))
         setTiles(getTiles(json.data))
+        setTokens(getTokens(json.data.tokens))
       } else if (json.type === 'win') {
         alert("You have won the game!")
       }
@@ -48,12 +53,12 @@ function App() {
   gameService.addHandler(handler)
 
   const reset = (_) => {
-    gameService.send('RESET')
+    gameService.reset()
   }
 
   return (
     <div className="App">
-      <Board updatedTiles={updatedTiles} coord={coord} />
+      <Board grid={updatedTiles} tokens={tokens} />
       <button onClick={reset}>
         Reset
       </button>

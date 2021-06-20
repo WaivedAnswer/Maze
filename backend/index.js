@@ -3,6 +3,7 @@ const config = require('./utils/config')
 const logger = require('./utils/logger')
 const webSocketServer = require('websocket').server
 const http = require('http')
+const { Coordinate } = require('./models/coordinate')
 
 const clients = []
 
@@ -11,27 +12,26 @@ const inBounds = (selected) => {
     return selected >= 0 && selected < dimensions
 }
 
+let complete
+let tokens
+let selected
 
-const getPos = (xVal, yVal) => {
+const getMovementVector = (x, y) => {
     return {
-        x: xVal,
-        y: yVal
+        x: x,
+        y: y
     }
 }
 
-
-let complete = false
-
-let selectedY = 0
-let selectedX = 0
-
 const reset = () => {
-    selectedX = 0
-    selectedY = 0
+    tokens = [new Coordinate(0, 0), new Coordinate(9, 9)]
     complete = false
+    selected = 0
 }
 
-let exit = getPos(0, 7)
+let exit = new Coordinate(0, 7)
+
+reset()
 
 
 /**
@@ -60,6 +60,26 @@ const send = (obj) => {
     }
 }
 
+const updateTokens = () => {
+    var messageData = {
+        time: (new Date()).getTime(),
+        tokens: tokens.map(token => token.getPos())
+    }
+
+    // broadcast message to all connected clients
+    send({
+        type: 'selected-id',
+        data: messageData
+    })
+}
+
+const movementCommands = {
+    'RIGHT': getMovementVector(1, 0),
+    'LEFT': getMovementVector(-1, 0),
+    'UP': getMovementVector(0, -1),
+    'DOWN': getMovementVector(0, 1)
+}
+
 
 // This callback function is called every time someone
 // tries to connect to the WebSocket server
@@ -77,8 +97,8 @@ wsServer.on('request', function (request) {
         data: {
             height: dimensions,
             width: dimensions,
-            pos: getPos(selectedX, selectedY),
-            exit: exit
+            tokens: tokens.map(token => token.getPos()),
+            exit: exit.getPos()
         }
     })
 
@@ -86,55 +106,36 @@ wsServer.on('request', function (request) {
         logger.info(message)
         if (message.type === 'utf8') {
             logger.info(`${new Date()} Received Message: ${message.utf8Data}`)
-            if (message.utf8Data === 'RESET') {
-                reset()
-            }
 
-            if (complete) {
+            let command
+            try {
+                command = JSON.parse(message.utf8Data)
+            } catch (e) {
+                logger.error(`Invalid JSON: ${message.utf8Data}, ${e}`)
                 return
             }
 
-            if (message.utf8Data === 'UP') {
-                const updatedPos = selectedY - 1
-                if (inBounds(updatedPos)) {
-                    selectedY = updatedPos
-                }
-            } else if (message.utf8Data === 'DOWN') {
-                const updatedPos = selectedY + 1
-                if (inBounds(updatedPos)) {
-                    selectedY = updatedPos
-                }
-            } else if (message.utf8Data === 'LEFT') {
-                const updatedPos = selectedX - 1
-                if (inBounds(updatedPos)) {
-                    selectedX = updatedPos
-                }
-            } else if (message.utf8Data === 'RIGHT') {
-                const updatedPos = selectedX + 1
-                if (inBounds(updatedPos)) {
-                    selectedX = updatedPos
+            const selectedToken = selected
+
+            if (command.type === 'RESET') {
+                reset()
+            } else if (complete) {
+                return
+            } else if (command.type === 'SELECTED') {
+                selected = parseInt(command.selected)
+            } else if (command.type in movementCommands) {
+                const movementVector = movementCommands[command.type]
+                const tokenPos = tokens[selectedToken]
+                const updatedX = tokenPos.x + movementVector.x
+                const updatedY = tokenPos.y + movementVector.y
+                if (inBounds(updatedX) && inBounds(updatedY)) {
+                    tokens[selectedToken] = new Coordinate(updatedX, updatedY)
                 }
             }
 
-            const currPos = getPos(selectedX, selectedY)
 
-            var obj = {
-                time: (new Date()).getTime(),
-                pos: currPos
-            }
-
-            // broadcast message to all connected clients
-            send({
-                type: 'selected-id',
-                data: obj
-            })
-
-            if (currPos.x === exit.x && currPos.y === exit.y) {
-                send({
-                    type: 'win'
-                })
-                complete = true
-            }
+            updateTokens()
+            checkWin()
         }
     })
     // user disconnected
@@ -144,3 +145,16 @@ wsServer.on('request', function (request) {
         clients.splice(index, 1)
     })
 })
+
+function checkWin() {
+    const tokenExit = (token) => {
+        return token.x === exit.x && token.y === exit.y
+    }
+
+    if (tokens.every(token => tokenExit(token))) {
+        send({
+            type: 'win'
+        })
+        complete = true
+    }
+}
