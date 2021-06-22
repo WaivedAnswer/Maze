@@ -1,14 +1,15 @@
 'use strict'
+
+const http = require('http')
+const webSocketServer = require('websocket').server
+
 const config = require('./utils/config')
 const logger = require('./utils/logger')
-const webSocketServer = require('websocket').server
-const http = require('http')
-
-const sampleSize = require('lodash.samplesize')
-
 const { Coordinate } = require('./models/coordinate')
+const { splitMoves } = require('./models/move')
+const { Player } = require('./models/player')
 
-const clients = []
+const players = []
 
 const dimensions = 10
 const inBounds = (selected) => {
@@ -37,9 +38,7 @@ let exit = new Coordinate(0, 7)
 reset()
 
 
-/**
- * HTTP server
- */
+
 // eslint-disable-next-line no-unused-vars
 const server = http.createServer(function (ignoredRequest, _response) {
     // Not important for us. We're writing WebSocket server,
@@ -55,13 +54,14 @@ const wsServer = new webSocketServer({
     httpServer: server
 })
 
-const send = (obj) => {
-    const json = JSON.stringify(obj)
-    logger.info(json)
-    for (var i = 0; i < clients.length; i++) {
-        clients[i].sendUTF(json)
+const sendAll = (obj) => {
+    logger.info(obj)
+    for (var i = 0; i < players.length; i++) {
+        players[i].send(obj)
     }
 }
+
+
 
 const updateTokens = () => {
     var messageData = {
@@ -69,8 +69,7 @@ const updateTokens = () => {
         tokens: tokens.map(token => token.getPos())
     }
 
-    // broadcast message to all connected clients
-    send({
+    sendAll({
         type: 'selected-id',
         data: messageData
     })
@@ -83,19 +82,36 @@ const movementCommands = {
     'DOWN': getMovementVector(0, 1)
 }
 
+const updateMovements = (movements, dividingPlayers) => {
+    const playerMoves = splitMoves(Object.keys(movements), dividingPlayers.length)
+    for (let idx in playerMoves) {
+        dividingPlayers[idx].send({
+            type: 'movements',
+            data: {
+                movements: playerMoves[idx]
+            }
+        })
+    }
+}
 
-// This callback function is called every time someone
-// tries to connect to the WebSocket server
+
 wsServer.on('request', function (request) {
     logger.info(`${new Date()} Connection from origin ${request.origin}.`)
+
     const connection = request.accept(null, request.origin)
 
+    if (players.length >= Object.keys(movementCommands).length) {
+        return
+    }
+
+
     // we need to know client index to remove them on 'close' event
-    const index = clients.push(connection) - 1
+    const player = new Player(connection)
+    const index = players.push(player) - 1
 
     logger.info(`${new Date()} Connection accepted.`)
 
-    send({
+    player.send({
         type: 'board-update',
         data: {
             height: dimensions,
@@ -105,12 +121,7 @@ wsServer.on('request', function (request) {
         }
     })
 
-    connection.send(JSON.stringify({
-        type: 'movements',
-        data: {
-            movements: sampleSize(Object.keys(movementCommands), 3)
-        }
-    }))
+    updateMovements(movementCommands, players)
 
     connection.on('message', function (message) {
         logger.info(message)
@@ -143,16 +154,17 @@ wsServer.on('request', function (request) {
                 }
             }
 
-            logger.info(`Client count is: ${clients.length}`)
+            logger.info(`Player count is: ${players.length}`)
             updateTokens()
             checkWin()
         }
     })
+
     // user disconnected
     connection.on('close', function (connection) {
         logger.info(`${new Date()} Peer ${connection.remoteAddress} disconnected.`)
-
-        clients.splice(index, 1)
+        players.splice(index, 1)
+        updateMovements(movementCommands, players)
     })
 })
 
@@ -162,7 +174,7 @@ function checkWin() {
     }
 
     if (tokens.every(token => tokenExit(token))) {
-        send({
+        sendAll({
             type: 'win'
         })
         complete = true
