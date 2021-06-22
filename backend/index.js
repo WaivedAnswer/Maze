@@ -1,6 +1,7 @@
 'use strict'
 
 const http = require('http')
+const express = require('express')
 const webSocketServer = require('websocket').server
 
 const config = require('./utils/config')
@@ -37,13 +38,11 @@ let exit = new Coordinate(0, 7)
 
 reset()
 
-
+const app = express()
+app.use(express.static('build'))
 
 // eslint-disable-next-line no-unused-vars
-const server = http.createServer(function (ignoredRequest, _response) {
-    // Not important for us. We're writing WebSocket server,
-    // not HTTP server
-})
+const server = http.createServer(app)
 
 server.listen(config.PORT, function () {
     logger.info(`${new Date()} Server is listening on port ${config.PORT}`)
