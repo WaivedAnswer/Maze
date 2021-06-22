@@ -2,8 +2,10 @@ import { TileType } from "../models/tile"
 
 const Tile = ({ token, type, onTokenSelected }) => {
     let className
-    if (token) {
-        className = 'tile-selected'
+    if (token && token.isSelected) {
+        className = 'token-selected'
+    } else if (token && !token.isSelected) {
+        className = 'token'
     } else if (type === TileType.EXIT) {
         className = 'tile-exit'
     } else {

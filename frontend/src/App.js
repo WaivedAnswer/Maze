@@ -6,6 +6,7 @@ import Coordinate from './models/coordinate'
 import { Tile, TileType } from './models/tile'
 import isEqual from "lodash.isequal"
 import Token from './models/token'
+import MoveIndicator from './components/moveIndicator'
 
 
 const getCoordinate = (pos) => {
@@ -29,27 +30,29 @@ const getTiles = (initData) => {
   return grid
 }
 
-const getTokens = (tokens) => {
-  return tokens.map((pos, idx) => new Token(idx, getCoordinate(pos)))
+const getTokens = (data) => {
+  return data.tokens.map((pos, idx) => new Token(idx, getCoordinate(pos), data.selected === idx))
 }
 
 function App() {
   const [updatedTiles, setTiles] = useState([[]])
   const [tokens, setTokens] = useState([])
+  const [allowedMoves, setMoves] = useState([])
 
   let handler = {
     id: 'app-updates',
     handle: (json) => {
       if (json.type === 'selected-id') {
         console.log(json)
-        setTokens(getTokens(json.data.tokens))
+        setTokens(getTokens(json.data))
       } else if (json.type === 'board-update') {
         setTiles(getTiles(json.data))
-        setTokens(getTokens(json.data.tokens))
+        setTokens(getTokens(json.data))
       } else if (json.type === 'win') {
         alert("You have won the game!")
       } else if (json.type === 'movements') {
         gameService.setMovements(json.data.movements)
+        setMoves(json.data.movements)
       }
     }
   }
@@ -61,11 +64,15 @@ function App() {
 
   return (
     <div className="App">
-      <Board grid={updatedTiles} tokens={tokens} />
-      <button onClick={reset}>
-        Reset
-      </button>
-    </div>
+      <div className="board-space">
+        <div className="board-controls">
+          <MoveIndicator moves={allowedMoves} />
+          <button onClick={reset}>Reset</button>
+        </div>
+        <Board grid={updatedTiles} tokens={tokens} />
+      </div>
+
+    </div >
   );
 }
 

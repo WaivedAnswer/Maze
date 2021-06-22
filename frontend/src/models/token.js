@@ -1,7 +1,8 @@
 class Token {
-    constructor(id, coord) {
+    constructor(id, coord, isSelected) {
         this.id = id
         this.coord = coord
+        this.isSelected = isSelected
     }
 }
 

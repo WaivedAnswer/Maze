@@ -66,7 +66,8 @@ const sendAll = (obj) => {
 const updateTokens = () => {
     var messageData = {
         time: (new Date()).getTime(),
-        tokens: tokens.map(token => token.getPos())
+        tokens: tokens.map(token => token.getPos()),
+        selected: selected
     }
 
     sendAll({
