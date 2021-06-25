@@ -9,13 +9,11 @@ const logger = require('./utils/logger')
 const { Coordinate } = require('./models/coordinate')
 const { splitMoves } = require('./models/move')
 const { Player } = require('./models/player')
+const { Board } = require('./models/board')
 
 const players = []
 
-const dimensions = 10
-const inBounds = (selected) => {
-    return selected >= 0 && selected < dimensions
-}
+const board = new Board(10, new Coordinate(0, 7))
 
 let complete
 let tokens
@@ -33,8 +31,6 @@ const reset = () => {
     complete = false
     selected = 0
 }
-
-let exit = new Coordinate(0, 7)
 
 reset()
 
@@ -114,10 +110,10 @@ wsServer.on('request', function (request) {
     player.send({
         type: 'board-update',
         data: {
-            height: dimensions,
-            width: dimensions,
+            height: board.dimensions,
+            width: board.dimensions,
             tokens: tokens.map(token => token.getPos()),
-            exit: exit.getPos()
+            exit: board.exit.getPos()
         }
     })
 
@@ -147,10 +143,10 @@ wsServer.on('request', function (request) {
             } else if (command.type in movementCommands) {
                 const movementVector = movementCommands[command.type]
                 const tokenPos = tokens[selectedToken]
-                const updatedX = tokenPos.x + movementVector.x
-                const updatedY = tokenPos.y + movementVector.y
-                if (inBounds(updatedX) && inBounds(updatedY)) {
-                    tokens[selectedToken] = new Coordinate(updatedX, updatedY)
+                const updatedPos = new Coordinate(tokenPos.x + movementVector.x,
+                    tokenPos.y + movementVector.y)
+                if (board.canMove(updatedPos)) {
+                    tokens[selectedToken] = updatedPos
                 }
             }
 
@@ -169,11 +165,8 @@ wsServer.on('request', function (request) {
 })
 
 function checkWin() {
-    const tokenExit = (token) => {
-        return token.x === exit.x && token.y === exit.y
-    }
 
-    if (tokens.every(token => tokenExit(token))) {
+    if (tokens.every(token => board.isAtExit(token))) {
         sendAll({
             type: 'win'
         })
