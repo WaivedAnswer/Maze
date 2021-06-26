@@ -23,6 +23,10 @@
    background-color: orangered;
 }
 
+.tile-wall {
+   background-color: gray;
+}
+
 .board-space {
     display: flex;
 }

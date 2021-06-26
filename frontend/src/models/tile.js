@@ -1,6 +1,7 @@
 let TileType = {
     NORMAL: 1,
-    EXIT: 2
+    EXIT: 2,
+    WALL: 3
 }
 
 class Tile {

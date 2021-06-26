@@ -13,7 +13,7 @@ const { Board } = require('./models/board')
 
 const players = []
 
-const board = new Board(10, new Coordinate(0, 7))
+const board = new Board(10, new Coordinate(9, 5))
 
 let complete
 let tokens
@@ -27,7 +27,7 @@ const getMovementVector = (x, y) => {
 }
 
 const reset = () => {
-    tokens = [new Coordinate(0, 0), new Coordinate(9, 9)]
+    tokens = [new Coordinate(0, 0), new Coordinate(5, 9)]
     complete = false
     selected = 0
 }
@@ -110,6 +110,7 @@ wsServer.on('request', function (request) {
     player.send({
         type: 'board-update',
         data: {
+            board: board.getData(),
             height: board.dimensions,
             width: board.dimensions,
             tokens: tokens.map(token => token.getPos()),
@@ -142,11 +143,11 @@ wsServer.on('request', function (request) {
                 selected = parseInt(command.selected)
             } else if (command.type in movementCommands) {
                 const movementVector = movementCommands[command.type]
-                const tokenPos = tokens[selectedToken]
-                const updatedPos = new Coordinate(tokenPos.x + movementVector.x,
-                    tokenPos.y + movementVector.y)
-                if (board.canMove(updatedPos)) {
-                    tokens[selectedToken] = updatedPos
+                const tokenCoord = tokens[selectedToken]
+                const updatedCoord = new Coordinate(tokenCoord.x + movementVector.x,
+                    tokenCoord.y + movementVector.y)
+                if (board.canMove(updatedCoord)) {
+                    tokens[selectedToken] = updatedCoord
                 }
             }
 

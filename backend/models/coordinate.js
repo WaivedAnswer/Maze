@@ -10,6 +10,10 @@ class Coordinate {
             y: this.y
         }
     }
+
+    getKey() {
+        return `${this.x},${this.y}`
+    }
 }
 
 module.exports = {

@@ -18,11 +18,22 @@ const getCoordinate = (pos) => {
 const getTiles = (initData) => {
   let grid = []
   const exitPos = getCoordinate(initData.exit)
+  const walls = initData.board.walls.map(wallPos => getCoordinate(wallPos))
+  console.log(walls)
+
   for (let y = 0; y < initData.height; y++) {
     let row = []
     for (let x = 0; x < initData.width; x++) {
       const currPos = new Coordinate(x, y)
-      const type = isEqual(exitPos, currPos) ? TileType.EXIT : TileType.NORMAL
+      let type
+      if (isEqual(exitPos, currPos)) {
+        type = TileType.EXIT
+      } else if (walls.some(wall => isEqual(wall, currPos))) {
+        type = TileType.WALL
+      } else {
+        type = TileType.NORMAL
+      }
+
       row.push(new Tile(currPos, type))
     }
     grid.push(row)

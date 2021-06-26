@@ -8,6 +8,8 @@ const Tile = ({ token, type, onTokenSelected }) => {
         className = 'token'
     } else if (type === TileType.EXIT) {
         className = 'tile-exit'
+    } else if (type === TileType.WALL) {
+        className = 'tile-wall'
     } else {
         className = 'tile'
     }
