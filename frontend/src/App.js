@@ -6,7 +6,7 @@ import Coordinate from './models/coordinate'
 import { Tile, TileType } from './models/tile'
 import isEqual from "lodash.isequal"
 import Token from './models/token'
-import MoveIndicator from './components/moveIndicator'
+import PlayerIndicator from './components/playerIndicator.js'
 
 
 const getCoordinate = (pos) => {
@@ -19,7 +19,6 @@ const getTiles = (initData) => {
   let grid = []
   const exitPos = getCoordinate(initData.exit)
   const walls = initData.board.walls.map(wallPos => getCoordinate(wallPos))
-  console.log(walls)
 
   for (let y = 0; y < initData.height; y++) {
     let row = []
@@ -49,6 +48,8 @@ function App() {
   const [updatedTiles, setTiles] = useState([[]])
   const [tokens, setTokens] = useState([])
   const [allowedMoves, setMoves] = useState([])
+  const [playerName, setPlayerName] = useState("")
+  const [otherPlayers, setOtherPlayers] = useState([])
 
   let handler = {
     id: 'app-updates',
@@ -64,9 +65,15 @@ function App() {
       } else if (json.type === 'movements') {
         gameService.setMovements(json.data.movements)
         setMoves(json.data.movements)
+      } else if (json.type === 'name') {
+        setPlayerName(json.data.name)
+      } else if (json.type === 'all-players') {
+        setOtherPlayers(json.data.filter(playerInfo => playerInfo.playerName !== playerName))
       }
     }
   }
+
+  console.log(otherPlayers)
   gameService.addHandler(handler)
 
   const reset = (_) => {
@@ -77,7 +84,15 @@ function App() {
     <div className="App">
       <div className="board-space">
         <div className="board-controls">
-          <MoveIndicator moves={allowedMoves} />
+          <PlayerIndicator playerName={playerName} allowedMoves={allowedMoves} isSelf={true} />
+          <br />
+          <h2 hidden={!otherPlayers.length}>Other Players:</h2>
+          {
+            otherPlayers.map(player => <PlayerIndicator key={player.playerName}
+              playerName={player.playerName}
+              allowedMoves={player.moves}
+              isSelf={false} />)
+          }
           <button onClick={reset}>Reset</button>
         </div>
         <Board grid={updatedTiles} tokens={tokens} />

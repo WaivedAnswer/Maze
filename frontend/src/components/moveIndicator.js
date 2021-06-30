@@ -1,12 +1,15 @@
 
-const MoveIndicator = ({ moves }) => {
-    console.log(moves)
+const MoveIndicator = ({ moves, isSelf }) => {
+    const heading = 'Moves:'
+
     return (
         < div >
-            <h2>Moves:</h2>
+            {
+                isSelf ? <h2>{heading}</h2> : <h3>{heading}</h3>
+            }
             <ul>
                 {
-                    moves.map(move => <li>{move}</li>)
+                    moves.map(move => <li key={move}>{move}</li>)
                 }
             </ul>
 

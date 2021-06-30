@@ -30,3 +30,11 @@
 .board-space {
     display: flex;
 }
+
+.player-self {
+   font-weight: bold;
+}
+
+.player-other {
+   font-weight:lighter;
+}

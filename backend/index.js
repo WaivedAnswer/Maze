@@ -88,6 +88,20 @@ const updateMovements = (movements, dividingPlayers) => {
             }
         })
     }
+    const playerInfo = playerMoves.map((moves, idx) => {
+        return {
+            moves: moves,
+            playerName: getPlayerName(idx)
+        }
+    })
+    sendAll({
+        type: 'all-players',
+        data: playerInfo
+    })
+}
+
+const getPlayerName = (index) => {
+    return `Player ${index + 1}`
 }
 
 
@@ -108,6 +122,13 @@ wsServer.on('request', function (request) {
     logger.info(`${new Date()} Connection accepted.`)
 
     player.send({
+        type: 'name',
+        data: {
+            name: getPlayerName(index)
+        }
+    })
+
+    player.send({
         type: 'board-update',
         data: {
             board: board.getData(),
@@ -117,6 +138,8 @@ wsServer.on('request', function (request) {
             exit: board.exit.getPos()
         }
     })
+
+
 
     updateMovements(movementCommands, players)
 

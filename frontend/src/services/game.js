@@ -4,6 +4,7 @@ var connection = new WebSocket(websocketURL)
 
 
 connection.onopen = function () {
+    console.log('Opened!')
 }
 
 let handlers = []
