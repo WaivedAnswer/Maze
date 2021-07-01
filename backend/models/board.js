@@ -9,13 +9,16 @@ class Board {
             new Section(dimensions,
                 new Offset(0, 0)),
             new Section(dimensions,
-                new Offset(dimensions, 5))]
+                new Offset(dimensions, 5)),
+            new Section(dimensions,
+                new Offset(0, dimensions + 1))
+        ]
     }
 
     getData() {
         return {
-            height: this.sections[1].getMaxDimensions().height,
-            width: this.sections[1].getMaxDimensions().width,
+            height: Math.max(...this.sections.map(section => section.getMaxDimensions().height)),
+            width: Math.max(...this.sections.map(section => section.getMaxDimensions().width)),
             exit: this.sections[0].exit.getPos(),
             walls: this.sections.flatMap(section => section.getWalls()),
             tiles: this.sections.flatMap(section => section.getAllTiles())
