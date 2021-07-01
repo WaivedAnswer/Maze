@@ -1,8 +1,9 @@
 const logger = require('./../utils/logger')
 
 class Player {
-    constructor(connection) {
+    constructor(connection, id) {
         this.connection = connection
+        this.id = id
     }
 
     send(obj) {

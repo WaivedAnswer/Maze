@@ -12,6 +12,8 @@ const { splitMoves } = require('./models/move')
 const { Player } = require('./models/player')
 const { Board } = require('./models/board')
 
+
+let nextPlayerId = 0
 const players = []
 
 
@@ -92,7 +94,7 @@ const updateMovements = (movements, dividingPlayers) => {
     const playerInfo = playerMoves.map((moves, idx) => {
         return {
             moves: moves,
-            playerName: getPlayerName(idx)
+            playerName: getPlayerName(dividingPlayers[idx].id)
         }
     })
     sendAll({
@@ -128,7 +130,8 @@ wsServer.on('request', function (request) {
 
 
     // we need to know client index to remove them on 'close' event
-    const player = new Player(connection)
+    const playerId = nextPlayerId++
+    const player = new Player(connection, playerId)
     const index = players.push(player) - 1
 
     logger.info(`${new Date()} Connection accepted.`)
@@ -136,7 +139,7 @@ wsServer.on('request', function (request) {
     player.send({
         type: 'name',
         data: {
-            name: getPlayerName(index)
+            name: getPlayerName(player.id)
         }
     })
 
@@ -155,6 +158,7 @@ wsServer.on('request', function (request) {
     connection.on('message', function (message) {
         logger.info(message)
         if (message.type === 'utf8') {
+            logger.info(`${players.length} players`)
             logger.info(`${new Date()} Received Message: ${message.utf8Data}`)
 
             let command
@@ -186,8 +190,9 @@ wsServer.on('request', function (request) {
 
     // user disconnected
     connection.on('close', function (connection) {
-        logger.info(`${new Date()} Peer ${connection.remoteAddress} disconnected.`)
-        players.splice(index, 1)
+        logger.warn(`${new Date()} Peer ${connection.remoteAddress} disconnected.`)
+        const removeIndex = players.findIndex(player => player.id === playerId)
+        players.splice(removeIndex, 1)
         updateMovements(movementCommands, players)
     })
 })
