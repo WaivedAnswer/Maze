@@ -49,7 +49,7 @@ const setMovements = (movements) => {
 }
 
 const sendBasicCommand = (command) => {
-    connection.send(JSON.stringify(
+    send(JSON.stringify(
         {
             type: command
         }
@@ -83,6 +83,15 @@ const moveUp = () => {
     sendMovement('UP')
 }
 
+const doSomething = (playerName) => {
+    send(JSON.stringify(
+        {
+            type: 'DO-SOMETHING',
+            player: playerName
+        }
+    ))
+}
+
 export default {
     send,
     moveRight,
@@ -91,5 +100,6 @@ export default {
     moveUp,
     setMovements,
     reset,
+    doSomething,
     addHandler
 }

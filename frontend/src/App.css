@@ -36,8 +36,8 @@ td {
 .tile-exit {
    height: 32px;
    width: 32px;
-   background-color: orangered;
-   border: orangered;
+   background-color: greenyellow;
+   border: greenyellow;
   border-style: solid;
 }
 
@@ -52,13 +52,17 @@ td {
 .tile-unknown {
    height: 32px;
    width: 32px;
-   background-color: darkslategray;
-   border: darkslategray;
+   background-color: purple;
+   border: purple;
   border-style: solid;
 }
 
 .board-space {
     display: flex;
+}
+
+.board-controls {
+   margin-left: 16px;
 }
 
 .player-self {
@@ -67,4 +71,18 @@ td {
 
 .player-other {
    font-weight:lighter;
+}
+
+.player-bar > button {
+   margin-left: 16px;
+}
+
+.notification {
+  color: black;
+  background: aqua;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
 }

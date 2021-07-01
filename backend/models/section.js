@@ -7,6 +7,7 @@ class Section {
     constructor(dimensions, offset, hidden) {
         this.dimensions = dimensions
         this.hidden = hidden
+        this.originalHidden = hidden
         this.offset = offset
         this.exit = new Coordinate(9, 5)
         this.walls = new Map()
@@ -38,6 +39,11 @@ class Section {
         for (let j = 1; j < dimensions - 1; j++) {
             this.addTile(new Tile(new Coordinate(8, j)))
         }
+    }
+
+    reset() {
+        this.hidden = this.originalHidden
+        console.log(this.originalHidden)
     }
 
     getWalls() {

@@ -16,6 +16,11 @@ class Board {
         this.onBoardChange = onBoardChange
     }
 
+    reset() {
+        this.sections.forEach(section => section.reset())
+        this.onBoardChange()
+    }
+
     getData() {
         return {
             height: Math.max(...this.sections.map(section => section.getMaxDimensions().height)),
