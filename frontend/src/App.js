@@ -18,7 +18,7 @@ const getCoordinate = (pos) => {
 const getTiles = (initData) => {
   let grid = []
   const board = initData.board
-  const exitPos = getCoordinate(board.exit)
+  const exits = board.exits.map(exitPos => getCoordinate(exitPos))
   const walls = board.walls.map(wallPos => getCoordinate(wallPos))
   const allTiles = board.tiles.map(tilePos => getCoordinate(tilePos))
 
@@ -27,7 +27,7 @@ const getTiles = (initData) => {
     for (let x = 0; x < board.width; x++) {
       const currPos = new Coordinate(x, y)
       let type
-      if (isEqual(exitPos, currPos)) {
+      if (exits.some(exitPos => isEqual(exitPos, currPos))) {
         type = TileType.EXIT
       } else if (walls.some(wall => isEqual(wall, currPos))) {
         type = TileType.WALL
@@ -59,7 +59,6 @@ function App() {
     id: 'app-updates',
     handle: (json) => {
       if (json.type === 'token-update') {
-        console.log(json)
         setTokens(getTokens(json.data))
       } else if (json.type === 'board-update') {
         setTiles(getTiles(json.data))

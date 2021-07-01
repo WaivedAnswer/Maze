@@ -14,7 +14,6 @@ const { Board } = require('./models/board')
 
 const players = []
 
-const board = new Board(10)
 
 let complete
 let tokenCoords
@@ -105,6 +104,17 @@ const updateMovements = (movements, dividingPlayers) => {
 const getPlayerName = (index) => {
     return `Player ${index + 1}`
 }
+
+const onBoardChange = () => {
+    sendAll({
+        type: 'board-update',
+        data: {
+            board: board.getData(),
+            tokens: tokenCoords.map(token => token.coordinate.getPos())
+        }
+    })
+}
+const board = new Board(10, onBoardChange)
 
 
 wsServer.on('request', function (request) {

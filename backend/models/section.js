@@ -4,8 +4,9 @@ const { Tile } = require('./tile')
 
 //deals with simple coordinates
 class Section {
-    constructor(dimensions, offset) {
+    constructor(dimensions, offset, hidden) {
         this.dimensions = dimensions
+        this.hidden = hidden
         this.offset = offset
         this.exit = new Coordinate(9, 5)
         this.walls = new Map()
@@ -43,6 +44,10 @@ class Section {
         return [...this.walls.values()].map(tile => tile.coord.offset(this.offset).getPos())
     }
 
+    getExits() {
+        return [this.exit.offset(this.offset).getPos()]
+    }
+
     getAllTiles() {
         let allTiles = []
         let origin = new Coordinate(this.offset.x, this.offset.y)
@@ -78,7 +83,7 @@ class Section {
     }
 
     isAtExit(coord) {
-        return coord.x === this.exit.x && coord.y === this.exit.y
+        return coord.x === this.exit.offset(this.offset).x && coord.y === this.exit.offset(this.offset).y
     }
 }
 

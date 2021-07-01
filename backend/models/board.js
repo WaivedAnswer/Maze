@@ -4,38 +4,46 @@ const { Offset } = require('./offset')
 
 //deals with section coordinates and section connections
 class Board {
-    constructor(dimensions) {
+    constructor(dimensions, onBoardChange) {
         this.sections = [
             new Section(dimensions,
-                new Offset(0, 0)),
+                new Offset(0, 0), false),
             new Section(dimensions,
-                new Offset(dimensions, 5)),
+                new Offset(dimensions, 5), true),
             new Section(dimensions,
-                new Offset(0, dimensions + 1))
+                new Offset(0, dimensions + 1), true)
         ]
+        this.onBoardChange = onBoardChange
     }
 
     getData() {
         return {
             height: Math.max(...this.sections.map(section => section.getMaxDimensions().height)),
             width: Math.max(...this.sections.map(section => section.getMaxDimensions().width)),
-            exit: this.sections[0].exit.getPos(),
-            walls: this.sections.flatMap(section => section.getWalls()),
-            tiles: this.sections.flatMap(section => section.getAllTiles())
+            exits: this.sections.filter(section => !section.hidden).flatMap(section => section.getExits()),
+            walls: this.sections.filter(section => !section.hidden).flatMap(section => section.getWalls()),
+            tiles: this.sections.filter(section => !section.hidden).flatMap(section => section.getAllTiles())
         }
     }
 
     move(currSectionCoord, movementVector) {
         //gets section coord location of new movement, gets section checks if can move
         const updatedCoord = currSectionCoord.coordinate.offset(movementVector)
-        if (this.sections.some(section => section.canMove(updatedCoord))) {
+        const newSection = this.sections.find(section => section.canMove(updatedCoord))
+
+        if (newSection) {
+            if (newSection.hidden) {
+                newSection.hidden = false
+                this.onBoardChange()
+            }
             return new SectionCoordinate(0, updatedCoord)
         }
         return currSectionCoord
     }
 
     isAtExit(sectionCoord) {
-        return this.sections[sectionCoord.section].isAtExit(sectionCoord.coordinate)
+        const currSection = this.sections.find(section => section.canMove(sectionCoord.coordinate))
+        return currSection.isAtExit(sectionCoord.coordinate)
     }
 }
 
