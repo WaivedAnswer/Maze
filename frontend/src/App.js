@@ -17,20 +17,24 @@ const getCoordinate = (pos) => {
 
 const getTiles = (initData) => {
   let grid = []
-  const exitPos = getCoordinate(initData.exit)
-  const walls = initData.board.walls.map(wallPos => getCoordinate(wallPos))
+  const board = initData.board
+  const exitPos = getCoordinate(board.exit)
+  const walls = board.walls.map(wallPos => getCoordinate(wallPos))
+  const allTiles = board.tiles.map(tilePos => getCoordinate(tilePos))
 
-  for (let y = 0; y < initData.height; y++) {
+  for (let y = 0; y < board.height; y++) {
     let row = []
-    for (let x = 0; x < initData.width; x++) {
+    for (let x = 0; x < board.width; x++) {
       const currPos = new Coordinate(x, y)
       let type
       if (isEqual(exitPos, currPos)) {
         type = TileType.EXIT
       } else if (walls.some(wall => isEqual(wall, currPos))) {
         type = TileType.WALL
-      } else {
+      } else if (allTiles.some(tile => isEqual(tile, currPos))) {
         type = TileType.NORMAL
+      } else {
+        type = TileType.UNKNOWN
       }
 
       row.push(new Tile(currPos, type))
@@ -54,7 +58,7 @@ function App() {
   let handler = {
     id: 'app-updates',
     handle: (json) => {
-      if (json.type === 'selected-id') {
+      if (json.type === 'token-update') {
         console.log(json)
         setTokens(getTokens(json.data))
       } else if (json.type === 'board-update') {

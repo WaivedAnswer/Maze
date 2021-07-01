@@ -7,16 +7,17 @@ const webSocketServer = require('websocket').server
 const config = require('./utils/config')
 const logger = require('./utils/logger')
 const { Coordinate } = require('./models/coordinate')
+const { SectionCoordinate } = require('./models/sectionCoordinate')
 const { splitMoves } = require('./models/move')
 const { Player } = require('./models/player')
 const { Board } = require('./models/board')
 
 const players = []
 
-const board = new Board(10, new Coordinate(9, 5))
+const board = new Board(10)
 
 let complete
-let tokens
+let tokenCoords
 let selected
 
 const getMovementVector = (x, y) => {
@@ -27,7 +28,8 @@ const getMovementVector = (x, y) => {
 }
 
 const reset = () => {
-    tokens = [new Coordinate(0, 0), new Coordinate(5, 9)]
+    //likely should move where tokens are initialized
+    tokenCoords = [new SectionCoordinate(0, new Coordinate(0, 0)), new SectionCoordinate(0, new Coordinate(5, 9))]
     complete = false
     selected = 0
 }
@@ -61,12 +63,12 @@ const sendAll = (obj) => {
 const updateTokens = () => {
     var messageData = {
         time: (new Date()).getTime(),
-        tokens: tokens.map(token => token.getPos()),
+        tokens: tokenCoords.map(token => token.coordinate.getPos()),
         selected: selected
     }
 
     sendAll({
-        type: 'selected-id',
+        type: 'token-update',
         data: messageData
     })
 }
@@ -132,10 +134,7 @@ wsServer.on('request', function (request) {
         type: 'board-update',
         data: {
             board: board.getData(),
-            height: board.dimensions,
-            width: board.dimensions,
-            tokens: tokens.map(token => token.getPos()),
-            exit: board.exit.getPos()
+            tokens: tokenCoords.map(token => token.coordinate.getPos())
         }
     })
 
@@ -166,15 +165,10 @@ wsServer.on('request', function (request) {
                 selected = parseInt(command.selected)
             } else if (command.type in movementCommands) {
                 const movementVector = movementCommands[command.type]
-                const tokenCoord = tokens[selectedToken]
-                const updatedCoord = new Coordinate(tokenCoord.x + movementVector.x,
-                    tokenCoord.y + movementVector.y)
-                if (board.canMove(updatedCoord)) {
-                    tokens[selectedToken] = updatedCoord
-                }
+                const tokenCoord = tokenCoords[selectedToken]
+                tokenCoords[selectedToken] = board.move(tokenCoord, movementVector)
             }
 
-            logger.info(`Player count is: ${players.length}`)
             updateTokens()
             checkWin()
         }
@@ -190,7 +184,7 @@ wsServer.on('request', function (request) {
 
 function checkWin() {
 
-    if (tokens.every(token => board.isAtExit(token))) {
+    if (tokenCoords.every(tokenCoord => board.isAtExit(tokenCoord))) {
         sendAll({
             type: 'win'
         })

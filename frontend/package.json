@@ -8,7 +8,6 @@
     "@testing-library/user-event": "^12.8.3",
     "lodash.isequal": "^4.5.0",
     "react": "^17.0.2",
-    "react-css-grid": "^2.0.0-0",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.2"

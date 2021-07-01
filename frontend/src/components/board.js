@@ -1,5 +1,4 @@
 import React from 'react'
-import Grid from 'react-css-grid'
 import Tile from './tile'
 import gameService from './../services/game'
 import isEqual from "lodash.isequal"
@@ -32,15 +31,24 @@ const Board = ({ grid, tokens }) => {
 
     return (
         <div className="game-board" onKeyPress={handleKeyPress} tabIndex={0}>
-            <Grid width={600 / grid.length} gap={0}>
-                {grid.map(
-                    row => row.map(tile =>
-                        <Tile key={tile.coord.toString()}
-                            type={tile.type}
-                            token={getToken(tile.coord)}
-                            onTokenSelected={onTokenSelected} />)
-                )}
-            </Grid>
+            <table >
+                <tbody>
+                    {
+                        grid.map((row, rowNum) =>
+                            <tr key={rowNum} >
+                                {row.map((tile, colNum) =>
+                                    <td>
+                                        <Tile key={tile.coord.toString()}
+                                            type={tile.type}
+                                            token={getToken(tile.coord)}
+                                            onTokenSelected={onTokenSelected} />
+                                    </td>
+
+                                )}
+                            </tr>
+                        )}
+                </tbody>
+            </table>
         </div>
     )
 }

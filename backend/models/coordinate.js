@@ -11,6 +11,14 @@ class Coordinate {
         }
     }
 
+    offset(offset) {
+        return new Coordinate(this.x + offset.x, this.y + offset.y)
+    }
+
+    relativeTo(offset) {
+        return new Coordinate(this.x - offset.x, this.y - offset.y)
+    }
+
     getKey() {
         return `${this.x},${this.y}`
     }

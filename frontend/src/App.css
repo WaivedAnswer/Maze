@@ -1,30 +1,60 @@
 .game-board {
-   display: grid;
-   width: 600px;
-   height: 600px;
-   margin: auto;
+   margin: 32px;
+}
+
+table {
+   border-spacing: 0px;
+   border-collapse: collapse;
+}
+
+td { 
+   padding: 0px;
 }
 
 .tile {
+   height: 32px;
+   width: 32px;
    border-style: solid;
 }
 
 .token-selected {
+   height: 32px;
+   width: 32px;
   background-color: aqua;
   border: red;
   border-style: solid;
 }
 
 .token {
+   height: 32px;
+   width: 32px;
   background-color: blue;
+  border: blue;
+  border-style: solid;
 }
 
 .tile-exit {
+   height: 32px;
+   width: 32px;
    background-color: orangered;
+   border: orangered;
+  border-style: solid;
 }
 
 .tile-wall {
+   height: 32px;
+   width: 32px;
    background-color: gray;
+   border: gray;
+  border-style: solid;
+}
+
+.tile-unknown {
+   height: 32px;
+   width: 32px;
+   background-color: darkslategray;
+   border: darkslategray;
+  border-style: solid;
 }
 
 .board-space {

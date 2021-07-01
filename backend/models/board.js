@@ -1,70 +1,38 @@
-const { Coordinate } = require('./coordinate')
-const { Tile } = require('./tile')
+const { SectionCoordinate } = require('./sectionCoordinate')
+const { Section } = require('./section')
+const { Offset } = require('./offset')
 
+//deals with section coordinates and section connections
 class Board {
-    constructor(dimensions, exit) {
-        this.dimensions = dimensions
-        this.exit = exit
-        this.tiles = new Map()
-
-        for (let i = 0; i < dimensions - 1; i++) {
-            this.addTile(new Tile(new Coordinate(i, 5)))
-        }
-
-        for (let i = 0; i < 4; i++) {
-            this.addTile(new Tile(new Coordinate(i, 1)))
-        }
-
-        for (let i = 1; i < 6; i++) {
-            this.addTile(new Tile(new Coordinate(i, 7)))
-        }
-
-        for (let i = 1; i < 6; i++) {
-            this.addTile(new Tile(new Coordinate(i, 3)))
-        }
-
-        for (let j = 0; j < 3; j++) {
-            this.addTile(new Tile(new Coordinate(5, j)))
-        }
-
-        for (let j = 7; j < dimensions; j++) {
-            this.addTile(new Tile(new Coordinate(6, j)))
-        }
-
-        for (let j = 1; j < dimensions - 1; j++) {
-            this.addTile(new Tile(new Coordinate(8, j)))
-        }
+    constructor(dimensions) {
+        this.sections = [
+            new Section(dimensions,
+                new Offset(0, 0)),
+            new Section(dimensions,
+                new Offset(dimensions, 5))]
     }
 
     getData() {
-
         return {
-            height: this.dimensions,
-            width: this.dimensions,
-            exit: this.exit.getPos(),
-            walls: [...this.tiles.values()].map(tile => tile.coord.getPos())
+            height: this.sections[1].getMaxDimensions().height,
+            width: this.sections[1].getMaxDimensions().width,
+            exit: this.sections[0].exit.getPos(),
+            walls: this.sections.flatMap(section => section.getWalls()),
+            tiles: this.sections.flatMap(section => section.getAllTiles())
         }
     }
 
-    addTile(tile) {
-        this.tiles.set(tile.coord.getKey(), tile)
+    move(currSectionCoord, movementVector) {
+        //gets section coord location of new movement, gets section checks if can move
+        const updatedCoord = currSectionCoord.coordinate.offset(movementVector)
+        if (this.sections.some(section => section.canMove(updatedCoord))) {
+            return new SectionCoordinate(0, updatedCoord)
+        }
+        return currSectionCoord
     }
 
-    inBounds(selected) {
-        return selected >= 0 && selected < this.dimensions
-    }
-
-    canMove(coord) {
-        let key = coord.getKey()
-        console.log(key)
-        let isWall = this.tiles.has(key)
-        console.log(isWall)
-        console.log(this.tiles)
-        return this.inBounds(coord.x) && this.inBounds(coord.y) && !isWall
-    }
-
-    isAtExit(pos) {
-        return pos.x === this.exit.x && pos.y === this.exit.y
+    isAtExit(sectionCoord) {
+        return this.sections[sectionCoord.section].isAtExit(sectionCoord.coordinate)
     }
 }
 
