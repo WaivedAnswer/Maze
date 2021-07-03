@@ -6,8 +6,8 @@ const Notification = ({ notification }) => {
     }
 
     return (
-        <div className='notification'>
-            {notification}
+        <div className={notification.isGood ? 'notification' : 'notification-bad'}>
+            {notification.message}
         </div>
     )
 }

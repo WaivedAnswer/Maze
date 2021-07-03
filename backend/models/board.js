@@ -1,4 +1,5 @@
 const { SectionCoordinate } = require('./sectionCoordinate')
+const { Coordinate } = require('./coordinate')
 const { Section } = require('./section')
 const { Offset } = require('./offset')
 
@@ -7,11 +8,14 @@ class Board {
     constructor(dimensions, onBoardChange) {
         this.sections = [
             new Section(dimensions,
-                new Offset(0, 0), false),
+                new Offset(0, 0), false,
+                null),
             new Section(dimensions,
-                new Offset(dimensions, 5), true),
+                new Offset(dimensions, 5), true,
+                null),
             new Section(dimensions,
-                new Offset(0, dimensions + 1), true)
+                new Offset(0, dimensions + 1), true,
+                new Coordinate(9, 5))
         ]
         this.onBoardChange = onBoardChange
     }

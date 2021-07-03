@@ -16,11 +16,6 @@ const { Board } = require('./models/board')
 let nextPlayerId = 0
 const players = []
 
-
-let complete
-let tokenCoords
-let selected
-
 const getMovementVector = (x, y) => {
     return {
         x: x,
@@ -44,13 +39,26 @@ const wsServer = new webSocketServer({
 })
 
 const sendAll = (obj) => {
-    logger.info(obj)
     for (var i = 0; i < players.length; i++) {
         players[i].send(obj)
     }
 }
 
 
+let complete
+let tokenCoords
+let selected
+let remainingSeconds
+var timerInterval
+
+const getTimeMessage = () => {
+    return {
+        type: 'timer-update',
+        data: {
+            seconds: remainingSeconds
+        }
+    }
+}
 
 const updateTokens = () => {
     var messageData = {
@@ -114,7 +122,23 @@ const reset = () => {
     tokenCoords = [new SectionCoordinate(0, new Coordinate(0, 0)), new SectionCoordinate(0, new Coordinate(5, 9))]
     complete = false
     selected = 0
+    remainingSeconds = 120
+    sendAll(getTimeMessage())
     board.reset()
+    clearInterval(timerInterval)
+    timerInterval = setInterval(() => {
+        if (remainingSeconds === 0) {
+            clearInterval(timerInterval)
+            sendAll({
+                type: 'lose'
+            })
+            complete = true
+        }
+        if (remainingSeconds > 0) {
+            remainingSeconds -= 1
+            sendAll(getTimeMessage())
+        }
+    }, 1000)
 }
 
 reset()
@@ -150,6 +174,8 @@ wsServer.on('request', function (request) {
             tokens: tokenCoords.map(token => token.coordinate.getPos())
         }
     })
+
+    player.send(getTimeMessage())
 
 
 
@@ -212,5 +238,6 @@ function checkWin() {
             type: 'win'
         })
         complete = true
+        clearInterval(timerInterval)
     }
 }

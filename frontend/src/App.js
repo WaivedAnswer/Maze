@@ -1,5 +1,5 @@
 import './App.css'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Board from './components/board'
 import gameService from './services/game'
 import Coordinate from './models/coordinate'
@@ -8,6 +8,7 @@ import isEqual from "lodash.isequal"
 import Token from './models/token'
 import PlayerIndicator from './components/playerIndicator'
 import Notification from './components/notification'
+import Timer from './components/Timer'
 
 
 const getCoordinate = (pos) => {
@@ -56,15 +57,21 @@ function App() {
   const [playerName, setPlayerName] = useState("")
   const [otherPlayers, setOtherPlayers] = useState([])
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [remainingSeconds, setRemainingSeconds] = useState(null)
 
-
-  const notify = (message, fade) => {
-    setNotificationMessage(message)
+  const clearNotification = () => {
+    setNotificationMessage(null)
+  }
+  const notify = (message, fade, isGood) => {
+    setNotificationMessage({
+      message: message,
+      isGood: isGood
+    })
     if (!fade) {
       return
     }
     setTimeout(() => {
-      setNotificationMessage(null)
+      clearNotification()
     }, 5000)
   }
 
@@ -76,8 +83,9 @@ function App() {
       } else if (json.type === 'board-update') {
         setTiles(getTiles(json.data))
         setTokens(getTokens(json.data))
+        clearNotification()
       } else if (json.type === 'win') {
-        notify("You have won the game!", false)
+        notify("You have won the game!", false, true)
       } else if (json.type === 'movements') {
         gameService.setMovements(json.data.movements)
         setMoves(json.data.movements)
@@ -86,7 +94,15 @@ function App() {
       } else if (json.type === 'all-players') {
         setOtherPlayers(json.data.filter(playerInfo => playerInfo.playerName !== playerName))
       } else if (json.type === 'do-something') {
-        notify(`${json.data.sender} wants you to do something.`, true)
+        notify(`${json.data.sender} wants you to do something.`, true, true)
+      } else if (json.type === 'timer-update') {
+        // probably can update in a different way 
+        //date to finish makes this less chatty
+        //could have an interval here that counts down
+        //timer-update is sent only on time pickups and connections
+        setRemainingSeconds(json.data.seconds)
+      } else if (json.type === 'lose') {
+        notify("You have lost the game..", false, false)
       }
     }
   }
@@ -106,6 +122,8 @@ function App() {
       <Notification notification={notificationMessage} />
       <div className="board-space">
         <div className="board-controls">
+          <Timer remainingSeconds={remainingSeconds} />
+          <br />
           <PlayerIndicator playerName={playerName} allowedMoves={allowedMoves} isSelf={true} />
           <br />
           <h2 hidden={!otherPlayers.length}>Other Players:</h2>
