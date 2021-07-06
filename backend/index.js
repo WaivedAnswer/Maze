@@ -48,6 +48,7 @@ const sendAll = (obj) => {
 let complete
 let tokenCoords
 let selected
+let selectedTokens
 let remainingSeconds
 var timerInterval
 
@@ -60,16 +61,29 @@ const getTimeMessage = () => {
     }
 }
 
-const updateTokens = () => {
-    var messageData = {
-        time: (new Date()).getTime(),
-        tokens: tokenCoords.map(token => token.coordinate.getPos()),
-        selected: selected
+const getSelections = () => {
+    const selections = []
+    for (const idx of selectedTokens.keys()) {
+        selections.push({
+            selection: selectedTokens.get(idx),
+            selectedBy: getPlayerName(idx)
+        })
     }
+    return selections
+}
 
+const getTokenData = () => {
+    return {
+        tokens: tokenCoords.map(token => token.coordinate.getPos()),
+        selectedTokens: [...selectedTokens.values()],
+        selections: getSelections()
+    }
+}
+
+const updateTokens = () => {
     sendAll({
         type: 'token-update',
-        data: messageData
+        data: getTokenData()
     })
 }
 
@@ -106,14 +120,18 @@ const getPlayerName = (index) => {
     return `Player ${index + 1}`
 }
 
-const onBoardChange = () => {
-    sendAll({
+const getBoardUpdate = () => {
+    return {
         type: 'board-update',
         data: {
             board: board.getData(),
-            tokens: tokenCoords.map(token => token.coordinate.getPos())
+            tokenData: getTokenData()
         }
-    })
+    }
+}
+
+const onBoardChange = () => {
+    sendAll(getBoardUpdate())
 }
 const board = new Board(10, onBoardChange)
 
@@ -122,6 +140,7 @@ const reset = () => {
     tokenCoords = [new SectionCoordinate(0, new Coordinate(0, 0)), new SectionCoordinate(0, new Coordinate(5, 9))]
     complete = false
     selected = 0
+    selectedTokens = new Map()
     remainingSeconds = 120
     sendAll(getTimeMessage())
     board.reset()
@@ -167,13 +186,7 @@ wsServer.on('request', function (request) {
         }
     })
 
-    player.send({
-        type: 'board-update',
-        data: {
-            board: board.getData(),
-            tokens: tokenCoords.map(token => token.coordinate.getPos())
-        }
-    })
+    player.send(getBoardUpdate())
 
     player.send(getTimeMessage())
 
@@ -195,7 +208,7 @@ wsServer.on('request', function (request) {
                 return
             }
 
-            const selectedToken = selected
+
 
             if (command.type === 'RESET') {
                 reset()
@@ -203,6 +216,7 @@ wsServer.on('request', function (request) {
                 return
             } else if (command.type === 'SELECTED') {
                 selected = parseInt(command.selected)
+                selectedTokens.set(player.id, selected)
             } else if (command.type === 'DO-SOMETHING') {
                 const targetPlayer = players.find(p => getPlayerName(p.id) === command.player)
                 targetPlayer.send({
@@ -212,6 +226,10 @@ wsServer.on('request', function (request) {
                     }
                 })
             } else if (command.type in movementCommands) {
+                const selectedToken = selectedTokens.get(player.id)
+                if (selectedToken === null) {
+                    return
+                }
                 const movementVector = movementCommands[command.type]
                 const tokenCoord = tokenCoords[selectedToken]
                 tokenCoords[selectedToken] = board.move(tokenCoord, movementVector)
@@ -230,6 +248,8 @@ wsServer.on('request', function (request) {
         updateMovements(movementCommands, players)
     })
 })
+
+
 
 function checkWin() {
 

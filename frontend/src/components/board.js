@@ -26,7 +26,7 @@ const Board = ({ grid, tokens }) => {
     }
 
     const getToken = (tileCoord) => {
-        return tokens.filter(token => isEqual(token.coord, tileCoord))[0]
+        return tokens.find(token => isEqual(token.coord, tileCoord))
     }
 
     return (

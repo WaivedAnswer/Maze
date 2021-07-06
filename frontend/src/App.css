@@ -4,57 +4,51 @@
 
 table {
    border-spacing: 0px;
-   border-collapse: collapse;
 }
 
 td { 
    padding: 0px;
 }
 
-.tile {
+
+.token-selected, .token, .tile-exit, .tile-wall, .tile-unknown, .tile {
    height: 32px;
    width: 32px;
    border-style: solid;
+   border-width:thin;
+
+}
+
+.tile {
+  background-color: whitesmoke;
+  border-color: black
 }
 
 .token-selected {
-   height: 32px;
-   width: 32px;
   background-color: aqua;
-  border: red;
-  border-style: solid;
+  border-color: greenyellow;
+  text-align: center;
+  line-height: 32px; /*hack to center text*/
 }
 
 .token {
-   height: 32px;
-   width: 32px;
   background-color: blue;
-  border: blue;
-  border-style: solid;
+  border-color: blue;
 }
 
 .tile-exit {
-   height: 32px;
-   width: 32px;
    background-color: greenyellow;
-   border: greenyellow;
-  border-style: solid;
+   border-color: greenyellow;
 }
 
 .tile-wall {
-   height: 32px;
-   width: 32px;
    background-color: gray;
-   border: gray;
-  border-style: solid;
+   border-color: black;
 }
 
 .tile-unknown {
-   height: 32px;
-   width: 32px;
    background-color: purple;
-   border: purple;
-  border-style: solid;
+   border-color: purple;
 }
 
 .board-space {
