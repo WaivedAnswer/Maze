@@ -46,8 +46,25 @@ const getTiles = (initData) => {
   return grid
 }
 
+const getInitials = (str) => {
+  const split = str.split(" ")
+  return split.map(substr => substr[0]).join('')
+}
+
+const getSelectedBy = (selections, idx) => {
+  let selection = selections.find(selection => selection.selection === idx)
+  if (selection) {
+    return getInitials(selection.selectedBy)
+  }
+  return null
+}
+
 const getTokens = (data) => {
-  return data.tokens.map((pos, idx) => new Token(idx, getCoordinate(pos), data.selected === idx))
+  return data.tokens.map((pos, idx) =>
+    new Token(idx,
+      getCoordinate(pos),
+      data.selectedTokens.some(selected => selected === idx),
+      getSelectedBy(data.selections, idx)))
 }
 
 function App() {
@@ -82,7 +99,7 @@ function App() {
         setTokens(getTokens(json.data))
       } else if (json.type === 'board-update') {
         setTiles(getTiles(json.data))
-        setTokens(getTokens(json.data))
+        setTokens(getTokens(json.data.tokenData))
         clearNotification()
       } else if (json.type === 'win') {
         notify("You have won the game!", false, true)
