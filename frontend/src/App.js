@@ -63,7 +63,6 @@ const getTokens = (data) => {
   return data.tokens.map((pos, idx) =>
     new Token(idx,
       getCoordinate(pos),
-      data.selectedTokens.some(selected => selected === idx),
       getSelectedBy(data.selections, idx)))
 }
 

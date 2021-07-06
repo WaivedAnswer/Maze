@@ -75,7 +75,6 @@ const getSelections = () => {
 const getTokenData = () => {
     return {
         tokens: tokenCoords.map(token => token.coordinate.getPos()),
-        selectedTokens: [...selectedTokens.values()],
         selections: getSelections()
     }
 }

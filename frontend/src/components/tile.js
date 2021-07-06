@@ -4,10 +4,10 @@ const Tile = ({ token, type, onTokenSelected }) => {
     let className
     let content
 
-    if (token && token.isSelected) {
+    if (token && token.selectedBy) {
         className = 'token-selected'
         content = token.selectedBy
-    } else if (token && !token.isSelected) {
+    } else if (token && !token.selectedBy) {
         className = 'token'
     } else if (type === TileType.EXIT) {
         className = 'tile-exit'
