@@ -1,15 +1,9 @@
 import { TileType } from "../models/tile"
+import Token from "./token"
 
 const Tile = ({ token, type, onTokenSelected }) => {
     let className
-    let content
-
-    if (token && token.selectedBy) {
-        className = 'token-selected'
-        content = token.selectedBy
-    } else if (token && !token.selectedBy) {
-        className = 'token'
-    } else if (type === TileType.EXIT) {
+    if (type === TileType.EXIT) {
         className = 'tile-exit'
     } else if (type === TileType.WALL) {
         className = 'tile-wall'
@@ -19,15 +13,9 @@ const Tile = ({ token, type, onTokenSelected }) => {
         className = 'tile'
     }
 
-    const onClick = () => {
-        if (token) {
-            onTokenSelected(token)
-        }
-    }
-
     return (
-        <div className={className} onClick={onClick}>
-            {content}
+        <div className={className}>
+            <Token token={token} onTokenSelected={onTokenSelected}/>
         </div>
     )
 }

@@ -11,7 +11,7 @@ td {
 }
 
 
-.token-selected, .token, .tile-exit, .tile-wall, .tile-unknown, .tile {
+.tile-exit, .tile-wall, .tile-unknown, .tile {
    height: 32px;
    width: 32px;
    border-style: solid;
@@ -19,21 +19,19 @@ td {
 
 }
 
+.token {
+   display: inline-block;
+}
+
+.token img {
+   height: 100%;
+   width: 100%;
+   display: block;
+}
+
 .tile {
   background-color: whitesmoke;
   border-color: black
-}
-
-.token-selected {
-  background-color: aqua;
-  border-color: greenyellow;
-  text-align: center;
-  line-height: 32px; /*hack to center text*/
-}
-
-.token {
-  background-color: blue;
-  border-color: blue;
 }
 
 .tile-exit {
