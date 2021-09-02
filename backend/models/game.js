@@ -34,6 +34,10 @@ class Game {
     getPlayerName(index){
         return `Player ${index + 1}`
     }
+
+    checkWin(board) {
+        return this.tokenCoords.every(tokenCoord => board.isAtExit(tokenCoord))
+    }
 }
 
 module.exports = {

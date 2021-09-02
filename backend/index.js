@@ -221,8 +221,7 @@ wsServer.on('request', function (request) {
 
 
 function checkWin() {
-
-    if (game.tokenCoords.every(tokenCoord => board.isAtExit(tokenCoord))) {
+    if (game.checkWin(board)) {
         sendAll({
             type: 'win'
         })
