@@ -6,11 +6,10 @@ const webSocketServer = require('websocket').server
 
 const config = require('./utils/config')
 const logger = require('./utils/logger')
-const { Coordinate } = require('./models/coordinate')
-const { SectionCoordinate } = require('./models/sectionCoordinate')
 const { splitMoves } = require('./models/move')
 const { Player } = require('./models/player')
 const { Board } = require('./models/board')
+const { Game } = require('./models/game')
 
 
 let nextPlayerId = 0
@@ -46,7 +45,7 @@ const sendAll = (obj) => {
 
 
 let complete
-let tokenCoords
+let game
 let selected
 let selectedTokens
 let remainingSeconds
@@ -74,7 +73,7 @@ const getSelections = () => {
 
 const getTokenData = () => {
     return {
-        tokens: tokenCoords.map(token => token.coordinate.getPos()),
+        tokens: game.tokenCoords.map(token => token.coordinate.getPos()),
         selections: getSelections()
     }
 }
@@ -136,7 +135,7 @@ const board = new Board(10, onBoardChange)
 
 const reset = () => {
     //likely should move where tokens are initialized
-    tokenCoords = [new SectionCoordinate(0, new Coordinate(0, 0)), new SectionCoordinate(0, new Coordinate(5, 9))]
+    game = new Game()
     complete = false
     selected = 0
     selectedTokens = new Map()
@@ -230,8 +229,8 @@ wsServer.on('request', function (request) {
                     return
                 }
                 const movementVector = movementCommands[command.type]
-                const tokenCoord = tokenCoords[selectedToken]
-                tokenCoords[selectedToken] = board.move(tokenCoord, movementVector)
+                const tokenCoord = game.tokenCoords[selectedToken]
+                game.tokenCoords[selectedToken] = board.move(tokenCoord, movementVector)
             }
 
             updateTokens()
@@ -252,7 +251,7 @@ wsServer.on('request', function (request) {
 
 function checkWin() {
 
-    if (tokenCoords.every(tokenCoord => board.isAtExit(tokenCoord))) {
+    if (game.tokenCoords.every(tokenCoord => board.isAtExit(tokenCoord))) {
         sendAll({
             type: 'win'
         })
