@@ -44,10 +44,7 @@ const sendAll = (obj) => {
 }
 
 
-let complete
 let game
-let selected
-let selectedTokens
 let remainingSeconds
 var timerInterval
 
@@ -60,28 +57,10 @@ const getTimeMessage = () => {
     }
 }
 
-const getSelections = () => {
-    const selections = []
-    for (const idx of selectedTokens.keys()) {
-        selections.push({
-            selection: selectedTokens.get(idx),
-            selectedBy: getPlayerName(idx)
-        })
-    }
-    return selections
-}
-
-const getTokenData = () => {
-    return {
-        tokens: game.tokenCoords.map(token => token.coordinate.getPos()),
-        selections: getSelections()
-    }
-}
-
 const updateTokens = () => {
     sendAll({
         type: 'token-update',
-        data: getTokenData()
+        data: game.getTokenData()
     })
 }
 
@@ -105,7 +84,7 @@ const updateMovements = (movements, dividingPlayers) => {
     const playerInfo = playerMoves.map((moves, idx) => {
         return {
             moves: moves,
-            playerName: getPlayerName(dividingPlayers[idx].id)
+            playerName: game.getPlayerName(dividingPlayers[idx].id)
         }
     })
     sendAll({
@@ -114,16 +93,12 @@ const updateMovements = (movements, dividingPlayers) => {
     })
 }
 
-const getPlayerName = (index) => {
-    return `Player ${index + 1}`
-}
-
 const getBoardUpdate = () => {
     return {
         type: 'board-update',
         data: {
             board: board.getData(),
-            tokenData: getTokenData()
+            tokenData: game.getTokenData()
         }
     }
 }
@@ -136,9 +111,6 @@ const board = new Board(10, onBoardChange)
 const reset = () => {
     //likely should move where tokens are initialized
     game = new Game()
-    complete = false
-    selected = 0
-    selectedTokens = new Map()
     remainingSeconds = 120
     sendAll(getTimeMessage())
     board.reset()
@@ -149,7 +121,7 @@ const reset = () => {
             sendAll({
                 type: 'lose'
             })
-            complete = true
+            game.complete = true
         }
         if (remainingSeconds > 0) {
             remainingSeconds -= 1
@@ -180,7 +152,7 @@ wsServer.on('request', function (request) {
     player.send({
         type: 'name',
         data: {
-            name: getPlayerName(player.id)
+            name: game.getPlayerName(player.id)
         }
     })
 
@@ -210,21 +182,20 @@ wsServer.on('request', function (request) {
 
             if (command.type === 'RESET') {
                 reset()
-            } else if (complete) {
+            } else if (game.complete) {
                 return
             } else if (command.type === 'SELECTED') {
-                selected = parseInt(command.selected)
-                selectedTokens.set(player.id, selected)
+                game.select(player.id, parseInt(command.selected))
             } else if (command.type === 'DO-SOMETHING') {
-                const targetPlayer = players.find(p => getPlayerName(p.id) === command.player)
+                const targetPlayer = players.find(p => game.getPlayerName(p.id) === command.player)
                 targetPlayer.send({
                     type: 'do-something',
                     data: {
-                        sender: getPlayerName(player.id)
+                        sender: game.getPlayerName(player.id)
                     }
                 })
             } else if (command.type in movementCommands) {
-                const selectedToken = selectedTokens.get(player.id)
+                const selectedToken = game.selectedTokens.get(player.id)
                 if (selectedToken === null) {
                     return
                 }
@@ -255,7 +226,7 @@ function checkWin() {
         sendAll({
             type: 'win'
         })
-        complete = true
+        game.complete = true
         clearInterval(timerInterval)
     }
 }
