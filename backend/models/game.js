@@ -1,12 +1,15 @@
+const { Board } = require('./board')
 const { Coordinate } = require('./coordinate')
 const { SectionCoordinate } = require('./sectionCoordinate')
 
+
 class Game {
-    constructor() {
+    constructor(onBoardChange) {
         //likely should move where tokens are initialized
         this.tokenCoords = [new SectionCoordinate(0, new Coordinate(0, 0)), new SectionCoordinate(0, new Coordinate(5, 9))]
         this.selectedTokens = new Map()
         this.complete = false
+        this.board = new Board(10, onBoardChange)
     }
 
     getSelections() {
@@ -35,8 +38,18 @@ class Game {
         return `Player ${index + 1}`
     }
 
-    checkWin(board) {
-        return this.tokenCoords.every(tokenCoord => board.isAtExit(tokenCoord))
+    checkWin() {
+        return this.tokenCoords.every(tokenCoord => this.board.isAtExit(tokenCoord))
+    }
+
+    getBoardUpdate() {
+        return {
+            type: 'board-update',
+            data: {
+                board: this.board.getData(),
+                tokenData: this.getTokenData()
+            }
+        }
     }
 }
 

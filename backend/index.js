@@ -8,7 +8,7 @@ const config = require('./utils/config')
 const logger = require('./utils/logger')
 const { splitMoves } = require('./models/move')
 const { Player } = require('./models/player')
-const { Board } = require('./models/board')
+
 const { Game } = require('./models/game')
 
 
@@ -93,27 +93,16 @@ const updateMovements = (movements, dividingPlayers) => {
     })
 }
 
-const getBoardUpdate = () => {
-    return {
-        type: 'board-update',
-        data: {
-            board: board.getData(),
-            tokenData: game.getTokenData()
-        }
-    }
+const onBoardChange = () => {
+    sendAll(game.getBoardUpdate())
 }
 
-const onBoardChange = () => {
-    sendAll(getBoardUpdate())
-}
-const board = new Board(10, onBoardChange)
 
 const reset = () => {
     //likely should move where tokens are initialized
-    game = new Game()
+    game = new Game(onBoardChange)
     remainingSeconds = 120
     sendAll(getTimeMessage())
-    board.reset()
     clearInterval(timerInterval)
     timerInterval = setInterval(() => {
         if (remainingSeconds === 0) {
@@ -156,7 +145,7 @@ wsServer.on('request', function (request) {
         }
     })
 
-    player.send(getBoardUpdate())
+    player.send(game.getBoardUpdate())
 
     player.send(getTimeMessage())
 
@@ -201,7 +190,7 @@ wsServer.on('request', function (request) {
                 }
                 const movementVector = movementCommands[command.type]
                 const tokenCoord = game.tokenCoords[selectedToken]
-                game.tokenCoords[selectedToken] = board.move(tokenCoord, movementVector)
+                game.tokenCoords[selectedToken] = game.board.move(tokenCoord, movementVector)
             }
 
             updateTokens()
@@ -221,7 +210,7 @@ wsServer.on('request', function (request) {
 
 
 function checkWin() {
-    if (game.checkWin(board)) {
+    if (game.checkWin()) {
         sendAll({
             type: 'win'
         })
