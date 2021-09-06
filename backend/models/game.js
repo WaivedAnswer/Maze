@@ -1,12 +1,12 @@
 const { Board } = require('./board')
 const { Coordinate } = require('./coordinate')
-const { SectionCoordinate } = require('./sectionCoordinate')
+const { Token } = require('./token')
 
 
 class Game {
     constructor(onBoardChange) {
         //likely should move where tokens are initialized
-        this.tokenCoords = [new SectionCoordinate(0, new Coordinate(0, 0)), new SectionCoordinate(0, new Coordinate(5, 9))]
+        this.tokenCoords = [new Token(new Coordinate(0, 0)), new Token(new Coordinate(5, 9))]
         this.selectedTokens = new Map()
         this.complete = false
         this.board = new Board(10, onBoardChange)

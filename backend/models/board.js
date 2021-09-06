@@ -1,14 +1,15 @@
-const { SectionCoordinate } = require('./sectionCoordinate')
-const { Coordinate } = require('./coordinate')
+const { Token } = require('./token')
 const { Section } = require('./section')
 const { Offset } = require('./offset')
+const { Coordinate } = require('./coordinate')
 
 //deals with section coordinates and section connections
 class Board {
     constructor(dimensions, onBoardChange) {
         this.sections = [
             new Section(dimensions,
-                new Offset(0, 0), false,
+                new Offset(0, 0),
+                false,
                 null),
             new Section(dimensions,
                 new Offset(dimensions, 5), true,
@@ -31,7 +32,6 @@ class Board {
     }
 
     move(currSectionCoord, movementVector) {
-        //gets section coord location of new movement, gets section checks if can move
         const updatedCoord = currSectionCoord.coordinate.offset(movementVector)
         const newSection = this.sections.find(section => section.canMove(updatedCoord))
 
@@ -40,7 +40,7 @@ class Board {
                 newSection.hidden = false
                 this.onBoardChange()
             }
-            return new SectionCoordinate(0, updatedCoord)
+            return new Token(updatedCoord)
         }
         return currSectionCoord
     }
