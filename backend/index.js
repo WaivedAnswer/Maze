@@ -43,7 +43,6 @@ const sendAll = (obj) => {
     }
 }
 
-
 let game
 let remainingSeconds
 var timerInterval
@@ -97,7 +96,6 @@ const onBoardChange = () => {
     sendAll(game.getBoardUpdate())
 }
 
-
 const reset = () => {
     //likely should move where tokens are initialized
     game = new Game(onBoardChange)
@@ -146,9 +144,7 @@ wsServer.on('request', function (request) {
     })
 
     player.send(game.getBoardUpdate())
-
     player.send(getTimeMessage())
-
 
 
     updateMovements(movementCommands, players)
@@ -166,8 +162,6 @@ wsServer.on('request', function (request) {
                 logger.error(`Invalid JSON: ${message.utf8Data}, ${e}`)
                 return
             }
-
-
 
             if (command.type === 'RESET') {
                 reset()
