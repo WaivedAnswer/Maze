@@ -1,16 +1,18 @@
 const { Coordinate } = require('./coordinate')
 const { Offset } = require('./offset')
 const { Tile } = require('./tile')
+const { DIRECTIONS } = require('./direction')
 
 //deals with simple coordinates
 class Section {
-    constructor(dimensions, offset, hidden, exit) {
+    constructor(dimensions, offset, exit) {
         this.dimensions = dimensions
-        this.hidden = hidden
-        this.originalHidden = hidden
         this.offset = offset
         this.exit = exit
         this.walls = new Map()
+        this.connections = [
+            new Coordinate(9, 9)
+        ]
 
         for (let i = 0; i < dimensions - 1; i++) {
             this.addTile(new Tile(new Coordinate(i, 5)))
@@ -39,11 +41,6 @@ class Section {
         for (let j = 1; j < dimensions - 1; j++) {
             this.addTile(new Tile(new Coordinate(8, j)))
         }
-    }
-
-    reset() {
-        this.hidden = this.originalHidden
-        console.log(this.originalHidden)
     }
 
     getWalls() {
@@ -83,19 +80,37 @@ class Section {
         return selected >= 0 && selected < this.dimensions
     }
 
+    getRelativeCoord(coord) {
+        return coord.relativeTo(this.offset)
+    }
+
     canMove(coord) {
-        let relativeCoord = coord.relativeTo(this.offset)
+        let relativeCoord = this.getRelativeCoord(coord)
         let key = relativeCoord.getKey()
         let isWall = this.walls.has(key)
 
         return this.inBounds(relativeCoord.x) && this.inBounds(relativeCoord.y) && !isWall
     }
 
+    isAtSectionCoord(coord, sectionCoord) {
+        let relativeCoord = this.getRelativeCoord(coord)
+        return sectionCoord.x === relativeCoord.x && sectionCoord.y === relativeCoord.y
+    }
+
+
+    isAtConnection(coord) {
+        return this.connections.some( connection => this.isAtSectionCoord(coord, connection))
+    }
+
+    getConnectionOrientation() {
+        return DIRECTIONS.RIGHT
+    }
+
     isAtExit(coord) {
         if (!this.exit) {
             return false
         }
-        return coord.x === this.exit.offset(this.offset).x && coord.y === this.exit.offset(this.offset).y
+        return this.isAtSectionCoord(coord, this.exit)
     }
 }
 

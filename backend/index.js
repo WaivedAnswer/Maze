@@ -11,16 +11,11 @@ const { Player } = require('./models/player')
 
 const { Game } = require('./models/game')
 
+const { DIRECTIONS } = require('./models/direction')
+
 
 let nextPlayerId = 0
 const players = []
-
-const getMovementVector = (x, y) => {
-    return {
-        x: x,
-        y: y
-    }
-}
 
 const app = express()
 app.use(express.static('build'))
@@ -63,12 +58,6 @@ const updateTokens = () => {
     })
 }
 
-const movementCommands = {
-    'RIGHT': getMovementVector(1, 0),
-    'LEFT': getMovementVector(-1, 0),
-    'UP': getMovementVector(0, -1),
-    'DOWN': getMovementVector(0, 1)
-}
 
 const updateMovements = (movements, dividingPlayers) => {
     const playerMoves = splitMoves(Object.keys(movements), dividingPlayers.length)
@@ -124,7 +113,7 @@ wsServer.on('request', function (request) {
 
     const connection = request.accept(null, request.origin)
 
-    if (players.length >= Object.keys(movementCommands).length) {
+    if (players.length >= Object.keys(DIRECTIONS).length) {
         return
     }
 
@@ -147,7 +136,7 @@ wsServer.on('request', function (request) {
     player.send(getTimeMessage())
 
 
-    updateMovements(movementCommands, players)
+    updateMovements(DIRECTIONS, players)
 
     connection.on('message', function (message) {
         logger.info(message)
@@ -177,12 +166,12 @@ wsServer.on('request', function (request) {
                         sender: game.getPlayerName(player.id)
                     }
                 })
-            } else if (command.type in movementCommands) {
+            } else if (command.type in DIRECTIONS) {
                 const selectedToken = game.selectedTokens.get(player.id)
                 if (selectedToken === null) {
                     return
                 }
-                const movementVector = movementCommands[command.type]
+                const movementVector = DIRECTIONS[command.type]
                 const tokenCoord = game.tokenCoords[selectedToken]
                 game.tokenCoords[selectedToken] = game.board.move(tokenCoord, movementVector)
             }
@@ -197,7 +186,7 @@ wsServer.on('request', function (request) {
         logger.info(`${new Date()} Peer ${connection.remoteAddress} disconnected.`)
         const removeIndex = players.findIndex(player => player.id === playerId)
         players.splice(removeIndex, 1)
-        updateMovements(movementCommands, players)
+        updateMovements(DIRECTIONS, players)
     })
 })
 

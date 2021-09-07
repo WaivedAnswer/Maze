@@ -39,7 +39,7 @@ class Game {
     }
 
     checkWin() {
-        return this.tokenCoords.every(tokenCoord => this.board.isAtExit(tokenCoord))
+        return this.tokenCoords.every(tokenCoord => this.board.isEscaped(tokenCoord))
     }
 
     getBoardUpdate() {
