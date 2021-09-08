@@ -12,7 +12,21 @@ const DIRECTIONS = {
     DOWN: getMovementVector(0, 1)
 }
 
+function getOppositeDirection(orientation) {
+    switch (orientation) {
+    case DIRECTIONS.RIGHT:
+        return DIRECTIONS.LEFT
+    case DIRECTIONS.LEFT:
+        return DIRECTIONS.RIGHT
+    case DIRECTIONS.UP:
+        return DIRECTIONS.DOWN
+    case DIRECTIONS.DOWN:
+        return DIRECTIONS.UP
+    }
+}
+
 
 module.exports = {
-    DIRECTIONS
+    DIRECTIONS,
+    getOppositeDirection
 }

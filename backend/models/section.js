@@ -1,7 +1,7 @@
 const { Coordinate } = require('./coordinate')
 const { Offset } = require('./offset')
 const { Tile } = require('./tile')
-const { Connection } = require('./connection')
+const { getConnection } = require('./connection')
 const { DIRECTIONS } = require('./direction')
 
 //deals with simple coordinates
@@ -12,7 +12,8 @@ class Section {
         this.exit = exit
         this.walls = new Map()
         this.connections = [
-            new Connection(DIRECTIONS.RIGHT, new Coordinate(9, 9))
+            getConnection(DIRECTIONS.DOWN),
+            getConnection(DIRECTIONS.RIGHT)
         ]
 
         for (let i = 0; i < dimensions - 1; i++) {
@@ -98,8 +99,20 @@ class Section {
         return sectionCoord.x === relativeCoord.x && sectionCoord.y === relativeCoord.y
     }
 
-    getConnection(coord) {
-        return this.connections.find( connection => this.isAtSectionCoord(coord, connection.coord))
+    getConnectingOffset(coord) {
+        const connection = this.connections.find( connection => this.isAtSectionCoord(coord, connection.coord))
+        if(!connection || connection.connected) {
+            return null
+        }
+        return connection.getConnectionOrigin().offset(this.offset)
+    }
+
+    connectAt(coord) {
+        const connection = this.connections.find( connection => this.isAtSectionCoord(coord, connection.coord))
+        if(!connection) {
+            return
+        }
+        connection.connected = true
     }
 
     isAtExit(coord) {
