@@ -34,31 +34,18 @@ class Board {
             return token
         }
 
-        const currConnection = currSection.getConnection(updatedCoord)
-        if (currConnection && !this.allSectionsRevealed()) {
-            let orientation = currConnection.orientation
-            this.addSection(updatedCoord, orientation)
+        const connectionPoint = currSection.getConnectingOffset(updatedCoord)
+        if (connectionPoint && !this.allSectionsRevealed()) {
+            this.addSection(connectionPoint)
+            currSection.connectAt(updatedCoord)
         }
 
         return new Token(updatedCoord)
     }
 
-    getOffset(coord, orientation) {
-        switch (orientation) {
-        case DIRECTIONS.RIGHT:
-            return coord.offset( {
-                x: 1,
-                y: 0
-            })
-        }
-        return coord
-    }
-
-
-
-    addSection(coord, orientation) {
+    addSection(offsetCoord) {
         let newSection = new Section(this.sectionDimensions,
-            this.getOffset(coord, orientation),
+            offsetCoord,
             new Coordinate(9, 5))
         this.sections.push(newSection)
         this.onBoardChange()
