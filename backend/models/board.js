@@ -34,8 +34,9 @@ class Board {
             return token
         }
 
-        if (currSection.isAtConnection(updatedCoord) && !this.allSectionsRevealed()) {
-            let orientation = currSection.getConnectionOrientation(updatedCoord)
+        const currConnection = currSection.getConnection(updatedCoord)
+        if (currConnection && !this.allSectionsRevealed()) {
+            let orientation = currConnection.orientation
             this.addSection(updatedCoord, orientation)
         }
 
