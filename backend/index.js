@@ -88,6 +88,7 @@ const onBoardChange = () => {
 const reset = () => {
     //likely should move where tokens are initialized
     game = new Game(onBoardChange)
+    onBoardChange()
     remainingSeconds = 120
     sendAll(getTimeMessage())
     clearInterval(timerInterval)
