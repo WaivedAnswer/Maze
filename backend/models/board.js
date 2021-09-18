@@ -2,7 +2,6 @@ const { Token } = require('./token')
 const { Section } = require('./section')
 const { Offset } = require('./offset')
 const { Coordinate } = require('./coordinate')
-const { DIRECTIONS } = require('./direction')
 
 //deals with section coordinates and section connections
 class Board {
@@ -17,13 +16,21 @@ class Board {
         this.onBoardChange = onBoardChange
     }
 
+    getMinCoordinate() {
+        const offsetX = this.sections.map(section => section.offset.x)
+        const minOffsetX = Math.min(...offsetX)
+        const offsetY = this.sections.map( section => section.offset.y)
+        const minOffsetY = Math.min(...offsetY)
+        return new Coordinate(minOffsetX, minOffsetY)
+    }
+
     getData() {
         return {
-            height: Math.max(...this.sections.map(section => section.getMaxDimensions().height)),
-            width: Math.max(...this.sections.map(section => section.getMaxDimensions().width)),
-            exits: this.sections.flatMap(section => section.getExits()),
-            walls: this.sections.flatMap(section => section.getWalls()),
-            tiles: this.sections.flatMap(section => section.getAllTiles())
+            height: Math.max(...this.sections.map(section => section.getMaxDimensions(this.getMinCoordinate()).height)),
+            width: Math.max(...this.sections.map(section => section.getMaxDimensions(this.getMinCoordinate()).width)),
+            exits: this.sections.flatMap(section => section.getExits(this.getMinCoordinate())),
+            walls: this.sections.flatMap(section => section.getWalls(this.getMinCoordinate())),
+            tiles: this.sections.flatMap(section => section.getAllTiles(this.getMinCoordinate()))
         }
     }
 
@@ -34,18 +41,20 @@ class Board {
             return token
         }
 
-        const connectionPoint = currSection.getConnectingOffset(updatedCoord)
-        if (connectionPoint && !this.allSectionsRevealed()) {
-            this.addSection(connectionPoint)
-            currSection.connectAt(updatedCoord)
+        const connectionOffset = currSection.getConnectingOffset(updatedCoord)
+        if (!connectionOffset || this.allSectionsRevealed()) {
+            return new Token(updatedCoord)
         }
+
+        this.addSection(connectionOffset)
+        currSection.connectAt(updatedCoord)
 
         return new Token(updatedCoord)
     }
 
-    addSection(offsetCoord) {
+    addSection(offset) {
         let newSection = new Section(this.sectionDimensions,
-            offsetCoord,
+            offset,
             new Coordinate(9, 5))
         this.sections.push(newSection)
         this.onBoardChange()
