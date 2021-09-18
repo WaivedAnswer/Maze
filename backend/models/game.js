@@ -2,7 +2,6 @@ const { Board } = require('./board')
 const { Coordinate } = require('./coordinate')
 const { Token } = require('./token')
 
-
 class Game {
     constructor(onBoardChange) {
         //likely should move where tokens are initialized
@@ -29,7 +28,7 @@ class Game {
 
     getTokenData() {
         return {
-            tokens: this.tokenCoords.map(token => token.coordinate.getPos()),
+            tokens: this.tokenCoords.map(token => token.getPos(this.board.getMinCoordinate())),
             selections: this.getSelections()
         }
     }

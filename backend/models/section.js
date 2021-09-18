@@ -12,7 +12,7 @@ class Section {
         this.exit = exit
         this.walls = new Map()
         this.connections = [
-            getConnection(DIRECTIONS.DOWN),
+            getConnection(DIRECTIONS.UP),
             getConnection(DIRECTIONS.RIGHT)
         ]
 
@@ -45,32 +45,36 @@ class Section {
         }
     }
 
-    getWalls() {
-        return [...this.walls.values()].map(tile => tile.coord.offset(this.offset).getPos())
+    getAbsolutePos(coord, relativeTo) {
+        return coord.offset(this.offset).relativeTo(relativeTo).getPos()
     }
 
-    getExits() {
+
+    getWalls(relativeTo) {
+        return [...this.walls.values()].map(tile => this.getAbsolutePos(tile.coord, relativeTo))
+    }
+
+    getExits(relativeTo) {
         if (!this.exit) {
             return []
         }
-        return [this.exit.offset(this.offset).getPos()]
+        return [this.getAbsolutePos(this.exit, relativeTo)]
     }
 
-    getAllTiles() {
+    getAllTiles(relativeTo) {
         let allTiles = []
-        let origin = new Coordinate(this.offset.x, this.offset.y)
         for (let i = 0; i < this.dimensions; i++) {
             for (let j = 0; j < this.dimensions; j++) {
-                allTiles.push(origin.offset(new Offset(i, j)).getPos())
+                allTiles.push(this.getAbsolutePos(new Coordinate(i, j), relativeTo))
             }
         }
         return allTiles
     }
 
-    getMaxDimensions() {
+    getMaxDimensions(relativeTo) {
         return {
-            width: this.offset.x + this.dimensions,
-            height: this.offset.y + this.dimensions
+            width: this.offset.x + this.dimensions - relativeTo.x,
+            height: this.offset.y + this.dimensions - relativeTo.y
         }
     }
 
@@ -104,7 +108,8 @@ class Section {
         if(!connection || connection.connected) {
             return null
         }
-        return connection.getConnectionOrigin().offset(this.offset)
+        let connectingOriginCoord = connection.getConnectionOrigin().offset(this.offset)
+        return new Offset(connectingOriginCoord.x, connectingOriginCoord.y)
     }
 
     connectAt(coord) {

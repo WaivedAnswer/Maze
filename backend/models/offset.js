@@ -3,6 +3,10 @@ class Offset {
         this.x = x
         this.y = y
     }
+
+    relativeTo(coord) {
+        return new Offset(this.x - coord.x, this.y - coord.y)
+    }
 }
 
 module.exports = {

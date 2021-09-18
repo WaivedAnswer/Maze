@@ -1,7 +1,5 @@
 const info = (...params) => {
-    //if (!params) {
     console.log(...params)
-    //}
 }
 
 const warn = (...params) => {
