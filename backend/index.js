@@ -169,8 +169,7 @@ wsServer.on('request', function (request) {
                     }
                 })
             } else if (command.type in DIRECTIONS) {
-                const movementVector = DIRECTIONS[command.type]
-                game.move(player, movementVector)
+                game.move(player, command.type)
             }
 
             updateTokens()

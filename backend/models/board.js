@@ -1,7 +1,7 @@
-const { Token } = require('./token')
 const { Section } = require('./section')
 const { Offset } = require('./offset')
 const { Coordinate } = require('./coordinate')
+const { DIRECTIONS } = require('./direction')
 
 //deals with section coordinates and section connections
 class Board {
@@ -34,7 +34,9 @@ class Board {
         }
     }
 
-    move(currCoord, movementVector) {
+    move(token, movementCommand) {
+        const movementVector = DIRECTIONS[movementCommand]
+        const currCoord = token.coordinate
         const updatedCoord = currCoord.offset(movementVector)
         const currSection = this.sections.find(section => section.canMove(updatedCoord))
         if(!currSection) {
