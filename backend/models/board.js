@@ -34,22 +34,22 @@ class Board {
         }
     }
 
-    move(token, movementVector) {
-        const updatedCoord = token.coordinate.offset(movementVector)
+    move(currCoord, movementVector) {
+        const updatedCoord = currCoord.offset(movementVector)
         const currSection = this.sections.find(section => section.canMove(updatedCoord))
         if(!currSection) {
-            return token
+            return currCoord
         }
 
         const connectionOffset = currSection.getConnectingOffset(updatedCoord)
         if (!connectionOffset || this.allSectionsRevealed()) {
-            return new Token(updatedCoord)
+            return updatedCoord
         }
 
         this.addSection(connectionOffset)
         currSection.connectAt(updatedCoord)
 
-        return new Token(updatedCoord)
+        return updatedCoord
     }
 
     addSection(offset) {

@@ -15,6 +15,8 @@ const { DIRECTIONS } = require('./models/direction')
 
 
 let nextPlayerId = 0
+//potential hiccup with moving players
+//when game is reset players will be reset as well (unless pass players somehow)
 const players = []
 
 const app = express()
@@ -60,6 +62,7 @@ const updateTokens = () => {
 
 
 const updateMovements = (movements, dividingPlayers) => {
+    //this should likely be moved to a player object concept
     const playerMoves = splitMoves(Object.keys(movements), dividingPlayers.length)
     for (let idx in playerMoves) {
         dividingPlayers[idx].send({
@@ -86,7 +89,6 @@ const onBoardChange = () => {
 }
 
 const reset = () => {
-    //likely should move where tokens are initialized
     game = new Game(onBoardChange)
     onBoardChange()
     remainingSeconds = 120
@@ -142,7 +144,6 @@ wsServer.on('request', function (request) {
     connection.on('message', function (message) {
         logger.info(message)
         if (message.type === 'utf8') {
-            logger.info(`${players.length} players`)
             logger.info(`${new Date()} Received Message: ${message.utf8Data}`)
 
             let command
@@ -168,13 +169,8 @@ wsServer.on('request', function (request) {
                     }
                 })
             } else if (command.type in DIRECTIONS) {
-                const selectedToken = game.selectedTokens.get(player.id)
-                if (selectedToken === null) {
-                    return
-                }
                 const movementVector = DIRECTIONS[command.type]
-                const tokenCoord = game.tokenCoords[selectedToken]
-                game.tokenCoords[selectedToken] = game.board.move(tokenCoord, movementVector)
+                game.move(player, movementVector)
             }
 
             updateTokens()

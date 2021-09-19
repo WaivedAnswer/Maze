@@ -5,7 +5,7 @@ const { Token } = require('./token')
 class Game {
     constructor(onBoardChange) {
         //likely should move where tokens are initialized
-        this.tokenCoords = [new Token(new Coordinate(0, 0)), new Token(new Coordinate(5, 9))]
+        this.tokens = [new Token(new Coordinate(0, 0)), new Token(new Coordinate(5, 9))]
         this.selectedTokens = new Map()
         this.complete = false
         this.board = new Board(10, onBoardChange)
@@ -22,13 +22,23 @@ class Game {
         return selections
     }
 
+    move(player, movementVector) {
+        const selectedToken = this.selectedTokens.get(player.id)
+        if (selectedToken === null) {
+            return
+        }
+        const token = this.tokens[selectedToken]
+        const updatedCoord = this.board.move(token.coordinate, movementVector)
+        token.coordinate = updatedCoord
+    }
+
     select(playerId, selection) {
         this.selectedTokens.set(playerId, selection)
     }
 
     getTokenData() {
         return {
-            tokens: this.tokenCoords.map(token => token.getPos(this.board.getMinCoordinate())),
+            tokens: this.tokens.map(token => token.getPos(this.board.getMinCoordinate())),
             selections: this.getSelections()
         }
     }
@@ -38,7 +48,7 @@ class Game {
     }
 
     checkWin() {
-        return this.tokenCoords.every(tokenCoord => this.board.isEscaped(tokenCoord))
+        return this.tokens.every(tokenCoord => this.board.isEscaped(tokenCoord))
     }
 
     getBoardUpdate() {
