@@ -10,15 +10,22 @@ class Section {
     constructor(dimensions, offset, exit) {
         this.dimensions = dimensions
         this.offset = offset
-        this.tiles = new CoordinateMap()
-        if(exit) {
-            this.tiles.addItem(exit, new Tile(exit, TileType.EXIT))
-        }
-        this.walls = new Map()
+
         this.connections = [
             getConnection(DIRECTIONS.UP),
             getConnection(DIRECTIONS.RIGHT)
         ]
+
+        this.tiles = new CoordinateMap()
+        for (let i = 0; i < this.dimensions; i++) {
+            for (let j = 0; j < this.dimensions; j++) {
+                this.addTile(new Tile(new Coordinate(i, j), TileType.NORMAL))
+            }
+        }
+
+        if(exit) {
+            this.addTile(new Tile(exit, TileType.EXIT))
+        }
 
         for (let i = 0; i < dimensions - 1; i++) {
             this.addWall(new Coordinate(i, 5))
@@ -49,36 +56,35 @@ class Section {
         }
     }
 
-    getAbsolutePos(coord, relativeTo) {
-        return coord.offset(this.offset).relativeTo(relativeTo).getPos()
+    addTile(tile) {
+        this.tiles.addItem(tile.coord, tile)
     }
 
+    addWall(coord) {
+        const tile = new Tile(coord, TileType.WALL)
+        this.tiles.addItem(coord, tile)
+    }
 
-    getWalls(relativeTo) {
-        return [...this.walls.values()].map(tile => this.getAbsolutePos(tile.coord, relativeTo))
+    getTilesOfType(type, relativeTo) {
+        return this.tiles.getItems()
+            .filter( tile => tile.type === type)
+            .map( tile => this.getAbsolutePos(tile.coord, relativeTo))
     }
 
     getExitTiles() {
         return this.tiles.getItems().filter( tile => tile.type === TileType.EXIT)
     }
 
-    getExits(relativeTo) {
-        const exits = this.getExitTiles()
-        if (exits.length === 0) {
-            return []
-        }
+    getWalls(relativeTo) {
+        return this.getTilesOfType(TileType.WALL, relativeTo)
+    }
 
-        return exits.map(exit => this.getAbsolutePos(exit.coord, relativeTo))
+    getExits(relativeTo) {
+        return this.getTilesOfType(TileType.EXIT, relativeTo)
     }
 
     getAllTiles(relativeTo) {
-        let allTiles = []
-        for (let i = 0; i < this.dimensions; i++) {
-            for (let j = 0; j < this.dimensions; j++) {
-                allTiles.push(this.getAbsolutePos(new Coordinate(i, j), relativeTo))
-            }
-        }
-        return allTiles
+        return this.getTilesOfType(TileType.NORMAL, relativeTo)
     }
 
     getMaxDimensions(relativeTo) {
@@ -88,14 +94,12 @@ class Section {
         }
     }
 
-    addWall(coord) {
-        const tile = new Tile(coord, TileType.WALL)
-        this.tiles.addItem(coord, tile)
-        this.walls.set(coord.getKey(), tile)
+    inBounds(coordDimension) {
+        return coordDimension >= 0 && coordDimension < this.dimensions
     }
 
-    inBounds(selected) {
-        return selected >= 0 && selected < this.dimensions
+    getAbsolutePos(coord, relativeTo) {
+        return coord.offset(this.offset).relativeTo(relativeTo).getPos()
     }
 
     getRelativeCoord(coord) {
@@ -104,18 +108,8 @@ class Section {
 
     canMove(coord) {
         const relativeCoord = this.getRelativeCoord(coord)
-
-        const isWall = this.isWall(relativeCoord)
-
-        return this.inBounds(relativeCoord.x) && this.inBounds(relativeCoord.y) && !isWall
-    }
-
-    isWall(relativeCoord) {
         const currTile = this.tiles.getItemAt(relativeCoord)
-        if(!currTile) {
-            return false
-        }
-        return currTile.type === TileType.WALL
+        return this.inBounds(relativeCoord.x) && this.inBounds(relativeCoord.y) && currTile.isPassable()
     }
 
     isAtSectionCoord(coord, sectionCoord) {
@@ -141,11 +135,9 @@ class Section {
     }
 
     isAtExit(coord) {
-        const exits = this.getExitTiles()
-        if (exits.length === 0 ) {
-            return false
-        }
-        return exits.some( exit => this.isAtSectionCoord(coord, exit.coord))
+        let relativeCoord = this.getRelativeCoord(coord)
+        const currTile = this.tiles.getItemAt(relativeCoord)
+        return currTile.type === TileType.EXIT
     }
 }
 
