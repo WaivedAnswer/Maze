@@ -1,7 +1,7 @@
 const { Coordinate } = require('./coordinate')
 const { CoordinateMap } = require('./coordinateMap')
 const { Offset } = require('./offset')
-const { Tile } = require('./tile')
+const { Tile, TileType } = require('./tile')
 const { getConnection } = require('./connection')
 const { DIRECTIONS } = require('./direction')
 
@@ -12,7 +12,7 @@ class Section {
         this.offset = offset
         this.tiles = new CoordinateMap()
         if(exit) {
-            this.tiles.addItem(exit, new Tile(exit))
+            this.tiles.addItem(exit, new Tile(exit, TileType.EXIT))
         }
         this.walls = new Map()
         this.connections = [
@@ -21,31 +21,31 @@ class Section {
         ]
 
         for (let i = 0; i < dimensions - 1; i++) {
-            this.addTile(new Tile(new Coordinate(i, 5)))
+            this.addWall(new Coordinate(i, 5))
         }
 
         for (let i = 0; i < 4; i++) {
-            this.addTile(new Tile(new Coordinate(i, 1)))
+            this.addWall(new Coordinate(i, 1))
         }
 
         for (let i = 1; i < 6; i++) {
-            this.addTile(new Tile(new Coordinate(i, 7)))
+            this.addWall(new Coordinate(i, 7))
         }
 
         for (let i = 1; i < 6; i++) {
-            this.addTile(new Tile(new Coordinate(i, 3)))
+            this.addWall(new Coordinate(i, 3))
         }
 
         for (let j = 0; j < 3; j++) {
-            this.addTile(new Tile(new Coordinate(5, j)))
+            this.addWall(new Coordinate(5, j))
         }
 
         for (let j = 7; j < dimensions; j++) {
-            this.addTile(new Tile(new Coordinate(6, j)))
+            this.addWall(new Coordinate(6, j))
         }
 
         for (let j = 1; j < dimensions - 1; j++) {
-            this.addTile(new Tile(new Coordinate(8, j)))
+            this.addWall(new Coordinate(8, j))
         }
     }
 
@@ -59,7 +59,7 @@ class Section {
     }
 
     getExitTiles() {
-        return this.tiles.getItems()
+        return this.tiles.getItems().filter( tile => tile.type === TileType.EXIT)
     }
 
     getExits(relativeTo) {
@@ -88,8 +88,10 @@ class Section {
         }
     }
 
-    addTile(tile) {
-        this.walls.set(tile.coord.getKey(), tile)
+    addWall(coord) {
+        const tile = new Tile(coord, TileType.WALL)
+        this.tiles.addItem(coord, tile)
+        this.walls.set(coord.getKey(), tile)
     }
 
     inBounds(selected) {
@@ -101,11 +103,19 @@ class Section {
     }
 
     canMove(coord) {
-        let relativeCoord = this.getRelativeCoord(coord)
-        let key = relativeCoord.getKey()
-        let isWall = this.walls.has(key)
+        const relativeCoord = this.getRelativeCoord(coord)
+
+        const isWall = this.isWall(relativeCoord)
 
         return this.inBounds(relativeCoord.x) && this.inBounds(relativeCoord.y) && !isWall
+    }
+
+    isWall(relativeCoord) {
+        const currTile = this.tiles.getItemAt(relativeCoord)
+        if(!currTile) {
+            return false
+        }
+        return currTile.type === TileType.WALL
     }
 
     isAtSectionCoord(coord, sectionCoord) {
