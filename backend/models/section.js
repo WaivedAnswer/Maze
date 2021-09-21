@@ -1,4 +1,5 @@
 const { Coordinate } = require('./coordinate')
+const { CoordinateMap } = require('./coordinateMap')
 const { Offset } = require('./offset')
 const { Tile } = require('./tile')
 const { getConnection } = require('./connection')
@@ -9,7 +10,10 @@ class Section {
     constructor(dimensions, offset, exit) {
         this.dimensions = dimensions
         this.offset = offset
-        this.exit = exit
+        this.tiles = new CoordinateMap()
+        if(exit) {
+            this.tiles.addItem(exit, new Tile(exit))
+        }
         this.walls = new Map()
         this.connections = [
             getConnection(DIRECTIONS.UP),
@@ -54,11 +58,17 @@ class Section {
         return [...this.walls.values()].map(tile => this.getAbsolutePos(tile.coord, relativeTo))
     }
 
+    getExitTiles() {
+        return this.tiles.getItems()
+    }
+
     getExits(relativeTo) {
-        if (!this.exit) {
+        const exits = this.getExitTiles()
+        if (exits.length === 0) {
             return []
         }
-        return [this.getAbsolutePos(this.exit, relativeTo)]
+
+        return exits.map(exit => this.getAbsolutePos(exit.coord, relativeTo))
     }
 
     getAllTiles(relativeTo) {
@@ -121,10 +131,11 @@ class Section {
     }
 
     isAtExit(coord) {
-        if (!this.exit) {
+        const exits = this.getExitTiles()
+        if (exits.length === 0 ) {
             return false
         }
-        return this.isAtSectionCoord(coord, this.exit)
+        return exits.some( exit => this.isAtSectionCoord(coord, exit.coord))
     }
 }
 
