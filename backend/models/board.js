@@ -1,5 +1,6 @@
 const { Section } = require('./section')
 const { Offset } = require('./offset')
+const { Tile, TileType } = require('./tile')
 const { Coordinate } = require('./coordinate')
 const { DIRECTIONS } = require('./direction')
 
@@ -9,11 +10,46 @@ class Board {
         this.sectionCount = 3
         this.sectionDimensions = dimensions
         this.sections = [
-            new Section(dimensions,
-                new Offset(0, 0),
-                null)
+            this.createSection(new Offset(0, 0), null)
         ]
         this.onBoardChange = onBoardChange
+    }
+
+    createSection(offset, exit) {
+        const section = new Section(this.sectionDimensions,
+            offset)
+        if(exit) {
+            section.addTile(new Tile(exit, TileType.EXIT))
+        }
+
+        for (let i = 0; i < this.sectionDimensions - 1; i++) {
+            section.addWall(new Coordinate(i, 5))
+        }
+
+        for (let i = 0; i < 4; i++) {
+            section.addWall(new Coordinate(i, 1))
+        }
+
+        for (let i = 1; i < 6; i++) {
+            section.addWall(new Coordinate(i, 7))
+        }
+
+        for (let i = 1; i < 6; i++) {
+            section.addWall(new Coordinate(i, 3))
+        }
+
+        for (let j = 0; j < 3; j++) {
+            section.addWall(new Coordinate(5, j))
+        }
+
+        for (let j = 7; j < this.sectionDimensions; j++) {
+            section.addWall(new Coordinate(6, j))
+        }
+
+        for (let j = 1; j < this.sectionDimensions - 1; j++) {
+            section.addWall(new Coordinate(8, j))
+        }
+        return section
     }
 
     getMinCoordinate() {
@@ -55,8 +91,7 @@ class Board {
     }
 
     addSection(offset) {
-        let newSection = new Section(this.sectionDimensions,
-            offset,
+        let newSection = this.createSection(offset,
             new Coordinate(9, 5))
         this.sections.push(newSection)
         this.onBoardChange()

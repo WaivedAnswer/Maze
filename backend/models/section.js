@@ -7,7 +7,7 @@ const { DIRECTIONS } = require('./direction')
 
 //deals with simple coordinates
 class Section {
-    constructor(dimensions, offset, exit) {
+    constructor(dimensions, offset) {
         this.dimensions = dimensions
         this.offset = offset
 
@@ -21,38 +21,6 @@ class Section {
             for (let j = 0; j < this.dimensions; j++) {
                 this.addTile(new Tile(new Coordinate(i, j), TileType.NORMAL))
             }
-        }
-
-        if(exit) {
-            this.addTile(new Tile(exit, TileType.EXIT))
-        }
-
-        for (let i = 0; i < dimensions - 1; i++) {
-            this.addWall(new Coordinate(i, 5))
-        }
-
-        for (let i = 0; i < 4; i++) {
-            this.addWall(new Coordinate(i, 1))
-        }
-
-        for (let i = 1; i < 6; i++) {
-            this.addWall(new Coordinate(i, 7))
-        }
-
-        for (let i = 1; i < 6; i++) {
-            this.addWall(new Coordinate(i, 3))
-        }
-
-        for (let j = 0; j < 3; j++) {
-            this.addWall(new Coordinate(5, j))
-        }
-
-        for (let j = 7; j < dimensions; j++) {
-            this.addWall(new Coordinate(6, j))
-        }
-
-        for (let j = 1; j < dimensions - 1; j++) {
-            this.addWall(new Coordinate(8, j))
         }
     }
 
