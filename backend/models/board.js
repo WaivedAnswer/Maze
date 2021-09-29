@@ -3,6 +3,7 @@ const { Offset } = require('./offset')
 const { Tile, TileType } = require('./tile')
 const { Coordinate } = require('./coordinate')
 const { DIRECTIONS } = require('./direction')
+const { Item } = require('./item')
 
 //deals with section coordinates and section connections
 class Board {
@@ -49,6 +50,9 @@ class Board {
         for (let j = 1; j < this.sectionDimensions - 1; j++) {
             section.addWall(new Coordinate(8, j))
         }
+
+        section.addTile(new Tile(new Coordinate(4,0), TileType.NORMAL, new Item()))
+
         return section
     }
 
@@ -70,11 +74,17 @@ class Board {
         }
     }
 
+    getTile(coord) {
+        const currSection = this.getCurrSection(coord)
+
+        return currSection.getTile(coord)
+    }
+
     move(token, movementCommand) {
         const movementVector = DIRECTIONS[movementCommand]
         const currCoord = token.coordinate
         const updatedCoord = currCoord.offset(movementVector)
-        const currSection = this.sections.find(section => section.canMove(updatedCoord))
+        const currSection = this.getCurrSection(updatedCoord)
         if(!currSection) {
             return currCoord
         }
@@ -102,8 +112,12 @@ class Board {
     }
 
     isEscaped(token) {
-        const currSection = this.sections.find(section => section.canMove(token.coordinate))
+        const currSection = this.getCurrSection(token.coordinate)
         return currSection.isAtExit(token.coordinate)
+    }
+
+    getCurrSection(coord) {
+        return this.sections.find(section => section.canMove(coord))
     }
 }
 

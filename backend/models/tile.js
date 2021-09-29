@@ -1,7 +1,8 @@
 class Tile {
-    constructor(coord, type) {
+    constructor(coord, type, item) {
         this.coord = coord
         this.type = type
+        this.item = item
     }
 
     isPassable() {

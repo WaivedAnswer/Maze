@@ -41,6 +41,7 @@ const Board = ({ grid, tokens }) => {
                                         <Tile
                                             type={tile.type}
                                             token={getToken(tile.coord)}
+                                            item={}
                                             onTokenSelected={onTokenSelected} />
                                     </td>
 

@@ -1,6 +1,7 @@
 class Token {
     constructor(coordinate) {
         this.coordinate = coordinate
+        this.items = []
     }
 
     getPos(relativeTo) {
@@ -9,6 +10,10 @@ class Token {
 
     updateCoords(relativeTo) {
         this.coordinate = this.coordinate.relativeTo(relativeTo)
+    }
+
+    pickupItem(item) {
+        this.items.push(item)
     }
 }
 

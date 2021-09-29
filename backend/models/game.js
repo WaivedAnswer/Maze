@@ -1,5 +1,6 @@
 const { Board } = require('./board')
 const { Coordinate } = require('./coordinate')
+const { Pickup } = require('./pickup')
 const { Token } = require('./token')
 
 class Game {
@@ -30,6 +31,13 @@ class Game {
         const token = this.tokens[selectedIndex]
         const updatedCoord = this.board.move(token, movementCommand)
         token.coordinate = updatedCoord
+
+        this.onMove(token, this.board)
+    }
+
+    onMove(token, board) {
+        const tile = board.getTile(token.coordinate)
+        new Pickup().interact(token, tile)
     }
 
     select(playerId, selection) {

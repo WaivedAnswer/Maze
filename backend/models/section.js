@@ -55,6 +55,11 @@ class Section {
         return this.getTilesOfType(TileType.NORMAL, relativeTo)
     }
 
+    getTile(coord) {
+        const relativeCoord = this.getRelativeCoord(coord)
+        return this.tiles.getItemAt(relativeCoord)
+    }
+
     getMaxDimensions(relativeTo) {
         return {
             width: this.offset.x + this.dimensions - relativeTo.x,
@@ -76,8 +81,11 @@ class Section {
 
     canMove(coord) {
         const relativeCoord = this.getRelativeCoord(coord)
-        const currTile = this.tiles.getItemAt(relativeCoord)
-        return this.inBounds(relativeCoord.x) && this.inBounds(relativeCoord.y) && currTile.isPassable()
+        if(!this.inBounds(relativeCoord.x) || !this.inBounds(relativeCoord.y)) {
+            return false
+        }
+        const currTile = this.getTile(coord)
+        return currTile.isPassable()
     }
 
     isAtSectionCoord(coord, sectionCoord) {
