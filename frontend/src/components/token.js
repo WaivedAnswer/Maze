@@ -16,7 +16,6 @@ const Token = ({ token, onTokenSelected}) => {
 
     const onClick = () => {
         if (token) {
-            console.log('click')
             onTokenSelected(token)
         }
     }

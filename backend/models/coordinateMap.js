@@ -12,6 +12,12 @@ class CoordinateMap {
         return  this.map.has(key)
     }
 
+    hasItemMatching( predicate ) {
+        const allTiles = [...this.map.values()]
+        const val = allTiles.some(item => predicate(item))
+        return val
+    }
+
     getItemAt(coord) {
         const key = coord.getKey()
         return this.map.get(key)

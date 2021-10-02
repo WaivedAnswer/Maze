@@ -8,7 +8,6 @@ class Player {
 
     send(obj) {
         const json = JSON.stringify(obj)
-        logger.info(json)
         this.connection.sendUTF(json)
     }
 }

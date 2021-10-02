@@ -1,8 +1,10 @@
 import { TileType } from "../models/tile"
 import Token from "./token"
+import Item from "./item"
 
-const Tile = ({ token, type, onTokenSelected }) => {
+const Tile = ({ token, onTokenSelected, tile }) => {
     let className
+    const type = tile.type
     if (type === TileType.EXIT) {
         className = 'tile-exit'
     } else if (type === TileType.WALL) {
@@ -16,6 +18,7 @@ const Tile = ({ token, type, onTokenSelected }) => {
     return (
         <div className={className}>
             <Token token={token} onTokenSelected={onTokenSelected}/>
+            { tile.hasItem ? <Item/> : null}
         </div>
     )
 }

@@ -39,6 +39,7 @@ const Board = ({ grid, tokens }) => {
                                 {row.map((tile, colNum) =>
                                     <td key={tile.coord.toString()}>
                                         <Tile
+                                            tile = {tile}
                                             type={tile.type}
                                             token={getToken(tile.coord)}
                                             onTokenSelected={onTokenSelected} />

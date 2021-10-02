@@ -9,6 +9,7 @@ class Game {
         this.selectedTokens = new Map()
         this.complete = false
         this.board = new Board(10, onBoardChange)
+        this.pickup = new Pickup(onBoardChange)
     }
 
     getSelections() {
@@ -37,7 +38,7 @@ class Game {
 
     onMove(token, board) {
         const tile = board.getTile(token.coordinate)
-        new Pickup().interact(token, tile)
+        this.pickup.interact(token, tile)
     }
 
     select(playerId, selection) {
@@ -56,7 +57,7 @@ class Game {
     }
 
     checkWin() {
-        return this.tokens.every(tokenCoord => this.board.isEscaped(tokenCoord))
+        return this.board.allItemsCollected() && this.tokens.every(tokenCoord => this.board.isEscaped(tokenCoord))
     }
 
     getBoardUpdate() {

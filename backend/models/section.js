@@ -67,6 +67,10 @@ class Section {
         }
     }
 
+    allItemsCollected() {
+        return !this.tiles.hasItemMatching( tile => tile.hasItem())
+    }
+
     inBounds(coord) {
         const relativeCoord = this.getRelativeCoord(coord)
         return this.tiles.hasItemAt(relativeCoord)
@@ -85,7 +89,6 @@ class Section {
             return false
         }
         const currTile = this.getTile(coord)
-        console.log(currTile)
         return currTile.isPassable()
     }
 

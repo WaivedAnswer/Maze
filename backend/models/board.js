@@ -85,13 +85,13 @@ class Board {
             for (let x = minCoordinate.x; x < maxCoordinate.x; x++) {
                 const currCoord = new Coordinate(x, y)
                 const currTile = this.getTile(currCoord)
-
                 const originBasedCoord = currCoord.relativeTo(minCoordinate)
                 if(currTile) {
                     row.push({
                         pos: originBasedCoord.getPos(),
                         type: currTile.type,
-                        hasItem: currTile.item !== null
+                        // eslint-disable-next-line eqeqeq
+                        hasItem: currTile.item != null
                     })
                 } else {
                     row.push({
@@ -105,6 +105,10 @@ class Board {
             allTiles.push(row)
         }
         return allTiles
+    }
+
+    allItemsCollected() {
+        return this.sections.every(section => section.allItemsCollected())
     }
 
     getTile(coord) {

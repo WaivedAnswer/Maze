@@ -8,6 +8,11 @@ class Tile {
     isPassable() {
         return this.type !== TileType.WALL
     }
+
+    hasItem() {
+        // eslint-disable-next-line eqeqeq
+        return this.item != null
+    }
 }
 
 const TileType = {
