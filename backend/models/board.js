@@ -64,19 +64,54 @@ class Board {
         return new Coordinate(minOffsetX, minOffsetY)
     }
 
+    getMaxCoordinate() {
+        const height = Math.max(...this.sections.map(section => section.getMaxDimensions(this.getMinCoordinate()).height))
+        const width =  Math.max(...this.sections.map(section => section.getMaxDimensions(this.getMinCoordinate()).width))
+        return new Coordinate(width, height)
+    }
+
     getData() {
         return {
-            height: Math.max(...this.sections.map(section => section.getMaxDimensions(this.getMinCoordinate()).height)),
-            width: Math.max(...this.sections.map(section => section.getMaxDimensions(this.getMinCoordinate()).width)),
-            exits: this.sections.flatMap(section => section.getExits(this.getMinCoordinate())),
-            walls: this.sections.flatMap(section => section.getWalls(this.getMinCoordinate())),
-            tiles: this.sections.flatMap(section => section.getAllTiles(this.getMinCoordinate()))
+            tiles: this.getAllData()
         }
+    }
+
+    getAllData() {
+        let minCoordinate = this.getMinCoordinate()
+        let maxCoordinate = this.getMaxCoordinate()
+        const allTiles = []
+        for (let y = minCoordinate.y; y < maxCoordinate.y; y++) {
+            let row = []
+            for (let x = minCoordinate.x; x < maxCoordinate.x; x++) {
+                const currCoord = new Coordinate(x, y)
+                const currTile = this.getTile(currCoord)
+
+                const originBasedCoord = currCoord.relativeTo(minCoordinate)
+                if(currTile) {
+                    row.push({
+                        pos: originBasedCoord.getPos(),
+                        type: currTile.type,
+                        hasItem: currTile.item !== null
+                    })
+                } else {
+                    row.push({
+                        pos: originBasedCoord.getPos(),
+                        type: -1,
+                        hasItem: false
+                    })
+                }
+
+            }
+            allTiles.push(row)
+        }
+        return allTiles
     }
 
     getTile(coord) {
         const currSection = this.getCurrSection(coord)
-
+        if(!currSection) {
+            return null
+        }
         return currSection.getTile(coord)
     }
 
@@ -85,7 +120,7 @@ class Board {
         const currCoord = token.coordinate
         const updatedCoord = currCoord.offset(movementVector)
         const currSection = this.getCurrSection(updatedCoord)
-        if(!currSection) {
+        if(!currSection || !currSection.canMove(updatedCoord)) {
             return currCoord
         }
 
@@ -117,7 +152,7 @@ class Board {
     }
 
     getCurrSection(coord) {
-        return this.sections.find(section => section.canMove(coord))
+        return this.sections.find(section => section.inBounds(coord))
     }
 }
 

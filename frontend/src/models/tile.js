@@ -6,9 +6,10 @@ let TileType = {
 }
 
 class Tile {
-    constructor(coord, type) {
+    constructor(coord, type, hasItem) {
         this.coord = coord
         this.type = type
+        this.hasItem = hasItem
     }
 }
 

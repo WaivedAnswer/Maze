@@ -51,7 +51,7 @@ class Section {
         return this.getTilesOfType(TileType.EXIT, relativeTo)
     }
 
-    getAllTiles(relativeTo) {
+    getNormalTiles(relativeTo) {
         return this.getTilesOfType(TileType.NORMAL, relativeTo)
     }
 
@@ -67,8 +67,9 @@ class Section {
         }
     }
 
-    inBounds(coordDimension) {
-        return coordDimension >= 0 && coordDimension < this.dimensions
+    inBounds(coord) {
+        const relativeCoord = this.getRelativeCoord(coord)
+        return this.tiles.hasItemAt(relativeCoord)
     }
 
     getAbsolutePos(coord, relativeTo) {
@@ -80,11 +81,11 @@ class Section {
     }
 
     canMove(coord) {
-        const relativeCoord = this.getRelativeCoord(coord)
-        if(!this.inBounds(relativeCoord.x) || !this.inBounds(relativeCoord.y)) {
+        if(!this.inBounds(coord)) {
             return false
         }
         const currTile = this.getTile(coord)
+        console.log(currTile)
         return currTile.isPassable()
     }
 

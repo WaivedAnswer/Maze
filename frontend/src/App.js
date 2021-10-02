@@ -17,32 +17,26 @@ const getCoordinate = (pos) => {
   return new Coordinate(x, y)
 }
 
-const getTiles = (initData) => {
-  let grid = []
-  const board = initData.board
-  const exits = board.exits.map(exitPos => getCoordinate(exitPos))
-  const walls = board.walls.map(wallPos => getCoordinate(wallPos))
-  const allTiles = board.tiles.map(tilePos => getCoordinate(tilePos))
-
-  for (let y = 0; y < board.height; y++) {
-    let row = []
-    for (let x = 0; x < board.width; x++) {
-      const currPos = new Coordinate(x, y)
-      let type
-      if (exits.some(exitPos => isEqual(exitPos, currPos))) {
-        type = TileType.EXIT
-      } else if (walls.some(wall => isEqual(wall, currPos))) {
-        type = TileType.WALL
-      } else if (allTiles.some(tile => isEqual(tile, currPos))) {
-        type = TileType.NORMAL
-      } else {
-        type = TileType.UNKNOWN
-      }
-
-      row.push(new Tile(currPos, type))
-    }
-    grid.push(row)
+const getTileType = (type) => {
+  switch(type) {
+    case 0:
+      return TileType.NORMAL
+    case 1:
+      return TileType.WALL
+    case 2:
+      return TileType.EXIT
+    default:
+      return TileType.UNKNOWN
   }
+}
+
+const getTileRow = (row) => {
+  return row.map(tile => new Tile(getCoordinate(tile.pos), getTileType(tile.type), tile.hasItem))
+}
+
+const getTiles = (initData) => {
+  const board = initData.board
+  const grid = board.tiles.map( row => getTileRow(row))
   return grid
 }
 
