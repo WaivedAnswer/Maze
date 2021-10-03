@@ -140,8 +140,10 @@ class Board {
     }
 
     addSection(offset) {
+        const isLast = this.sections.length + 1 >= this.sectionCount
+        const exit = isLast ? new Coordinate(9,5) : null
         let newSection = this.createSection(offset,
-            new Coordinate(9, 5))
+            exit)
         this.sections.push(newSection)
         this.onBoardChange()
     }
