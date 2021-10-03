@@ -90,8 +90,7 @@ class Board {
                     row.push({
                         pos: originBasedCoord.getPos(),
                         type: currTile.type,
-                        // eslint-disable-next-line eqeqeq
-                        hasItem: currTile.item != null
+                        hasItem: currTile.hasItem()
                     })
                 } else {
                     row.push({

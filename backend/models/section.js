@@ -11,10 +11,7 @@ class Section {
         this.dimensions = dimensions
         this.offset = offset
 
-        this.connections = [
-            getConnection(DIRECTIONS.UP),
-            getConnection(DIRECTIONS.RIGHT)
-        ]
+        this.connections = []
 
         this.tiles = new CoordinateMap()
         for (let i = 0; i < this.dimensions; i++) {
@@ -22,6 +19,14 @@ class Section {
                 this.addTile(new Tile(new Coordinate(i, j), TileType.NORMAL))
             }
         }
+
+        this.addConnection(getConnection(DIRECTIONS.UP))
+        this.addConnection(getConnection(DIRECTIONS.RIGHT))
+    }
+
+    addConnection(connection) {
+        this.connections.push(connection)
+        this.addTile(new Tile(connection.coord, TileType.CONNECT))
     }
 
     addTile(tile) {

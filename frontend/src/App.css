@@ -11,7 +11,7 @@ td {
 }
 
 
-.tile-exit, .tile-wall, .tile-unknown, .tile {
+.tile-exit, .tile-wall, .tile-unknown, .tile, .tile-connect {
    height: 32px;
    width: 32px;
    border-style: solid;
@@ -38,6 +38,13 @@ td {
    background-color: limegreen;
    border-color: limegreen;
 }
+
+.tile-connect {
+   background-color: darkgreen;
+   border-color: green;
+}
+
+
 
 .tile-wall {
    background-color: dimgray;

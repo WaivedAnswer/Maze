@@ -25,6 +25,8 @@ const getTileType = (type) => {
       return TileType.WALL
     case 2:
       return TileType.EXIT
+    case 3:
+      return TileType.CONNECT
     default:
       return TileType.UNKNOWN
   }

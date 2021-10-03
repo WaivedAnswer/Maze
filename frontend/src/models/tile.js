@@ -1,8 +1,9 @@
 let TileType = {
+    UNKNOWN: -1,
     NORMAL: 1,
     EXIT: 2,
     WALL: 3,
-    UNKNOWN: 4
+    CONNECT: 4,
 }
 
 class Tile {

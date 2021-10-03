@@ -18,7 +18,8 @@ class Tile {
 const TileType = {
     NORMAL: 0,
     WALL: 1,
-    EXIT: 2
+    EXIT: 2,
+    CONNECT: 3
 }
 
 module.exports = {

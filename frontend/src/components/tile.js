@@ -11,6 +11,8 @@ const Tile = ({ token, onTokenSelected, tile }) => {
         className = 'tile-wall'
     } else if (type === TileType.UNKNOWN) {
         className = 'tile-unknown'
+    } else if (type === TileType.CONNECT) {
+        className = 'tile-connect'
     } else {
         className = 'tile'
     }
