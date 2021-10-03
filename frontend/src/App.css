@@ -30,23 +30,23 @@ td {
 }
 
 .tile {
-  background-color: whitesmoke;
-  border-color: black
+  background-color: white;
+  border-color: black;
 }
 
 .tile-exit {
-   background-color: greenyellow;
-   border-color: greenyellow;
+   background-color: limegreen;
+   border-color: limegreen;
 }
 
 .tile-wall {
-   background-color: gray;
+   background-color: dimgray;
    border-color: black;
 }
 
 .tile-unknown {
-   background-color: purple;
-   border-color: purple;
+   background-color: indigo;
+   border-color: indigo;
 }
 
 .board-space {
