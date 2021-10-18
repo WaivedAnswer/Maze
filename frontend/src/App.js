@@ -56,10 +56,11 @@ const getSelectedBy = (selections, idx) => {
 }
 
 const getTokens = (data) => {
-  return data.tokens.map((pos, idx) =>
-    new Token(idx,
-      getCoordinate(pos),
-      getSelectedBy(data.selections, idx)))
+  const newTokens = data.tokens.map((pos, idx) =>
+  new Token(idx,
+    getCoordinate(pos),
+    getSelectedBy(data.selections, idx)))
+  return newTokens
 }
 
 function App() {
@@ -91,8 +92,10 @@ function App() {
     id: 'app-updates',
     handle: (json) => {
       if (json.type === 'token-update') {
+        console.log('Token update!')
         setTokens(getTokens(json.data))
       } else if (json.type === 'board-update') {
+        console.log('Board UPDATE')
         setTiles(getTiles(json.data))
         setTokens(getTokens(json.data.tokenData))
         clearNotification()

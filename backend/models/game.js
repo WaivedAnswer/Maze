@@ -2,9 +2,11 @@ const { Board } = require('./board')
 const { Coordinate } = require('./coordinate')
 const { Pickup } = require('./pickup')
 const { Token } = require('./token')
+const logger = require('../utils/logger')
 
 class Game {
     constructor(onBoardChange) {
+        //only two tokens in here, how did we get a null?
         this.tokens = [new Token(new Coordinate(0, 0)), new Token(new Coordinate(5, 9))]
         this.selectedTokens = new Map()
         this.complete = false
@@ -24,11 +26,12 @@ class Game {
     }
 
     move(player, movementCommand) {
-
+        //likely a bad selectedIndex ( how is this manipulated?), non null
         const selectedIndex = this.selectedTokens.get(player.id)
         if (selectedIndex === null) {
             return
         }
+        //either a null token in the array, or accessing the array out of bounds
         const token = this.tokens[selectedIndex]
         const updatedCoord = this.board.move(token, movementCommand)
         token.coordinate = updatedCoord
@@ -42,6 +45,12 @@ class Game {
     }
 
     select(playerId, selection) {
+        //set from the outside
+        //this might need some validation (ie selection cannot be greater than indexes of tokens)
+        //also selections are currently not cleaned up
+        if(selection > this.tokens.length || selection < 0) {
+            logger.error(`Error: Tried to set ${selection} as selection`)
+        }
         this.selectedTokens.set(playerId, selection)
     }
 
