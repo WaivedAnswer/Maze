@@ -17,6 +17,7 @@ const Board = ({ grid, tokens }) => {
     }
 
     const onTokenSelected = (token) => {
+        //sends with token.id (Where does this come from? is it always populated correctly?)
         gameService.send(JSON.stringify(
             {
                 type: "SELECTED",

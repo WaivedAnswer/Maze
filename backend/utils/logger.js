@@ -3,7 +3,7 @@ const debug = (...params) => {
 }
 
 const info = (...params) => {
-    console.log(...params)
+    //console.log(...params)
 }
 
 const warn = (...params) => {

@@ -159,6 +159,7 @@ wsServer.on('request', function (request) {
             } else if (game.complete) {
                 return
             } else if (command.type === 'SELECTED') {
+                //parseInt(this could come back as anything)
                 game.select(player.id, parseInt(command.selected))
             } else if (command.type === 'DO-SOMETHING') {
                 const targetPlayer = players.find(p => game.getPlayerName(p.id) === command.player)

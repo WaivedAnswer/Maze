@@ -120,6 +120,7 @@ class Board {
 
     move(token, movementCommand) {
         const movementVector = DIRECTIONS[movementCommand]
+        //crash likely means no token
         const currCoord = token.coordinate
         const updatedCoord = currCoord.offset(movementVector)
         const currSection = this.getCurrSection(updatedCoord)
