@@ -8,7 +8,7 @@ const { Item } = require('./item')
 //deals with section coordinates and section connections
 class Board {
     constructor(dimensions, onBoardChange) {
-        this.sectionCount = 3
+        this.sectionCount = 6
         this.sectionDimensions = dimensions
         this.sections = [
             this.createSection(new Offset(0, 0), null)
