@@ -1,28 +1,29 @@
 import React from 'react'
-import tokenImg from "../images/token-none.png"
-import tokenSelected from "../images/token-selected.png"
+import tokenImg from "../images/dwarf_right.png"
 
 const Token = ({ token, onTokenSelected}) => {
     if(!token) {
         return ''
     }
 
-    let imgSrc
+    let imgClass
     if (token.selectedBy) {
-        imgSrc = tokenSelected
+        imgClass = 'token-selected'
     } else if (!token.selectedBy) {
-        imgSrc = tokenImg
+        imgClass = 'token'
     }
-
+    
     const onClick = () => {
         if (token) {
             onTokenSelected(token)
         }
     }
 
+
+
     return (
-        <div className='token' onClick={onClick}>
-            <img src={imgSrc} alt='token' />
+        <div className={imgClass} onClick={onClick}>
+            <img src={tokenImg} alt='token' />
         </div>
     )
 }

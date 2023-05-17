@@ -14,13 +14,11 @@ td {
 .tile-exit, .tile-wall, .tile-unknown, .tile, .tile-connect {
    height: 32px;
    width: 32px;
-   border-style: solid;
-   border-width:thin;
-
+   display: flex;
 }
 
 .token {
-   display: inline-block;
+   display: flex;
 }
 
 .token img {
@@ -29,8 +27,19 @@ td {
    display: block;
 }
 
+.token-selected {
+   display: flex;
+}
+
+.token-selected img {
+   height: 100%;
+   width: 100%;
+   display: block;
+   background-color: aqua;
+}
+
 .tile {
-  background-color: white;
+  background-color: sandybrown;
   border-color: black;
 }
 
@@ -47,8 +56,15 @@ td {
 
 
 .tile-wall {
-   background-color: dimgray;
+   background-color: sandybrown;
    border-color: black;
+   display: flex;
+}
+
+.tile-wall img {
+   height: 100%;
+   width: 100%;
+   display: block;
 }
 
 .tile-unknown {
