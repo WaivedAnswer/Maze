@@ -142,7 +142,7 @@ wsServer.on('request', function (request) {
     updateMovements(DIRECTIONS, players)
 
     connection.on('message', function (message) {
-        logger.debug(message)
+        logger.debug('Received: ' + message)
         if (message.type === 'utf8') {
             logger.debug(`${new Date()} Received Message: ${message.utf8Data}`)
 

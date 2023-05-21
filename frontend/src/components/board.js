@@ -1,9 +1,8 @@
 import React from 'react'
 import Tile from './tile'
-import gameService from './../services/game'
 import isEqual from "lodash.isequal"
 
-const Board = ({ grid, tokens }) => {
+const Board = ({ grid, tokens, gameService }) => {
     const handleKeyPress = (event) => {
         if (event.key === 's') {
             gameService.moveDown()

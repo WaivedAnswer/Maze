@@ -1,10 +1,10 @@
 import './App.css'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Board from './components/board'
-import gameService from './services/game'
+import GameService from './services/game'
+import logger from './services/logger'
 import Coordinate from './models/coordinate'
 import { Tile, TileType } from './models/tile'
-import isEqual from "lodash.isequal"
 import Token from './models/token'
 import PlayerIndicator from './components/playerIndicator'
 import Notification from './components/notification'
@@ -71,58 +71,68 @@ function App() {
   const [otherPlayers, setOtherPlayers] = useState([])
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [remainingSeconds, setRemainingSeconds] = useState(null)
-
+  const [gameService, setGameService] = useState(null)
   const clearNotification = () => {
     setNotificationMessage(null)
   }
-  const notify = (message, fade, isGood) => {
-    setNotificationMessage({
-      message: message,
-      isGood: isGood
-    })
-    if (!fade) {
-      return
-    }
-    setTimeout(() => {
-      clearNotification()
-    }, 5000)
-  }
+  
 
-  let handler = {
-    id: 'app-updates',
-    handle: (json) => {
-      if (json.type === 'token-update') {
-        console.log('Token update!')
-        setTokens(getTokens(json.data))
-      } else if (json.type === 'board-update') {
-        console.log('Board UPDATE')
-        setTiles(getTiles(json.data))
-        setTokens(getTokens(json.data.tokenData))
+  useEffect(() => {
+    let service = new GameService()
+    const notify = (message, fade, isGood) => {
+      setNotificationMessage({
+        message: message,
+        isGood: isGood
+      })
+      if (!fade) {
+        return
+      }
+      setTimeout(() => {
         clearNotification()
-      } else if (json.type === 'win') {
-        notify("You have won the game!", false, true)
-      } else if (json.type === 'movements') {
-        gameService.setMovements(json.data.movements)
-        setMoves(json.data.movements)
-      } else if (json.type === 'name') {
-        setPlayerName(json.data.name)
-      } else if (json.type === 'all-players') {
-        setOtherPlayers(json.data.filter(playerInfo => playerInfo.playerName !== playerName))
-      } else if (json.type === 'do-something') {
-        notify(`${json.data.sender} wants you to do something.`, true, true)
-      } else if (json.type === 'timer-update') {
-        // probably can update in a different way 
-        //date to finish makes this less chatty
-        //could have an interval here that counts down
-        //timer-update is sent only on time pickups and connections
-        setRemainingSeconds(json.data.seconds)
-      } else if (json.type === 'lose') {
-        notify("You have lost the game..", false, false)
+      }, 5000)
+    }
+
+    let handler = {
+      id: 'app-updates',
+      handle: (json) => {
+        if (json.type === 'token-update') {
+          logger.debug('Token update!')
+          setTokens(getTokens(json.data))
+        } else if (json.type === 'board-update') {
+          logger.debug('Board UPDATE')
+          setTiles(getTiles(json.data))
+          setTokens(getTokens(json.data.tokenData))
+          clearNotification()
+        } else if (json.type === 'win') {
+          notify("You have won the game!", false, true)
+        } else if (json.type === 'movements') {
+          logger.debug("Setting movement")
+          service.setMovements(json.data.movements)
+          setMoves(json.data.movements)
+        } else if (json.type === 'name') {
+          //setPlayerName(json.data.name)
+          //playerName dependency needs some work
+        } else if (json.type === 'all-players') {
+          setOtherPlayers(json.data.filter(playerInfo => playerInfo.playerName !== playerName))
+        } else if (json.type === 'do-something') {
+          notify(`${json.data.sender} wants you to do something.`, true, true)
+        } else if (json.type === 'timer-update') {
+          // probably can update in a different way 
+          //date to finish makes this less chatty
+          //could have an interval here that counts down
+          //timer-update is sent only on time pickups and connections
+          setRemainingSeconds(json.data.seconds)
+        } else if (json.type === 'lose') {
+          notify("You have lost the game..", false, false)
+        }
       }
     }
-  }
+    service.addHandler(handler)
 
-  gameService.addHandler(handler)
+    setGameService(service)
+  },
+  [playerName])
+
 
   const reset = (_) => {
     gameService.reset()
@@ -151,7 +161,7 @@ function App() {
           }
           <button onClick={reset}>Reset</button>
         </div>
-        <Board grid={updatedTiles} tokens={tokens} />
+        <Board grid={updatedTiles} tokens={tokens} gameService={gameService} />
       </div>
 
     </div >
