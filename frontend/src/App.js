@@ -68,7 +68,7 @@ function App() {
   const [tokens, setTokens] = useState([])
   const [allowedMoves, setMoves] = useState([])
   const [playerName, setPlayerName] = useState("")
-  const [otherPlayers, setOtherPlayers] = useState([])
+  const [allPlayers, setAllPlayers] = useState([])
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [remainingSeconds, setRemainingSeconds] = useState(null)
   const [gameService, setGameService] = useState(null)
@@ -110,10 +110,10 @@ function App() {
           service.setMovements(json.data.movements)
           setMoves(json.data.movements)
         } else if (json.type === 'name') {
-          //setPlayerName(json.data.name)
+          setPlayerName(json.data.name)
           //playerName dependency needs some work
         } else if (json.type === 'all-players') {
-          setOtherPlayers(json.data.filter(playerInfo => playerInfo.playerName !== playerName))
+          setAllPlayers(json.data)
         } else if (json.type === 'do-something') {
           notify(`${json.data.sender} wants you to do something.`, true, true)
         } else if (json.type === 'timer-update') {
@@ -131,7 +131,7 @@ function App() {
 
     setGameService(service)
   },
-  [playerName])
+  [])
 
 
   const reset = (_) => {
@@ -141,6 +141,8 @@ function App() {
   const doSomething = (playerName) => {
     gameService.doSomething(playerName)
   }
+
+  const otherPlayers = allPlayers.filter(playerInfo => playerInfo.playerName !== playerName)
 
   return (
     <div className="App">
