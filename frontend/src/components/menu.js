@@ -6,6 +6,7 @@ import {
 function Menu() {
   return (
     <div className="menu">
+      <h1>Magic Maze</h1>
       <Link to="/game">{"Start Game"}</Link>
     </div>
   );
