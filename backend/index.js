@@ -9,7 +9,6 @@ const logger = require('./utils/logger')
 const { splitMoves } = require('./models/move')
 const { Player } = require('./models/player')
 
-const { Game } = require('./models/game')
 const { GameManager } = require('./models/gameManager')
 const { DIRECTIONS } = require('./models/direction')
 
@@ -20,9 +19,9 @@ app.use(express.json())
 
 const players = []
 
-const sendAll = (obj) => {
+const sendAll = (obj, gameId) => {
     for (var i = 0; i < players.length; i++) {
-        players[i].send(obj)
+        players[i].send(obj, gameId)
     }
 }
 
@@ -60,10 +59,7 @@ let nextPlayerId = 0
 //when game is reset players will be reset as well (unless pass players somehow)
 
 const updateTokens = (game) => {
-    sendAll({
-        type: 'token-update',
-        data: game.getTokenData()
-    })
+    game.updateTokens()
 }
 
 
@@ -136,6 +132,7 @@ wsServer.on('request', function (request) {
             } else if (game.complete) {
                 return
             } else if (command.type === 'INITIAL') {
+                //TODO game.addPlayer(player)
                 player.send({
                     type: 'name',
                     data: {
@@ -179,11 +176,5 @@ wsServer.on('request', function (request) {
 
 
 function checkWin(game) {
-    if (game.checkWin()) {
-        sendAll({
-            type: 'win'
-        })
-        game.complete = true
-        clearInterval(timerInterval)
-    }
+    game.checkWin()
 }

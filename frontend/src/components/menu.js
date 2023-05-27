@@ -14,7 +14,7 @@ function Menu() {
     logger.debug(response.data)
     // The server responds with the id of the new user
     const gameId = response.data.gameId;
-  
+    logger.debug('Game Id response:' + gameId)
     navigate(`/game/${gameId}`);
   };
 

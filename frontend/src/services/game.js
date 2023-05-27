@@ -37,6 +37,12 @@ class GameService {
                     return
                 }
             
+                logger.debug("message gameId:" + typeof(json.gameId))
+                logger.debug("service gameId:" + typeof(this.gameId))
+                if(json.gameId && json.gameId !== this.gameId) {
+                    return
+                }
+
                 for (let handler of this.handlers) {
                     handler.handle(json)
                 }

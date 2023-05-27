@@ -9,7 +9,7 @@ class Game {
         this.gameId = gameId
         this.sendAll = sendAll
         this.onBoardChange = () => {
-            this.sendAll(this.getBoardUpdate())
+            this.sendGameMessage(this.getBoardUpdate())
         }
         this.reset()
     }
@@ -19,6 +19,11 @@ class Game {
         logger.debug('Game Id Type: ' + typeof(this.gameId) )
         return this.gameId
     }
+
+    sendGameMessage(messageObj) {
+        this.sendAll(messageObj, this.gameId)
+    }
+
     getTimeMessage () {
         return {
             type: 'timer-update',
@@ -40,17 +45,17 @@ class Game {
         this.timerInterval = setInterval(() => {
             if (this.remainingSeconds === 0) {
                 clearInterval(this.timerInterval)
-                this.sendAll({
+                this.sendGameMessage({
                     type: 'lose'
                 })
                 this.complete = true
             }
             if (this.remainingSeconds > 0) {
                 this.remainingSeconds -= 1
-                this.sendAll(this.getTimeMessage())
+                this.sendGameMessage(this.getTimeMessage())
             }
         }, 1000)
-        this.sendAll(this.getTimeMessage(this.getRemainingSeconds()))
+        this.sendGameMessage(this.getTimeMessage(this.getRemainingSeconds()))
         this.onBoardChange()
     }
 
@@ -84,6 +89,13 @@ class Game {
         this.onMove(token, this.board)
     }
 
+    updateTokens() {
+        this.sendGameMessage({
+            type: 'token-update',
+            data: this.getTokenData()
+        })
+    }
+
     onMove(token, board) {
         const tile = board.getTile(token.coordinate)
         this.pickup.interact(token, tile)
@@ -99,6 +111,20 @@ class Game {
         this.selectedTokens.set(playerId, selection)
     }
 
+    checkWin() {
+        if (this.didWin()) {
+            this.sendGameMessage({
+                type: 'win'
+            })
+            this.complete = true
+            clearInterval(this.timerInterval)
+        }
+    }
+
+    didWin() {
+        return this.board.allItemsCollected() && this.tokens.every(tokenCoord => this.board.isEscaped(tokenCoord))
+    }
+
     getTokenData() {
         return {
             tokens: this.tokens.map(token => token.getPos(this.board.getMinCoordinate())),
@@ -110,9 +136,7 @@ class Game {
         return `Player ${index + 1}`
     }
 
-    checkWin() {
-        return this.board.allItemsCollected() && this.tokens.every(tokenCoord => this.board.isEscaped(tokenCoord))
-    }
+
 
     getBoardUpdate() {
         return {

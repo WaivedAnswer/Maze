@@ -78,9 +78,8 @@ function App() {
     setNotificationMessage(null)
   }
   let { gameId } = useParams();
-
   useEffect(() => {
-    let service = new GameService(gameId)
+    let service = new GameService(Number(gameId))
     const notify = (message, fade, isGood) => {
       setNotificationMessage({
         message: message,
