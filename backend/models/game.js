@@ -2,16 +2,65 @@ const { Board } = require('./board')
 const { Coordinate } = require('./coordinate')
 const { Pickup } = require('./pickup')
 const { Token } = require('./token')
+const { splitMoves } = require('./move')
+const { DIRECTIONS } = require('./direction')
 const logger = require('../utils/logger')
 
 class Game {
-    constructor(gameId, sendAll) {
+    constructor(gameId) {
         this.gameId = gameId
-        this.sendAll = sendAll
+        this.players = []
         this.onBoardChange = () => {
             this.sendGameMessage(this.getBoardUpdate())
         }
         this.reset()
+    }
+
+    doSomething(senderPlayerId, targetPlayerName) {
+        //TODO refactor this to use playerNames exclusively?
+        const targetPlayer = this.players.find(p => this.getPlayerName(p.id) === targetPlayerName)
+        targetPlayer.send({
+            type: 'do-something',
+            data: {
+                sender: this.getPlayerName(senderPlayerId)
+            }
+        })
+    }
+
+    addPlayer(player) {
+        this.players.push(player)
+        player.send({
+            type: 'name',
+            data: {
+                name: this.getPlayerName(player.id)
+            }
+        })
+        player.send(this.getBoardUpdate())
+        player.send(this.getTimeMessage())
+        this.updateMovements()
+    }
+
+    updateMovements() {
+        //this should likely be moved to a player object concept
+        const playerMoves = splitMoves(Object.keys(DIRECTIONS), this.players.length)
+        for (let idx in playerMoves) {
+            this.players[idx].send({
+                type: 'movements',
+                data: {
+                    movements: playerMoves[idx]
+                }
+            })
+        }
+        const playerInfo = playerMoves.map((moves, idx) => {
+            return {
+                moves: moves,
+                playerName: this.getPlayerName(this.players[idx].id)
+            }
+        })
+        this.sendGameMessage({
+            type: 'all-players',
+            data: playerInfo
+        })
     }
 
     getGameId() {
@@ -21,7 +70,9 @@ class Game {
     }
 
     sendGameMessage(messageObj) {
-        this.sendAll(messageObj, this.gameId)
+        for (var i = 0; i < this.players.length; i++) {
+            this.players[i].send(messageObj, this.gameId)
+        }
     }
 
     getTimeMessage () {

@@ -6,7 +6,6 @@ const webSocketServer = require('websocket').server
 
 const config = require('./utils/config')
 const logger = require('./utils/logger')
-const { splitMoves } = require('./models/move')
 const { Player } = require('./models/player')
 
 const { GameManager } = require('./models/gameManager')
@@ -17,15 +16,8 @@ const app = express()
 app.use(express.static('build'))
 app.use(express.json())
 
-const players = []
 
-const sendAll = (obj, gameId) => {
-    for (var i = 0; i < players.length; i++) {
-        players[i].send(obj, gameId)
-    }
-}
-
-let gameManager = new GameManager(sendAll)
+let gameManager = new GameManager()
 app.post('/games', async (req, res) => {
     try {
         console.debug('Post: ' + req)
@@ -58,40 +50,6 @@ let nextPlayerId = 0
 //potential hiccup with moving players
 //when game is reset players will be reset as well (unless pass players somehow)
 
-const updateTokens = (game) => {
-    game.updateTokens()
-}
-
-
-const updateMovements = (game, movements, dividingPlayers) => {
-    //this should likely be moved to a player object concept
-    const playerMoves = splitMoves(Object.keys(movements), dividingPlayers.length)
-    for (let idx in playerMoves) {
-        dividingPlayers[idx].send({
-            type: 'movements',
-            data: {
-                movements: playerMoves[idx]
-            }
-        })
-    }
-    const playerInfo = playerMoves.map((moves, idx) => {
-        return {
-            moves: moves,
-            playerName: game.getPlayerName(dividingPlayers[idx].id)
-        }
-    })
-    sendAll({
-        type: 'all-players',
-        data: playerInfo
-    })
-}
-
-
-
-const reset = (game) => {
-    game.reset()
-}
-
 
 wsServer.on('request', function (request) {
     logger.info('Request: ' + JSON.stringify(request))
@@ -99,15 +57,15 @@ wsServer.on('request', function (request) {
 
     const connection = request.accept(null, request.origin)
 
-    if (players.length >= Object.keys(DIRECTIONS).length) {
+    //TODO find a new way to limit player count
+    /*if (players.length >= Object.keys(DIRECTIONS).length) {
         return
-    }
+    }*/
 
 
     // we need to know client index to remove them on 'close' event
     const playerId = nextPlayerId++
     const player = new Player(connection, playerId)
-    players.push(player) - 1
 
     logger.info(`${new Date()} Connection accepted.`)
 
@@ -128,37 +86,22 @@ wsServer.on('request', function (request) {
             logger.debug(Object.keys(command))
             let game = gameManager._getGame(gameId)
             if (command.type === 'RESET') {
-                reset(game)
+                game.reset()
             } else if (game.complete) {
                 return
             } else if (command.type === 'INITIAL') {
-                //TODO game.addPlayer(player)
-                player.send({
-                    type: 'name',
-                    data: {
-                        name: game.getPlayerName(player.id)
-                    }
-                })
-                player.send(game.getBoardUpdate())
-                player.send(game.getTimeMessage())
-                updateMovements(game, DIRECTIONS, players)
+                game.addPlayer(player)
             }
             else if (command.type === 'SELECTED') {
                 //parseInt(this could come back as anything)
                 game.select(player.id, parseInt(command.selected))
             } else if (command.type === 'DO-SOMETHING') {
-                const targetPlayer = players.find(p => game.getPlayerName(p.id) === command.player)
-                targetPlayer.send({
-                    type: 'do-something',
-                    data: {
-                        sender: game.getPlayerName(player.id)
-                    }
-                })
+                game.doSomething(player.id, command.player)
             } else if (command.type in DIRECTIONS) {
                 game.move(player, command.type)
             }
 
-            updateTokens(game)
+            game.updateTokens()
             checkWin(game)
         }
     })
@@ -166,8 +109,8 @@ wsServer.on('request', function (request) {
     // user disconnected
     connection.on('close', function (connection) {
         logger.info(`${new Date()} Peer ${connection.remoteAddress} disconnected.`)
-        const removeIndex = players.findIndex(player => player.id === playerId)
-        players.splice(removeIndex, 1)
+        /*const removeIndex = players.findIndex(player => player.id === playerId)
+        players.splice(removeIndex, 1)*/ //TODO remove player
         //TODO how to figure out what game they left?
         //updateMovements(DIRECTIONS, players)
     })

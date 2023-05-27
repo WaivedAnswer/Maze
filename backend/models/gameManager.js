@@ -2,14 +2,13 @@ const { Game } = require('./game')
 const logger = require('../utils/logger')
 
 class GameManager {
-    constructor(sendAll) {
+    constructor() {
         this.games = []
-        this.sendAll = sendAll
     }
 
     createGame(gameId) {
         logger.debug('Create: ' + gameId)
-        let game = new Game(gameId, this.sendAll)
+        let game = new Game(gameId)
         this.games.push(game)
         return game
     }

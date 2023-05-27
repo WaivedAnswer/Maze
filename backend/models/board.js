@@ -9,7 +9,7 @@ const logger = require('../utils/logger')
 //deals with section coordinates and section connections
 class Board {
     constructor(dimensions, onBoardChange) {
-        this.sectionCount = 6
+        this.sectionCount = 4
         this.sectionDimensions = dimensions
         this.sections = [
             this.createSection(new Offset(0, 0), null)
