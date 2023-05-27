@@ -4,6 +4,7 @@ const { Tile, TileType } = require('./tile')
 const { Coordinate } = require('./coordinate')
 const { DIRECTIONS } = require('./direction')
 const { Item } = require('./item')
+const logger = require('../utils/logger')
 
 //deals with section coordinates and section connections
 class Board {
@@ -14,6 +15,7 @@ class Board {
             this.createSection(new Offset(0, 0), null)
         ]
         this.onBoardChange = onBoardChange
+        logger.debug('construction' + this.onBoardChange)
     }
 
     createSection(offset, exit) {
@@ -145,6 +147,7 @@ class Board {
         let newSection = this.createSection(offset,
             exit)
         this.sections.push(newSection)
+        logger.debug('precrash' + this.onBoardChange)
         this.onBoardChange()
     }
 

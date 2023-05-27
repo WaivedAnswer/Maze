@@ -12,7 +12,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/game" element={<App />}/>
+        <Route path="/game/:gameId" element={<App />}/>
         <Route path="/" element={<Menu />}/>
        </Routes>
     </Router>

@@ -1,13 +1,27 @@
 import React from 'react'
 import {
-  Link
+  useNavigate
 } from "react-router-dom"
+import axios from 'axios';
+import logger from '../services/logger'
 
 function Menu() {
+  const navigate = useNavigate();
+
+  const handleClick = async () => {
+    const response = await axios.post('/games', {});
+
+    logger.debug(response.data)
+    // The server responds with the id of the new user
+    const gameId = response.data.gameId;
+  
+    navigate(`/game/${gameId}`);
+  };
+
   return (
     <div className="menu">
       <h1>Magic Maze</h1>
-      <Link to="/game">{"Start Game"}</Link>
+      <button onClick={() => handleClick()}>Create Private Game</button>
     </div>
   );
 }

@@ -10,17 +10,40 @@ const { splitMoves } = require('./models/move')
 const { Player } = require('./models/player')
 
 const { Game } = require('./models/game')
-
+const { GameManager } = require('./models/gameManager')
 const { DIRECTIONS } = require('./models/direction')
 
 
-let nextPlayerId = 0
-//potential hiccup with moving players
-//when game is reset players will be reset as well (unless pass players somehow)
-const players = []
-
 const app = express()
 app.use(express.static('build'))
+app.use(express.json())
+
+const players = []
+
+const sendAll = (obj) => {
+    for (var i = 0; i < players.length; i++) {
+        players[i].send(obj)
+    }
+}
+
+let game
+
+let gameManager = new GameManager(sendAll)
+app.post('/games', async (req, res) => {
+    try {
+        console.debug('Post: ' + req)
+        // Create a new user with the data from the request body
+        const randomId = Math.floor(Math.random() * 100000)
+        game = await gameManager.createGame(randomId)
+
+        // Send the new user's id as the response
+        res.json({ gameId: game.getGameId() })
+    } catch (error) {
+        console.error(error)
+        // If an error occurred, send it as the response
+        res.status(500).json({ error: error.toString() })
+    }
+})
 
 // eslint-disable-next-line no-unused-vars
 const server = http.createServer(app)
@@ -34,14 +57,12 @@ const wsServer = new webSocketServer({
     httpServer: server
 })
 
-const sendAll = (obj) => {
-    for (var i = 0; i < players.length; i++) {
-        players[i].send(obj)
-    }
-}
+let nextPlayerId = 0
+//potential hiccup with moving players
+//when game is reset players will be reset as well (unless pass players somehow)
 
-let game
-let remainingSeconds
+
+let remainingSeconds = 120
 var timerInterval
 
 const getTimeMessage = () => {
@@ -61,7 +82,7 @@ const updateTokens = () => {
 }
 
 
-const updateMovements = (movements, dividingPlayers) => {
+const updateMovements = (game, movements, dividingPlayers) => {
     //this should likely be moved to a player object concept
     const playerMoves = splitMoves(Object.keys(movements), dividingPlayers.length)
     for (let idx in playerMoves) {
@@ -84,13 +105,10 @@ const updateMovements = (movements, dividingPlayers) => {
     })
 }
 
-const onBoardChange = () => {
-    sendAll(game.getBoardUpdate())
-}
 
-const reset = () => {
-    game = new Game(onBoardChange)
-    onBoardChange()
+
+const reset = (gameId) => {
+    gameManager.reset(gameId)
     remainingSeconds = 120
     sendAll(getTimeMessage())
     clearInterval(timerInterval)
@@ -109,9 +127,10 @@ const reset = () => {
     }, 1000)
 }
 
-reset()
+//reset()
 
 wsServer.on('request', function (request) {
+    logger.info('Request: ' + JSON.stringify(request))
     logger.info(`${new Date()} Connection from origin ${request.origin}.`)
 
     const connection = request.accept(null, request.origin)
@@ -128,24 +147,10 @@ wsServer.on('request', function (request) {
 
     logger.info(`${new Date()} Connection accepted.`)
 
-    player.send({
-        type: 'name',
-        data: {
-            name: game.getPlayerName(player.id)
-        }
-    })
-
-    player.send(game.getBoardUpdate())
-    player.send(getTimeMessage())
-
-
-    updateMovements(DIRECTIONS, players)
-
     connection.on('message', function (message) {
         logger.debug('Received: ' + message)
         if (message.type === 'utf8') {
             logger.debug(`${new Date()} Received Message: ${message.utf8Data}`)
-
             let command
             try {
                 command = JSON.parse(message.utf8Data)
@@ -153,12 +158,27 @@ wsServer.on('request', function (request) {
                 logger.error(`Invalid JSON: ${message.utf8Data}, ${e}`)
                 return
             }
-
+            logger.debug('Message: ' + JSON.stringify(message))
+            let gameId = Number(command.gameId)
+            logger.debug('Game id:' + gameId)
+            logger.debug(Object.keys(command))
+            let game = gameManager._getGame(gameId)
             if (command.type === 'RESET') {
-                reset()
+                reset(gameId)
             } else if (game.complete) {
                 return
-            } else if (command.type === 'SELECTED') {
+            } else if (command.type === 'INITIAL') {
+                player.send({
+                    type: 'name',
+                    data: {
+                        name: game.getPlayerName(player.id)
+                    }
+                })
+                player.send(game.getBoardUpdate())
+                player.send(getTimeMessage())
+                updateMovements(game, DIRECTIONS, players)
+            }
+            else if (command.type === 'SELECTED') {
                 //parseInt(this could come back as anything)
                 game.select(player.id, parseInt(command.selected))
             } else if (command.type === 'DO-SOMETHING') {
@@ -183,7 +203,8 @@ wsServer.on('request', function (request) {
         logger.info(`${new Date()} Peer ${connection.remoteAddress} disconnected.`)
         const removeIndex = players.findIndex(player => player.id === playerId)
         players.splice(removeIndex, 1)
-        updateMovements(DIRECTIONS, players)
+        //TODO how to figure out what game they left?
+        //updateMovements(DIRECTIONS, players)
     })
 })
 

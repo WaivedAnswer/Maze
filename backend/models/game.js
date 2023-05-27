@@ -5,14 +5,30 @@ const { Token } = require('./token')
 const logger = require('../utils/logger')
 
 class Game {
-    constructor(onBoardChange) {
-        //only two tokens in here, how did we get a null?
+    constructor(gameId, sendAll) {
+        this.gameId = gameId
+        this.sendAll = sendAll
+        this.onBoardChange = () => {
+            this.sendAll(this.getBoardUpdate())
+        }
+        this.reset()
+    }
+
+    getGameId() {
+        logger.debug('Get gameId: ' + this.gameId)
+        logger.debug('Game Id Type: ' + typeof(this.gameId) )
+        return this.gameId
+    }
+
+    reset() {
         this.tokens = [new Token(new Coordinate(0, 0)), new Token(new Coordinate(5, 9))]
         this.selectedTokens = new Map()
         this.complete = false
-        this.board = new Board(10, onBoardChange)
-        this.pickup = new Pickup(onBoardChange)
+        this.board = new Board(10, this.onBoardChange)
+        this.pickup = new Pickup(this.onBoardChange)
+        this.onBoardChange()
     }
+
 
     getSelections() {
         const selections = []

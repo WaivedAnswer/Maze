@@ -2,39 +2,10 @@ import logger from './logger'
 
 class GameService {
 
-    constructor() {
-        let websocketURL = process.env.NODE_ENV === 'development' ? 'ws://127.0.0.1:3001' : 'wss://' + window.location.host
+    constructor(gameId) {
         this.handlers = []
+        this.gameId = gameId
         this.allowedMovements = []
-        this.connection = new WebSocket(websocketURL)
-        logger.debug(websocketURL)
-        this.connection.onopen = () => {
-            logger.debug('Opened!')
-        }
-        this.connection.onerror = (error) => {
-            logger.error(error)
-            logger.error('Sorry, but there\'s some problem with your '
-                + 'connection or the server is down.')
-        }
-        
-        // most important part - incoming messages
-        this.connection.onmessage = (message) => {
-            try {
-                var json = JSON.parse(message.data);
-            } catch (e) {
-               logger.error('Invalid JSON: ', message.data);
-                return
-            }
-        
-            for (let handler of this.handlers) {
-                handler.handle(json)
-            }
-        }
-        setInterval(() => {
-            if (this.connection.readyState !== 1) {
-                logger.error('Error missing connection');
-            }
-        }, 3000);
     }
 
     addHandler(newHandler) {
@@ -42,9 +13,54 @@ class GameService {
         this.handlers.push(newHandler)
     }
 
+    connect() {
+        return new Promise((resolve, reject) => {
+            let websocketURL = process.env.NODE_ENV === 'development' ? 'ws://127.0.0.1:3001' : 'wss://' + window.location.host
+            this.connection = new WebSocket(websocketURL)
+            logger.debug(websocketURL)
+            this.connection.onopen = () => {
+                resolve()
+            }
+            this.connection.onerror = (error) => {
+                logger.error(error)
+                logger.error('Sorry, but there\'s some problem with your '
+                    + 'connection or the server is down.')
+                    reject(error)
+            }
+            
+            // most important part - incoming messages
+            this.connection.onmessage = (message) => {
+                try {
+                    var json = JSON.parse(message.data);
+                } catch (e) {
+                   logger.error('Invalid JSON: ', message.data);
+                    return
+                }
+            
+                for (let handler of this.handlers) {
+                    handler.handle(json)
+                }
+            }
+            setInterval(() => {
+                if (this.connection.readyState !== 1) {
+                    logger.error('Error missing connection');
+                }
+            }, 3000);
+          });
+       
+    }
+
+    getInitialUpdate() { 
+        this.sendBasicCommand('INITIAL')
+    }
+
     send(message) {
-        logger.debug("SEND:" + message)
-        this.connection.send(message)
+        let messageObject = JSON.parse(message)
+        messageObject.gameId = this.gameId
+        let gameMessage = JSON.stringify(messageObject)
+
+        logger.debug("SEND: " + gameMessage)
+        this.connection.send(gameMessage)
     }
 
     setMovements = (movements) => {

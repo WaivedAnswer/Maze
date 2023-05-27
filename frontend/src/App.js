@@ -9,6 +9,7 @@ import Token from './models/token'
 import PlayerIndicator from './components/playerIndicator'
 import Notification from './components/notification'
 import Timer from './components/Timer'
+import { useParams } from 'react-router-dom'
 
 
 const getCoordinate = (pos) => {
@@ -72,13 +73,14 @@ function App() {
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [remainingSeconds, setRemainingSeconds] = useState(null)
   const [gameService, setGameService] = useState(null)
+
   const clearNotification = () => {
     setNotificationMessage(null)
   }
-  
+  let { gameId } = useParams();
 
   useEffect(() => {
-    let service = new GameService()
+    let service = new GameService(gameId)
     const notify = (message, fade, isGood) => {
       setNotificationMessage({
         message: message,
@@ -128,10 +130,14 @@ function App() {
       }
     }
     service.addHandler(handler)
-
+    async function initialConnect() {
+      await service.connect()
+      service.getInitialUpdate()
+    }
+    initialConnect()
     setGameService(service)
   },
-  [])
+  [gameId])
 
 
   const reset = (_) => {
