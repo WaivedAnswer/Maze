@@ -11,7 +11,6 @@ class GameManager {
         logger.debug('Create: ' + gameId)
         let game = new Game(gameId, this.sendAll)
         this.games.push(game)
-        logger.debug('Games: ' + JSON.stringify(this.games))
         return game
     }
 
@@ -21,10 +20,10 @@ class GameManager {
     }
 
     _getGame(gameId) {
-        logger.debug('Get game: ' + gameId)
-        logger.debug('Parameter Type: ' + typeof(gameId) )
         let game = this.games.find(game => game.getGameId() === gameId)
-        logger.debug('Retrieved Game: ' + JSON.stringify(game))
+        if(!game) {
+            logger.warn('Failed to retrieve game with gameID: ' + gameId)
+        }
         return game
     }
 }

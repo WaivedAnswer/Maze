@@ -26,15 +26,13 @@ const sendAll = (obj) => {
     }
 }
 
-let game
-
 let gameManager = new GameManager(sendAll)
 app.post('/games', async (req, res) => {
     try {
         console.debug('Post: ' + req)
         // Create a new user with the data from the request body
         const randomId = Math.floor(Math.random() * 100000)
-        game = await gameManager.createGame(randomId)
+        let game = await gameManager.createGame(randomId)
 
         // Send the new user's id as the response
         res.json({ gameId: game.getGameId() })
@@ -61,20 +59,7 @@ let nextPlayerId = 0
 //potential hiccup with moving players
 //when game is reset players will be reset as well (unless pass players somehow)
 
-
-let remainingSeconds = 120
-var timerInterval
-
-const getTimeMessage = () => {
-    return {
-        type: 'timer-update',
-        data: {
-            seconds: remainingSeconds
-        }
-    }
-}
-
-const updateTokens = () => {
+const updateTokens = (game) => {
     sendAll({
         type: 'token-update',
         data: game.getTokenData()
@@ -107,27 +92,10 @@ const updateMovements = (game, movements, dividingPlayers) => {
 
 
 
-const reset = (gameId) => {
-    gameManager.reset(gameId)
-    remainingSeconds = 120
-    sendAll(getTimeMessage())
-    clearInterval(timerInterval)
-    timerInterval = setInterval(() => {
-        if (remainingSeconds === 0) {
-            clearInterval(timerInterval)
-            sendAll({
-                type: 'lose'
-            })
-            game.complete = true
-        }
-        if (remainingSeconds > 0) {
-            remainingSeconds -= 1
-            sendAll(getTimeMessage())
-        }
-    }, 1000)
+const reset = (game) => {
+    game.reset()
 }
 
-//reset()
 
 wsServer.on('request', function (request) {
     logger.info('Request: ' + JSON.stringify(request))
@@ -164,7 +132,7 @@ wsServer.on('request', function (request) {
             logger.debug(Object.keys(command))
             let game = gameManager._getGame(gameId)
             if (command.type === 'RESET') {
-                reset(gameId)
+                reset(game)
             } else if (game.complete) {
                 return
             } else if (command.type === 'INITIAL') {
@@ -175,7 +143,7 @@ wsServer.on('request', function (request) {
                     }
                 })
                 player.send(game.getBoardUpdate())
-                player.send(getTimeMessage())
+                player.send(game.getTimeMessage())
                 updateMovements(game, DIRECTIONS, players)
             }
             else if (command.type === 'SELECTED') {
@@ -193,8 +161,8 @@ wsServer.on('request', function (request) {
                 game.move(player, command.type)
             }
 
-            updateTokens()
-            checkWin()
+            updateTokens(game)
+            checkWin(game)
         }
     })
 
@@ -210,7 +178,7 @@ wsServer.on('request', function (request) {
 
 
 
-function checkWin() {
+function checkWin(game) {
     if (game.checkWin()) {
         sendAll({
             type: 'win'

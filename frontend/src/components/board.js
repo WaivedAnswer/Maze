@@ -4,13 +4,13 @@ import isEqual from "lodash.isequal"
 
 const Board = ({ grid, tokens, gameService }) => {
     const handleKeyPress = (event) => {
-        if (event.key === 's') {
+        if (event.key.toLowerCase() === 's') {
             gameService.moveDown()
-        } else if (event.key === 'w') {
+        } else if (event.key.toLowerCase() === 'w') {
             gameService.moveUp()
-        } else if (event.key === 'a') {
+        } else if (event.key.toLowerCase() === 'a') {
             gameService.moveLeft()
-        } else if (event.key === 'd') {
+        } else if (event.key.toLowerCase() === 'd') {
             gameService.moveRight()
         }
     }

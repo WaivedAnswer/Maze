@@ -19,6 +19,15 @@ class Game {
         logger.debug('Game Id Type: ' + typeof(this.gameId) )
         return this.gameId
     }
+    getTimeMessage () {
+        return {
+            type: 'timer-update',
+            data: {
+                seconds: this.remainingSeconds
+            }
+        }
+    }
+
 
     reset() {
         this.tokens = [new Token(new Coordinate(0, 0)), new Token(new Coordinate(5, 9))]
@@ -26,7 +35,27 @@ class Game {
         this.complete = false
         this.board = new Board(10, this.onBoardChange)
         this.pickup = new Pickup(this.onBoardChange)
+        this.remainingSeconds = 120
+        clearInterval(this.timerInterval)
+        this.timerInterval = setInterval(() => {
+            if (this.remainingSeconds === 0) {
+                clearInterval(this.timerInterval)
+                this.sendAll({
+                    type: 'lose'
+                })
+                this.complete = true
+            }
+            if (this.remainingSeconds > 0) {
+                this.remainingSeconds -= 1
+                this.sendAll(this.getTimeMessage())
+            }
+        }, 1000)
+        this.sendAll(this.getTimeMessage(this.getRemainingSeconds()))
         this.onBoardChange()
+    }
+
+    getRemainingSeconds() {
+        return this.remainingSeconds
     }
 
 
