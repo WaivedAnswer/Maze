@@ -1,7 +1,7 @@
 import './App.css'
 import React, { useState, useEffect } from 'react'
 import Board from './components/board'
-import GameService from './services/game'
+import GameService from './services/gameService'
 import logger from './services/logger'
 import Coordinate from './models/coordinate'
 import { Tile, TileType } from './models/tile'
@@ -79,7 +79,7 @@ function App() {
   }
   let { gameId } = useParams();
   useEffect(() => {
-    let service = new GameService(Number(gameId))
+    let service = new GameService(gameId)
     const notify = (message, fade, isGood) => {
       setNotificationMessage({
         message: message,
