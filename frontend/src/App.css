@@ -122,7 +122,35 @@ html, body {
 
 .menu > h1 {
    color: green;
-  
+   font-size: 4rem;
+   margin-bottom: 4rem;
+}
+
+.menuSelections {
+   display: flex;
+   align-items: right;
+   flex-direction: column;
+}
+
+.menuRow {
+   display: flex;
+   justify-content: space-evenly;
+   margin-bottom: 2em;
+}
+
+.inputText {
+   font-size: 2rem;
+   padding: 10px 20px;
+   border-radius: 5px;
+}
+
+.button {
+   font-size: 2rem;
+   background-color: green;
+   border: none;
+   color: white;
+   padding: 10px 20px;
+   border-radius: 5px;
 }
 
 

@@ -18,6 +18,25 @@ app.use(express.json())
 
 
 let gameManager = new GameManager()
+
+// app.get('/game/:gameId', async (req, res) => {
+//     try {
+//         console.debug('Get: ' + req)
+//         const gameId = req.params.gameId
+//         let game = gameManager._getGame(gameId)
+//         if(!game) {
+//             res.status(404).json({ error: 'Game not found' })
+//             return
+//         }
+//         // Send the new user's id as the response
+//         res.json({ gameId: game.getGameId() })
+//     } catch (error) {
+//         console.error(error)
+//         // If an error occurred, send it as the response
+//         res.status(500).json({ error: error.toString() })
+//     }
+// })
+
 app.post('/games', async (req, res) => {
     try {
         console.debug('Post: ' + req)
@@ -52,7 +71,6 @@ let nextPlayerId = 0
 
 
 wsServer.on('request', function (request) {
-    logger.info('Request: ' + JSON.stringify(request))
     logger.info(`${new Date()} Connection from origin ${request.origin}.`)
 
     const connection = request.accept(null, request.origin)
