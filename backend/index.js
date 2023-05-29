@@ -19,35 +19,17 @@ app.use(express.json())
 
 let gameManager = new GameManager()
 
-// app.get('/game/:gameId', async (req, res) => {
-//     try {
-//         console.debug('Get: ' + req)
-//         const gameId = req.params.gameId
-//         let game = gameManager._getGame(gameId)
-//         if(!game) {
-//             res.status(404).json({ error: 'Game not found' })
-//             return
-//         }
-//         // Send the new user's id as the response
-//         res.json({ gameId: game.getGameId() })
-//     } catch (error) {
-//         console.error(error)
-//         // If an error occurred, send it as the response
-//         res.status(500).json({ error: error.toString() })
-//     }
-// })
-
 app.post('/games', async (req, res) => {
     try {
-        console.debug('Post: ' + req)
+        logger.debug('Post: ' + JSON.stringify(req.body))
         // Create a new user with the data from the request body
-        const randomId = Math.floor(Math.random() * 100000)
-        let game = await gameManager.createGame(randomId)
+        const gameId = req.body.gameId
+        let game = await gameManager.createGame(gameId)
 
         // Send the new user's id as the response
         res.json({ gameId: game.getGameId() })
     } catch (error) {
-        console.error(error)
+        logger.error(error)
         // If an error occurred, send it as the response
         res.status(500).json({ error: error.toString() })
     }
@@ -99,7 +81,7 @@ wsServer.on('request', function (request) {
                 return
             }
             logger.debug('Message: ' + JSON.stringify(message))
-            let gameId = Number(command.gameId)
+            let gameId = command.gameId
             logger.debug('Game id:' + gameId)
             logger.debug(Object.keys(command))
             let game = gameManager._getGame(gameId)
