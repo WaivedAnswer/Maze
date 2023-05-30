@@ -16,27 +16,30 @@ class Game {
         this.reset()
     }
 
-    doSomething(senderPlayerId, targetPlayerName) {
-        //TODO refactor this to use playerNames exclusively?
-        const targetPlayer = this.players.find(p => this.getPlayerName(p.id) === targetPlayerName)
+    doSomething(senderPlayerName, targetPlayerName) {
+        const targetPlayer = this.players.find(p => p.getPlayerName() === targetPlayerName)
         targetPlayer.send({
             type: 'do-something',
             data: {
-                sender: this.getPlayerName(senderPlayerId)
+                sender: senderPlayerName
             }
         })
     }
 
     addPlayer(player) {
         this.players.push(player)
-        player.send({
-            type: 'name',
-            data: {
-                name: this.getPlayerName(player.id)
-            }
-        })
         player.send(this.getBoardUpdate())
         player.send(this.getTimeMessage())
+        this.updateMovements()
+    }
+
+    removePlayer(playerName) {
+        const removePlayerIndex = this.players.findIndex(p => p.getPlayerName() === playerName)
+        if(removePlayerIndex === -1) {
+            return
+        }
+
+        this.players.splice(removePlayerIndex, 1)
         this.updateMovements()
     }
 
@@ -54,7 +57,7 @@ class Game {
         const playerInfo = playerMoves.map((moves, idx) => {
             return {
                 moves: moves,
-                playerName: this.getPlayerName(this.players[idx].id)
+                playerName: this.players[idx].getPlayerName()
             }
         })
         this.sendGameMessage({
@@ -117,10 +120,10 @@ class Game {
 
     getSelections() {
         const selections = []
-        for (const idx of this.selectedTokens.keys()) {
+        for (const playerName of this.selectedTokens.keys()) {
             selections.push({
-                selection: this.selectedTokens.get(idx),
-                selectedBy: this.getPlayerName(idx)
+                selection: this.selectedTokens.get(playerName),
+                selectedBy: playerName
             })
         }
         return selections
@@ -128,7 +131,7 @@ class Game {
 
     move(player, movementCommand) {
         //likely a bad selectedIndex ( how is this manipulated?), non null
-        const selectedIndex = this.selectedTokens.get(player.id)
+        const selectedIndex = this.selectedTokens.get(player.getPlayerName())
         if (selectedIndex === null) {
             return
         }
@@ -152,14 +155,14 @@ class Game {
         this.pickup.interact(token, tile)
     }
 
-    select(playerId, selection) {
+    select(playerName, selection) {
         //set from the outside
         //this might need some validation (ie selection cannot be greater than indexes of tokens)
         //also selections are currently not cleaned up
         if(selection > this.tokens.length || selection < 0) {
             logger.error(`Error: Tried to set ${selection} as selection`)
         }
-        this.selectedTokens.set(playerId, selection)
+        this.selectedTokens.set(playerName, selection)
     }
 
     checkWin() {
@@ -183,10 +186,9 @@ class Game {
         }
     }
 
-    getPlayerName(index){
+    getPlayerNameFromIndex(index){
         return `Player ${index + 1}`
     }
-
 
 
     getBoardUpdate() {

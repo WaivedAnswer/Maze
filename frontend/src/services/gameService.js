@@ -2,9 +2,10 @@ import logger from './logger'
 
 class GameService {
 
-    constructor(gameId) {
+    constructor(gameId, playerName) {
         this.handlers = []
         this.gameId = gameId
+        this.playerName = playerName
         this.allowedMovements = []
     }
 
@@ -16,8 +17,9 @@ class GameService {
     connect() {
         return new Promise((resolve, reject) => {
             let websocketURL = process.env.NODE_ENV === 'development' ? 'ws://127.0.0.1:3001' : 'wss://' + window.location.host
-            this.connection = new WebSocket(websocketURL)
-            logger.debug(websocketURL)
+            let finalURL = websocketURL+`?playerName=${this.playerName}`
+            this.connection = new WebSocket(finalURL)
+            logger.debug("Connecting to:" + finalURL)
             this.connection.onopen = () => {
                 resolve()
             }
@@ -37,9 +39,8 @@ class GameService {
                     return
                 }
             
-                logger.debug("message gameId:" + typeof(json.gameId))
-                logger.debug("service gameId:" + typeof(this.gameId))
                 if(json.gameId && json.gameId !== this.gameId) {
+                    logger.warn('Sent message for different game')
                     return
                 }
 

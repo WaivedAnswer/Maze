@@ -13,9 +13,10 @@ class GameManager {
         return game
     }
 
-    reset(gameId) {
-        let game = this._getGame(gameId)
-        game.reset()
+    removePlayer(playerName) {
+        for(const game of this.games){
+            game.removePlayer(playerName)
+        }
     }
 
     _getGame(gameId) {

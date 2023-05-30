@@ -1,9 +1,9 @@
 const logger = require('./../utils/logger')
 
 class Player {
-    constructor(connection, id) {
+    constructor(connection, name) {
         this.connection = connection
-        this.id = id
+        this.name = name
     }
 
     send(obj, gameId) {
@@ -11,6 +11,10 @@ class Player {
         const json = JSON.stringify(obj)
         logger.debug('Send Player: ' + json )
         this.connection.sendUTF(json)
+    }
+
+    getPlayerName() {
+        return this.name
     }
 }
 

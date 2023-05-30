@@ -10,13 +10,7 @@ import Menu from './components/menu';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <Routes>
-        <Route path="/game/:gameId" element={<App />}/>
-        <Route path="/" element={<Menu />}/>
-       </Routes>
-    </Router>
-   
+    <App/>
   </React.StrictMode>,
   document.getElementById('root')
 );
