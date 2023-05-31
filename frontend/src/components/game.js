@@ -7,6 +7,7 @@ import Coordinate from '../models/coordinate'
 import { Tile, TileType } from '../models/tile'
 import Token from '../models/token'
 import PlayerIndicator from './playerIndicator'
+import Moves from './moves'
 import Notification from './notification'
 import Timer from './Timer'
 import { useParams } from 'react-router-dom'
@@ -152,7 +153,7 @@ function Game({realPlayerName}) {
         <div className="board-controls">
           <Timer remainingSeconds={remainingSeconds} />
           <br />
-          <PlayerIndicator playerName={realPlayerName} allowedMoves={allowedMoves} isSelf={true} />
+          <Moves playerName={realPlayerName} allowedMoves={allowedMoves} />
           <br />
           <h2 hidden={!otherPlayers.length}>Other Players:</h2>
           {
