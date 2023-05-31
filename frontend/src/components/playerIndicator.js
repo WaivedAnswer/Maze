@@ -1,4 +1,4 @@
-import MoveIndicator from './moveIndicator'
+import Moves from './moves'
 
 const PlayerIndicator = ({ playerName, allowedMoves, isSelf, doSomething }) => {
 
@@ -15,7 +15,7 @@ const PlayerIndicator = ({ playerName, allowedMoves, isSelf, doSomething }) => {
                     isSelf ? "" : <button onClick={onClickDoSomething}>Do Something!</button>
                 }
             </div>
-            <MoveIndicator moves={allowedMoves} isSelf={isSelf} />
+            <Moves moves={allowedMoves} isSelf={isSelf} />
         </div>
     )
 }
