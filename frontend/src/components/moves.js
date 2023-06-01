@@ -12,7 +12,7 @@ const Moves = ({ playerName, allowedMoves }) => {
             <h2>Moves</h2>
             <div className = 'player-moves' >
                 {
-                    allowedMoves.map(move =>  <MoveIndicator move={move}></MoveIndicator>)
+                    allowedMoves.map(move =>  <MoveIndicator key={move} move={move} isSelf={true}></MoveIndicator>)
                 }
             </div>
         </div>
