@@ -4,11 +4,7 @@ const Moves = ({ playerName, allowedMoves }) => {
 
     return (
         < div className='player-self'>
-            <div className='player-bar'>
-                {
-                    <label>{playerName}</label>
-                }
-            </div>
+            <span id='mainPlayer'>{playerName}</span>
             <h2>Moves</h2>
             <div className = 'player-moves' >
                 {

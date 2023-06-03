@@ -22,11 +22,10 @@ let gameManager = new GameManager()
 app.post('/games', async (req, res) => {
     try {
         logger.debug('Post: ' + JSON.stringify(req.body))
-        // Create a new user with the data from the request body
+
         const gameId = req.body.gameId
         let game = await gameManager.createGame(gameId)
 
-        // Send the new user's id as the response
         res.json({ gameId: game.getGameId() })
     } catch (error) {
         logger.error(error)

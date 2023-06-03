@@ -1,23 +1,22 @@
-import Moves from './moves'
+import MoveIndicator from './moveIndicator'
 
-const PlayerIndicator = ({ playerName, allowedMoves, isSelf, doSomething }) => {
+const OtherPlayer = ({ playerName, allowedMoves, doSomething }) => {
 
     const onClickDoSomething = (_) => {
         doSomething(playerName)
     }
     return (
-        < div className={isSelf ? 'player-self' : 'player-other'}>
+        < div className='player-other'>
             <div className='player-bar'>
+                <label>{playerName}</label>
                 {
-                    <label>{playerName}</label>
+                    allowedMoves.map(move =>  <MoveIndicator key={move} move={move} isSelf={false}></MoveIndicator>)
                 }
-                {
-                    isSelf ? "" : <button onClick={onClickDoSomething}>Do Something!</button>
-                }
+                <button className='doSomethingButton' onClick={onClickDoSomething}>!</button>
+                
             </div>
-            <Moves moves={allowedMoves} isSelf={isSelf} />
         </div>
     )
 }
 
-export default PlayerIndicator
+export default OtherPlayer

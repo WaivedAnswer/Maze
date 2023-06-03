@@ -1,5 +1,5 @@
 import React from 'react'
-import itemImg from "../images/coins.png"
+import itemImg from "../images/coins_new.png"
 
 const Item = () => {
     return (

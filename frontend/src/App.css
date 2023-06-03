@@ -4,6 +4,10 @@
    overflow: auto;
 }
 
+body {
+   font-family: 'Courier New', monospace;
+ }
+
 table {
    border-spacing: 0px;
 }
@@ -17,6 +21,7 @@ td {
    height: 32px;
    width: 32px;
    display: flex;
+   border-radius: 5px;
 }
 
 .token {
@@ -37,11 +42,12 @@ td {
    height: 100%;
    width: 100%;
    display: block;
-   background-color: aqua;
+   background-color: deepskyblue;
+   border-radius: 10px;
 }
 
 .tile {
-  background-color: sandybrown;
+  background-color: lightslategray;
   border-color: black;
 }
 
@@ -51,15 +57,14 @@ td {
 }
 
 .tile-connect {
-   background-color: darkgreen;
+   background-color: mediumaquamarine;
    border-color: green;
 }
 
 
 
 .tile-wall {
-   background-color: sandybrown;
-   border-color: black;
+   background-color: lightslategray;
    display: flex;
 }
 
@@ -70,26 +75,34 @@ td {
 }
 
 .tile-unknown {
-   background-color: indigo;
-   border-color: indigo;
+   background-color: transparent;
 }
 
 .board-space {
     display: grid;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 300px 1fr;
     height: 100vh;
     overflow: hidden;
+    background: lavender;
+}
+
+#mainPlayer {
+   font-size: 48px;
+   text-align: left;
+   margin-left: 0px;
 }
 
 .board-controls {
-   margin-left: 16px;
    padding: 20px;
-   border-radius: 5px;
    display: flex;
    flex-direction: column;
-   background-color: gray;
+   background-color: steelblue;
    height: 100vh;
+   border-color:black;
+   border-style: none solid none none;
+   border-width: thick;
    overflow-y: auto;
+   box-sizing: border-box;
 }
 
 .player-self {
@@ -121,9 +134,39 @@ td {
    width: 60%;
 }
 
-.player-bar > button {
-   margin-left: 16px;
+.player-bar > .move-icon {
+   width: 20%;
+   display: inline;
 }
+.player-bar {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   /**/ 
+   justify-content: space-between;
+   margin: 10px;
+}
+
+.doSomethingButton {
+   background: linear-gradient(to right, cornflowerblue, deepskyblue, skyblue); /* Gradient background */
+   padding: 0 !important;
+   margin-left: auto;
+   border: 2px solid navy; /* Button border */
+   color: white; /* Text color */
+   text-align: center;
+   font-size: 24px; /* Exclamation mark size */
+   width: 30px; /* Button width */
+   height: 30px; /* Button height */
+   border-radius: 50%; /* Round shape */
+   cursor: pointer;
+   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+   transition: all 0.3s ease 0s; /* Smoothens the hover effect */
+ }
+ 
+ .doSomethingButton:hover {
+   transform: translateY(-3px);
+   box-shadow: 0px 15px 20px -10px rgba(0,0,0,0.5);
+ }
 
 html, body {
    height: 100%;
@@ -148,12 +191,12 @@ html, body {
 }
 
 .menu > a {
-   color: green;
+   color: dodgerblue;
   
 }
 
 .menu > h1 {
-   color: green;
+   color: dodgerblue;
    font-size: 5rem;
    margin-bottom: 4rem;
 }
@@ -178,11 +221,16 @@ html, body {
 
 .button {
    font-size: 2rem;
-   background-color: green;
+   background-color: dodgerblue;
    border: none;
    color: white;
    padding: 10px 20px;
    border-radius: 5px;
+}
+
+#reset-button {
+   background-color: midnightblue;
+   margin-top: auto;
 }
 
 

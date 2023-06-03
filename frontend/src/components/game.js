@@ -6,7 +6,7 @@ import logger from '../services/logger'
 import Coordinate from '../models/coordinate'
 import { Tile, TileType } from '../models/tile'
 import Token from '../models/token'
-import PlayerIndicator from './playerIndicator'
+import OtherPlayer from './playerIndicator'
 import Moves from './moves'
 import Notification from './notification'
 import Timer from './Timer'
@@ -157,13 +157,13 @@ function Game({realPlayerName}) {
           <br />
           <h2 hidden={!otherPlayers.length}>Other Players:</h2>
           {
-            otherPlayers.map(player => <PlayerIndicator key={player.playerName}
+            otherPlayers.map(player => <OtherPlayer key={player.playerName}
               playerName={player.playerName}
               allowedMoves={player.moves}
               isSelf={false}
               doSomething={doSomething} />)
           }
-          <button onClick={reset}>Reset</button>
+          <button className='button' id='reset-button' onClick={reset}>Reset</button>
         </div>
         <Board grid={updatedTiles} tokens={tokens} gameService={gameService} />
       </div>
