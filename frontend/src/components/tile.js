@@ -2,8 +2,9 @@ import { TileType } from "../models/tile"
 import Token from "./token"
 import Item from "./item"
 import rockTile from "../images/rock.png"
+import portalTile from "../images/portal.png"
 
-const Tile = ({ token, onTokenSelected, tile }) => {
+const Tile = ({ token, onTokenSelected, tile, onTeleport }) => {
     let className
     let tileImg
     const type = tile.type
@@ -16,14 +17,25 @@ const Tile = ({ token, onTokenSelected, tile }) => {
         className = 'tile-unknown'
     } else if (type === TileType.CONNECT) {
         className = 'tile-connect'
-    } else {
+    } else if (type === TileType.PORTAL) {
+        className = 'tile-portal'
+        tileImg = portalTile
+    }
+    else {
         className = 'tile'
+    }
+
+    const handleClick = () => {
+        if(type !== TileType.PORTAL) {
+            return
+        }
+        onTeleport(tile.coord)
     }
 
     return (
         <div className={className}>
-            <img src={tileImg} alt='' />
             <Token token={token} onTokenSelected={onTokenSelected}/>
+            <img src={tileImg} onClick={handleClick} alt='' />
             { tile.hasItem ? <Item/> : null}
         </div>
     )

@@ -4,6 +4,7 @@ let TileType = {
     EXIT: 2,
     WALL: 3,
     CONNECT: 4,
+    PORTAL: 5
 }
 
 class Tile {

@@ -143,6 +143,24 @@ class Game {
         this.onMove(token, this.board)
     }
 
+    teleport(player, viewCoord) {
+        const selectedIndex = this.selectedTokens.get(player.getPlayerName())
+        if (selectedIndex === null) {
+            return
+        }
+
+        const token = this.tokens[selectedIndex]
+        if(!token) {
+            logger.debug('Trying to teleport with no selected token?')
+            return
+        }
+
+        const gameCoord = new Coordinate(viewCoord.x, viewCoord.y).offset(this.board.getMinCoordinate())
+        const updatedCoord = this.board.teleport(token, gameCoord)
+        token.coordinate = updatedCoord
+        this.onMove(token, this.board)
+    }
+
     updateTokens() {
         this.sendGameMessage({
             type: 'token-update',

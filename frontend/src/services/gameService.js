@@ -118,6 +118,15 @@ class GameService {
         ))
     }
 
+    teleport = (coord) => {
+        this.send(JSON.stringify(
+            {
+                type: "TELEPORT",
+                coord: coord
+            }
+        ))
+    }
+
 
 }
 

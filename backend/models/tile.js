@@ -19,7 +19,8 @@ const TileType = {
     NORMAL: 0,
     WALL: 1,
     EXIT: 2,
-    CONNECT: 3
+    CONNECT: 3,
+    PORTAL: 4
 }
 
 module.exports = {

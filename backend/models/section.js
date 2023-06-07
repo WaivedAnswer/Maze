@@ -4,7 +4,7 @@ const { Offset } = require('./offset')
 const { Tile, TileType } = require('./tile')
 const { getConnection } = require('./connection')
 const { DIRECTIONS } = require('./direction')
-
+const logger = require('../utils/logger')
 //deals with simple coordinates
 class Section {
     constructor(dimensions, offset) {
@@ -82,10 +82,11 @@ class Section {
     }
 
     getAbsolutePos(coord, relativeTo) {
-        return coord.offset(this.offset).relativeTo(relativeTo).getPos()
+        return coord.offset(this.offset).relativeTo(relativeTo)
     }
 
     getRelativeCoord(coord) {
+        logger.debug(coord)
         return coord.relativeTo(this.offset)
     }
 

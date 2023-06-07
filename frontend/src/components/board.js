@@ -25,6 +25,10 @@ const Board = ({ grid, tokens, gameService }) => {
         ))
     }
 
+    const onTeleport = (coord) => {
+        gameService.teleport(coord)
+    }
+
     const getToken = (tileCoord) => {
         return tokens.find(token => isEqual(token.coord, tileCoord))
     }
@@ -42,7 +46,8 @@ const Board = ({ grid, tokens, gameService }) => {
                                             tile = {tile}
                                             type={tile.type}
                                             token={getToken(tile.coord)}
-                                            onTokenSelected={onTokenSelected} />
+                                            onTokenSelected={onTokenSelected}
+                                            onTeleport={onTeleport} />
                                     </td>
 
                                 )}

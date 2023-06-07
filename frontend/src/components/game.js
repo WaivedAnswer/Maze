@@ -29,6 +29,8 @@ const getTileType = (type) => {
       return TileType.EXIT
     case 3:
       return TileType.CONNECT
+    case 4:
+      return TileType.PORTAL
     default:
       return TileType.UNKNOWN
   }
@@ -41,6 +43,7 @@ const getTileRow = (row) => {
 const getTiles = (initData) => {
   const board = initData.board
   const grid = board.tiles.map( row => getTileRow(row))
+  logger.info(JSON.stringify(board.tiles))
   return grid
 }
 

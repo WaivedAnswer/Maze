@@ -8,9 +8,9 @@ class Token {
         return this.coordinate.relativeTo(relativeTo).getPos()
     }
 
-    updateCoords(relativeTo) {
+    /*updateCoords(relativeTo) {
         this.coordinate = this.coordinate.relativeTo(relativeTo)
-    }
+    }*/
 
     pickupItem(item) {
         this.items.push(item)

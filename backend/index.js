@@ -98,6 +98,8 @@ wsServer.on('request', function (request) {
                 game.doSomething(player.getPlayerName(), command.player)
             } else if (command.type in DIRECTIONS) {
                 game.move(player, command.type)
+            } else if (command.type === 'TELEPORT') {
+                game.teleport(player, command.coord)
             }
 
             game.updateTokens()

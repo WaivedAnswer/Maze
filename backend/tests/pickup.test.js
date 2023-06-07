@@ -3,14 +3,15 @@ const { Tile, TileType } = require('../models/tile')
 const Token = require('../models/token').Token
 const Item = require('../models/item').Item
 const Coordinate = require('../models/coordinate').Coordinate
-
+const onBoardChange = () => {
+}
 test('item pickup', () => {
     //is it necessary for the tile and the token to have their coordinates?
     //if not then who has them?
     const item = new Item()
     const tile = new Tile(new Coordinate(0,0), TileType.NORMAL, item)
     const token = new Token(new Coordinate(0,0))
-    const subject = new Pickup()
+    const subject = new Pickup(onBoardChange)
 
     subject.interact(token, tile)
 
@@ -24,7 +25,7 @@ test('item pickup no tile item, token already has item', () => {
     const token = new Token(new Coordinate(0,0))
     token.pickupItem(item)
 
-    const subject = new Pickup()
+    const subject = new Pickup(onBoardChange)
     subject.interact(token, tile)
 
     expect(tile.item).toBeNull()
@@ -38,7 +39,7 @@ test('second item pickup, token already has item', () => {
     const token = new Token(new Coordinate(0,0))
     token.pickupItem(item)
 
-    const subject = new Pickup()
+    const subject = new Pickup(onBoardChange)
     subject.interact(token, tile)
 
     expect(tile.item).toBeNull()

@@ -2,6 +2,7 @@ const { Section } = require('./section')
 const { Offset } = require('./offset')
 const { Tile, TileType } = require('./tile')
 const { Coordinate } = require('./coordinate')
+const { PortalManager } = require('./portalManager')
 const { DIRECTIONS } = require('./direction')
 const { Item } = require('./item')
 const logger = require('../utils/logger')
@@ -11,11 +12,10 @@ class Board {
     constructor(dimensions, onBoardChange) {
         this.sectionCount = 4
         this.sectionDimensions = dimensions
-        this.sections = [
-            this.createSection(new Offset(0, 0), null)
-        ]
+        this.sections = []
+        this.portalManager = new PortalManager()
         this.onBoardChange = onBoardChange
-        logger.debug('construction' + this.onBoardChange)
+        this.addSection(new Offset(0, 0), false)
     }
 
     createSection(offset, exit) {
@@ -54,6 +54,7 @@ class Board {
         }
 
         section.addTile(new Tile(new Coordinate(4,0), TileType.NORMAL, new Item()))
+        section.addTile(new Tile(new Coordinate(7,4), TileType.PORTAL))
 
         return section
     }
@@ -137,8 +138,12 @@ class Board {
 
         this.addSection(connectionOffset)
         currSection.connectAt(updatedCoord)
-
+        this.onBoardChange()
         return updatedCoord
+    }
+
+    teleport(token, newCoord) {
+        return this.portalManager.teleport(token, newCoord)
     }
 
     addSection(offset) {
@@ -147,8 +152,12 @@ class Board {
         let newSection = this.createSection(offset,
             exit)
         this.sections.push(newSection)
-        logger.debug('precrash' + this.onBoardChange)
-        this.onBoardChange()
+        logger.info('Offset: ' + JSON.stringify(offset))
+        let newPortals = newSection.getTilesOfType(TileType.PORTAL, new Coordinate(0, 0))
+        logger.info('New portals!' + JSON.stringify(newPortals))
+        for(const portal of newPortals) {
+            this.portalManager.trackPortal(portal)
+        }
     }
 
     allSectionsRevealed() {
