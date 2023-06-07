@@ -17,7 +17,7 @@ td {
 }
 
 
-.tile-exit, .tile-wall, .tile-unknown, .tile, .tile-connect {
+.tile-exit, .tile-wall, .tile-unknown, .tile-portal, .tile, .tile-connect {
    height: 32px;
    width: 32px;
    display: flex;
@@ -69,6 +69,17 @@ td {
 }
 
 .tile-wall img {
+   height: 100%;
+   width: 100%;
+   display: block;
+}
+
+.tile-portal {
+   background-color: lightslategray;
+   display: flex;
+}
+
+.tile-portal img {
    height: 100%;
    width: 100%;
    display: block;
