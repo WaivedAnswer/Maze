@@ -33,28 +33,35 @@ const Board = ({ grid, tokens, gameService }) => {
         return tokens.find(token => isEqual(token.coord, tileCoord))
     }
 
-    return (
-        <div className="game-board" onKeyPress={handleKeyPress} tabIndex={0}>
-            <table >
-                <tbody>
-                    {
-                        grid.map((row, rowNum) =>
-                            <tr key={rowNum} >
-                                {row.map((tile, colNum) =>
-                                    <td key={tile.coord.toString()}>
-                                        <Tile
-                                            tile = {tile}
-                                            type={tile.type}
-                                            token={getToken(tile.coord)}
-                                            onTokenSelected={onTokenSelected}
-                                            onTeleport={onTeleport} />
-                                    </td>
+    const gridHeight = grid.length
 
-                                )}
-                            </tr>
-                        )}
-                </tbody>
-            </table>
+    const gridWidth = grid.length === 0 ? 0 : grid[0].length
+
+    const boardStyle = {
+        margin: '48px',
+        height: '100vh',
+        overflow: 'auto',
+        display: 'grid',
+        gridTemplateColumns: `repeat(${gridWidth}, 64px)`,
+        gridTemplateRows: `repeat(${gridHeight}, 64px)`,
+        gap: '0px'
+     }
+
+    return (
+        <div className="game-board" style= {boardStyle} onKeyPress={handleKeyPress} tabIndex={0}>
+            {
+                grid.map((row, rowNum) =>
+                        row.map((tile, colNum) =>
+                            <div className='tile-container' key={tile.coord.toString()}>
+                                <Tile
+                                    tile = {tile}
+                                    token={getToken(tile.coord)}
+                                    onTokenSelected={onTokenSelected}
+                                    onTeleport={onTeleport} />
+                            </div>
+
+                        )
+                )}
         </div>
     )
 }

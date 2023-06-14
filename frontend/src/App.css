@@ -1,49 +1,41 @@
-.game-board {
-   margin: 32px;
-   height: 100vh;
-   overflow: auto;
-}
-
 body {
    font-family: 'Courier New', monospace;
  }
 
-table {
-   border-spacing: 0px;
-}
-
-td { 
-   padding: 0px;
-}
-
-
 .tile-exit, .tile-wall, .tile-unknown, .tile-portal, .tile, .tile-connect {
-   height: 32px;
-   width: 32px;
-   display: flex;
+   position: relative;
+   height: 100%;
+   width: 100%;
    border-radius: 5px;
+   z-index:0;
 }
 
 .token {
+   top: 0;
+   left: 0;
    display: flex;
+   z-index: 1;
 }
 
-.token img {
+.token > img {
    height: 100%;
    width: 100%;
    display: block;
+   z-index: 1;
 }
 
 .token-selected {
    display: flex;
+   z-index: 1;
 }
 
-.token-selected img {
+.token-selected > img {
    height: 100%;
    width: 100%;
    display: block;
    background-color: deepskyblue;
-   border-radius: 10px;
+   border-radius: 20%;
+
 }
 
 .tile {
@@ -62,7 +54,6 @@ td {
 }
 
 
-
 .tile-wall {
    background-color: lightslategray;
    display: flex;
@@ -79,10 +70,21 @@ td {
    display: flex;
 }
 
-.tile-portal img {
+@keyframes flash {
+   0%, 50%, 100% {
+       opacity: 1;
+   }
+   25%, 75% {
+       opacity: 0.33;
+   }
+}
+
+.tile-portal .tile-image {
    height: 100%;
    width: 100%;
    display: block;
+   position:absolute;
+   animation: flash 3s linear infinite; /* Modify duration (1s) as needed */
 }
 
 .tile-unknown {
@@ -286,6 +288,7 @@ html, body {
    background: black;
    color: white;
    font-size: 36px;
+   text-align: center;
 }
 
 .timer-critical {

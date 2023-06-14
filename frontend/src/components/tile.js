@@ -35,7 +35,7 @@ const Tile = ({ token, onTokenSelected, tile, onTeleport }) => {
     return (
         <div className={className}>
             <Token token={token} onTokenSelected={onTokenSelected}/>
-            <img src={tileImg} onClick={handleClick} alt='' />
+            { tileImg ? <img src={tileImg} className="tile-image" onClick={handleClick} alt='' /> : null}
             { tile.hasItem ? <Item/> : null}
         </div>
     )
