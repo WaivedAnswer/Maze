@@ -36,7 +36,7 @@ const Tile = ({ token, onTokenSelected, tile, onTeleport }) => {
         <div className={className}>
             <Token token={token} onTokenSelected={onTokenSelected}/>
             { tileImg ? <img src={tileImg} className="tile-image" onClick={handleClick} alt='' /> : null}
-            { tile.hasItem ? <Item/> : null}
+            { tile.hasItem ? <Item item={tile.item}/> : null}
         </div>
     )
 }

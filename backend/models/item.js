@@ -1,8 +1,22 @@
+
 class Item {
-    constructor() {
+    constructor(type) {
+        this.type = type
+    }
+
+    getData() {
+        return {
+            type: this.type
+        }
     }
 }
 
+const ItemType = {
+    COIN: 0,
+    TIMER: 1
+}
+
 module.exports = {
-    Item
+    Item,
+    ItemType
 }

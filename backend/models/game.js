@@ -13,6 +13,12 @@ class Game {
         this.onBoardChange = () => {
             this.sendGameMessage(this.getBoardUpdate())
         }
+        this.onTimerFlip = () => {
+            const oldSeconds = this.remainingSeconds
+            const newSeconds = 120 - this.remainingSeconds
+            logger.info('Timer Flip! Old: ' + oldSeconds + ' New: ' + newSeconds )
+            this.remainingSeconds = newSeconds
+        }
         this.reset()
     }
 
@@ -93,7 +99,7 @@ class Game {
         this.selectedTokens = new Map()
         this.complete = false
         this.board = new Board(10, this.onBoardChange)
-        this.pickup = new Pickup(this.onBoardChange)
+        this.pickup = new Pickup(this.onBoardChange, this.onTimerFlip)
         this.remainingSeconds = 120
         clearInterval(this.timerInterval)
         this.timerInterval = setInterval(() => {

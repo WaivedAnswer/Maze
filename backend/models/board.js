@@ -4,7 +4,7 @@ const { Tile, TileType } = require('./tile')
 const { Coordinate } = require('./coordinate')
 const { PortalManager } = require('./portalManager')
 const { DIRECTIONS } = require('./direction')
-const { Item } = require('./item')
+const { Item, ItemType } = require('./item')
 const logger = require('../utils/logger')
 
 //deals with section coordinates and section connections
@@ -53,7 +53,8 @@ class Board {
             section.addWall(new Coordinate(8, j))
         }
 
-        section.addTile(new Tile(new Coordinate(4,0), TileType.NORMAL, new Item()))
+        section.addTile(new Tile(new Coordinate(4,0), TileType.NORMAL, new Item(ItemType.COIN)))
+        section.addTile(new Tile(new Coordinate(6,0), TileType.NORMAL, new Item(ItemType.TIMER)))
         section.addTile(new Tile(new Coordinate(7,4), TileType.PORTAL))
 
         return section
@@ -90,11 +91,15 @@ class Board {
                 const currTile = this.getTile(currCoord)
                 const originBasedCoord = currCoord.relativeTo(minCoordinate)
                 if(currTile) {
-                    row.push({
+                    let tileData = {
                         pos: originBasedCoord.getPos(),
                         type: currTile.type,
                         hasItem: currTile.hasItem()
-                    })
+                    }
+                    if(currTile.hasItem()) {
+                        tileData.item = currTile.item.getData()
+                    }
+                    row.push(tileData)
                 } else {
                     row.push({
                         pos: originBasedCoord.getPos(),

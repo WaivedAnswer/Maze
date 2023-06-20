@@ -5,6 +5,7 @@ import GameService from '../services/gameService'
 import logger from '../services/logger'
 import Coordinate from '../models/coordinate'
 import { Tile, TileType } from '../models/tile'
+import { Item } from '../models/item'
 import Token from '../models/token'
 import OtherPlayer from './playerIndicator'
 import Moves from './moves'
@@ -36,8 +37,18 @@ const getTileType = (type) => {
   }
 }
 
+const getTile = (tileData) => {
+  const itemData = tileData.item
+  let item
+  if(itemData) {
+    item = new Item(itemData.type)
+    logger.info("Item:" +  JSON.stringify(item))
+  }
+  return new Tile(getCoordinate(tileData.pos), getTileType(tileData.type), tileData.hasItem, item)
+}
+
 const getTileRow = (row) => {
-  return row.map(tile => new Tile(getCoordinate(tile.pos), getTileType(tile.type), tile.hasItem))
+  return row.map(tileData => getTile(tileData))
 }
 
 const getTiles = (initData) => {

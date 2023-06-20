@@ -1,6 +1,8 @@
+const { ItemType } = require('./item')
 class Pickup {
-    constructor(onBoardChange) {
+    constructor(onBoardChange, onFlipTimer) {
         this.onBoardChange = onBoardChange
+        this.onFlipTimer = onFlipTimer
     }
 
     interact(token, tile) {
@@ -9,6 +11,9 @@ class Pickup {
         if(tileItem) {
             token.pickupItem(tileItem)
             tile.item = null
+            if(tileItem.type === ItemType.TIMER) {
+                this.onFlipTimer()
+            }
             this.onBoardChange()
         }
     }
