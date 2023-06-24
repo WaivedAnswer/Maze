@@ -1,8 +1,9 @@
 import React from 'react'
 import Tile from './tile'
+import Escalator from './escalator'
 import isEqual from "lodash.isequal"
 
-const Board = ({ grid, tokens, gameService }) => {
+const Board = ({ grid, tokens, escalators, gameService }) => {
     const handleKeyPress = (event) => {
         if (event.key.toLowerCase() === 's') {
             gameService.moveDown()
@@ -47,12 +48,21 @@ const Board = ({ grid, tokens, gameService }) => {
         gap: '0px'
      }
 
+     const tileStyle = (tileCoord) => {
+        const style =  {
+        gridColumnStart: `${tileCoord.x + 1}`,
+        gridRowStart: `${tileCoord.y + 1}`,
+     }
+
+     return style
+    }
+
     return (
         <div className="game-board" style= {boardStyle} onKeyPress={handleKeyPress} tabIndex={0}>
             {
                 grid.map((row, rowNum) =>
                         row.map((tile, colNum) =>
-                            <div className='tile-container' key={tile.coord.toString()}>
+                            <div className='tile-container' key={tile.coord.toString()} style={tileStyle(tile.coord)}>
                                 <Tile
                                     tile = {tile}
                                     token={getToken(tile.coord)}
@@ -62,6 +72,9 @@ const Board = ({ grid, tokens, gameService }) => {
 
                         )
                 )}
+            {
+                escalators.map( (escalator) => <Escalator escalator={escalator}/>)
+            }
         </div>
     )
 }

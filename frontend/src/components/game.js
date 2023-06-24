@@ -4,6 +4,7 @@ import Board from './board'
 import GameService from '../services/gameService'
 import logger from '../services/logger'
 import Coordinate from '../models/coordinate'
+import {EscalatorModel} from '../models/escalator'
 import { Tile, TileType } from '../models/tile'
 import { Item } from '../models/item'
 import Token from '../models/token'
@@ -42,7 +43,6 @@ const getTile = (tileData) => {
   let item
   if(itemData) {
     item = new Item(itemData.type)
-    logger.info("Item:" +  JSON.stringify(item))
   }
   return new Tile(getCoordinate(tileData.pos), getTileType(tileData.type), tileData.hasItem, item)
 }
@@ -51,11 +51,13 @@ const getTileRow = (row) => {
   return row.map(tileData => getTile(tileData))
 }
 
-const getTiles = (initData) => {
-  const board = initData.board
-  const grid = board.tiles.map( row => getTileRow(row))
-  logger.info(JSON.stringify(board.tiles))
+const getTiles = (tiles) => {
+  const grid = tiles.map( row => getTileRow(row))
   return grid
+}
+
+const getEscalators = (escalators) => {
+  return escalators.map( escalator => new EscalatorModel(getCoordinate(escalator.start), getCoordinate(escalator.end)))
 }
 
 const getInitials = (str) => {
@@ -81,6 +83,7 @@ const getTokens = (data) => {
 
 function Game({realPlayerName}) {
   const [updatedTiles, setTiles] = useState([[]])
+  const [escalators, setEscalators] = useState([])
   const [tokens, setTokens] = useState([])
   const [allowedMoves, setMoves] = useState([])
   const [allPlayers, setAllPlayers] = useState([])
@@ -115,7 +118,8 @@ function Game({realPlayerName}) {
           setTokens(getTokens(json.data))
         } else if (json.type === 'board-update') {
           logger.debug('Board UPDATE')
-          setTiles(getTiles(json.data))
+          setTiles(getTiles(json.data.board.tiles))
+          setEscalators(getEscalators(json.data.board.escalators))
           setTokens(getTokens(json.data.tokenData))
           clearNotification()
         } else if (json.type === 'win') {
@@ -179,7 +183,7 @@ function Game({realPlayerName}) {
           }
           <button className='button' id='reset-button' onClick={reset}>Reset</button>
         </div>
-        <Board grid={updatedTiles} tokens={tokens} gameService={gameService} />
+        <Board grid={updatedTiles} tokens={tokens} escalators={escalators} gameService={gameService} />
       </div>
 
     </div >

@@ -12,6 +12,7 @@ class Section {
         this.offset = offset
 
         this.connections = []
+        this.escalators = []
 
         this.tiles = new CoordinateMap()
         for (let i = 0; i < this.dimensions; i++) {
@@ -22,6 +23,10 @@ class Section {
 
         this.addConnection(getConnection(DIRECTIONS.UP))
         this.addConnection(getConnection(DIRECTIONS.RIGHT))
+    }
+
+    addEscalator(escalator) {
+        this.escalators = escalator
     }
 
     addConnection(connection) {

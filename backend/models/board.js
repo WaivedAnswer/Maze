@@ -2,6 +2,7 @@ const { Section } = require('./section')
 const { Offset } = require('./offset')
 const { Tile, TileType } = require('./tile')
 const { Coordinate } = require('./coordinate')
+const { Escalator } = require('./escalator')
 const { PortalManager } = require('./portalManager')
 const { DIRECTIONS } = require('./direction')
 const { Item, ItemType } = require('./item')
@@ -56,6 +57,7 @@ class Board {
         section.addTile(new Tile(new Coordinate(4,0), TileType.NORMAL, new Item(ItemType.COIN)))
         section.addTile(new Tile(new Coordinate(6,0), TileType.NORMAL, new Item(ItemType.TIMER)))
         section.addTile(new Tile(new Coordinate(7,4), TileType.PORTAL))
+        section.addEscalator(new Escalator(new Coordinate(6, 3), new Coordinate(7, 2)))
 
         return section
     }
@@ -76,9 +78,25 @@ class Board {
 
     getData() {
         return {
-            tiles: this.getAllData()
+            tiles: this.getAllData(),
+            escalators: this.getEscalatorData()
         }
     }
+
+    getEscalatorData() {
+        let minCoordinate = this.getMinCoordinate()
+        let escalators = this.sections.flatMap(section => section.escalators)
+        let escalatorData = []
+        for(const escalator of escalators) {
+            let data = {
+                start: escalator.startCoord.relativeTo(minCoordinate),
+                end:  escalator.endCoord.relativeTo(minCoordinate)
+            }
+            escalatorData.push(data)
+        }
+        return escalatorData
+    }
+
 
     getAllData() {
         let minCoordinate = this.getMinCoordinate()
@@ -157,9 +175,8 @@ class Board {
         let newSection = this.createSection(offset,
             exit)
         this.sections.push(newSection)
-        logger.info('Offset: ' + JSON.stringify(offset))
+
         let newPortals = newSection.getTilesOfType(TileType.PORTAL, new Coordinate(0, 0))
-        logger.info('New portals!' + JSON.stringify(newPortals))
         for(const portal of newPortals) {
             this.portalManager.trackPortal(portal)
         }
