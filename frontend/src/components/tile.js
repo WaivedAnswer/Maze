@@ -1,10 +1,9 @@
 import { TileType } from "../models/tile"
-import Token from "./token"
 import Item from "./item"
 import rockTile from "../images/rock.png"
 import portalTile from "../images/portal.png"
 
-const Tile = ({ token, onTokenSelected, tile, onTeleport }) => {
+const Tile = ({tile, onTeleport }) => {
     let className
     let tileImg
     const type = tile.type
@@ -34,7 +33,6 @@ const Tile = ({ token, onTokenSelected, tile, onTeleport }) => {
 
     return (
         <div className={className}>
-            <Token token={token} onTokenSelected={onTokenSelected}/>
             { tileImg ? <img src={tileImg} className="tile-image" onClick={handleClick} alt='' /> : null}
             { tile.hasItem ? <Item item={tile.item}/> : null}
         </div>

@@ -1,7 +1,7 @@
 import React from 'react'
 import tokenImg from "../images/dwarf_right.png"
 
-const Token = ({ token, onTokenSelected}) => {
+const Token = ({ token, onTokenSelected, style}) => {
     if(!token) {
         return ''
     }
@@ -22,7 +22,7 @@ const Token = ({ token, onTokenSelected}) => {
 
 
     return (
-        <div className={imgClass} onClick={onClick}>
+        <div className={imgClass} style={style} onClick={onClick}>
             <img src={tokenImg} alt='token' />
         </div>
     )

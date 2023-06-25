@@ -19,19 +19,18 @@ body {
    top: 0;
    left: 0;
    display: flex;
-   z-index: 1;
+   z-index: 2;
 }
 
 .token > img {
    height: 100%;
    width: 100%;
    display: block;
-   z-index: 1;
 }
 
 .token-selected {
    display: flex;
-   z-index: 1;
+   z-index: 2;
 }
 
 .token-selected > img {
@@ -154,7 +153,7 @@ body {
 
 .escalator {
    position: relative;
-   z-index: 3;
+   z-index: 1;
 }
 
 .escalator-img {
