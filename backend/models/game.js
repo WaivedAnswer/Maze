@@ -136,26 +136,27 @@ class Game {
     }
 
     move(player, movementCommand) {
-        //likely a bad selectedIndex ( how is this manipulated?), non null
-        const selectedIndex = this.selectedTokens.get(player.getPlayerName())
-        if (selectedIndex === null) {
+        const token = this.getSelectedToken(player)
+        if(!token) {
+            logger.debug('Trying to move with no selected token?')
             return
         }
-        //either a null token in the array, or accessing the array out of bounds
-        const token = this.tokens[selectedIndex]
         const updatedCoord = this.board.move(token, movementCommand)
         token.coordinate = updatedCoord
-
         this.onMove(token, this.board)
     }
 
-    teleport(player, viewCoord) {
+    getSelectedToken(player) {
         const selectedIndex = this.selectedTokens.get(player.getPlayerName())
         if (selectedIndex === null) {
-            return
+            return null
         }
 
-        const token = this.tokens[selectedIndex]
+        return this.tokens[selectedIndex]
+    }
+
+    teleport(player, viewCoord) {
+        const token = this.getSelectedToken(player)
         if(!token) {
             logger.debug('Trying to teleport with no selected token?')
             return
@@ -165,6 +166,19 @@ class Game {
         const updatedCoord = this.board.teleport(token, gameCoord)
         token.coordinate = updatedCoord
         this.onMove(token, this.board)
+    }
+
+    escalate(player, escalatorId) {
+        const token = this.getSelectedToken(player)
+        if(!token) {
+            logger.debug('Trying to teleport with no selected token?')
+            return
+        }
+
+        const updatedCoord = this.board.escalate(token, escalatorId)
+        token.coordinate = updatedCoord
+        this.onMove(token, this.board)
+
     }
 
     updateTokens() {
@@ -200,7 +214,10 @@ class Game {
     }
 
     didWin() {
-        return this.board.allItemsCollected() && this.tokens.every(tokenCoord => this.board.isEscaped(tokenCoord))
+        const allItems = this.board.allItemsCollected()
+        const allEscaped = this.tokens.every(tokenCoord => this.board.isEscaped(tokenCoord))
+        console.log('Items: ' + allItems + ', Escaped: ' + allEscaped)
+        return  allItems && allEscaped
     }
 
     getTokenData() {

@@ -1,3 +1,4 @@
+const { ItemType } = require('./item')
 class Tile {
     constructor(coord, type, item) {
         this.coord = coord
@@ -12,6 +13,11 @@ class Tile {
     hasItem() {
         // eslint-disable-next-line eqeqeq
         return this.item != null
+    }
+
+    hasCoin() {
+        // eslint-disable-next-line eqeqeq
+        return this.item != null && this.item.type === ItemType.COIN
     }
 }
 

@@ -2,7 +2,7 @@ import downImg from "../images/escalator_down.png"
 import upImg from "../images/escalator_up.png"
 import {EscalatorOrientation} from '../models/escalator'
 
-const Escalator = ({ escalator }) => {
+const Escalator = ({ escalator, onEscalate }) => {
     const rowStart = escalator.getMinY() + 1
     const colStart = escalator.getMinX() + 1
     let escImg
@@ -22,9 +22,13 @@ const Escalator = ({ escalator }) => {
         gridColumn: `${colStart} / span ${escalator.getColSpan()}`,
     }
 
+    const handleClick = () => {
+        onEscalate(escalator.id)
+    }
+
     return (
         < div className = 'escalator' style = {tileStyle} >
-            <img className = 'escalator-img' src={escImg} alt='escalator' />
+            <img className = 'escalator-img' src={escImg} onClick={handleClick} alt='escalator' />
         </div>
     )
 }

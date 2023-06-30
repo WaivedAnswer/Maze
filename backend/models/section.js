@@ -7,12 +7,14 @@ const { DIRECTIONS } = require('./direction')
 const logger = require('../utils/logger')
 //deals with simple coordinates
 class Section {
-    constructor(dimensions, offset) {
+    constructor(id, dimensions, offset) {
+        this.id = id
         this.dimensions = dimensions
         this.offset = offset
 
         this.connections = []
         this.escalators = []
+        this.walls = []
 
         this.tiles = new CoordinateMap()
         for (let i = 0; i < this.dimensions; i++) {
@@ -26,7 +28,21 @@ class Section {
     }
 
     addEscalator(escalator) {
-        this.escalators = escalator
+        this.escalators.push(escalator)
+    }
+
+    getEscalatorData(relativeTo) {
+        let escalatorData = []
+        this.escalators.forEach( (escalator, index) =>  {
+            let data = {
+                id: `${this.id}-${index}`,
+                start: escalator.startCoord.relativeTo(relativeTo),
+                end:  escalator.endCoord.relativeTo(relativeTo)
+            }
+            escalatorData.push(data)
+        }
+        )
+        return escalatorData
     }
 
     addConnection(connection) {
@@ -39,8 +55,8 @@ class Section {
     }
 
     addWall(coord) {
-        const tile = new Tile(coord, TileType.WALL)
-        this.tiles.addItem(coord, tile)
+       /* const tile = new Tile(coord, TileType.WALL)
+        this.tiles.addItem(coord, tile)*/
     }
 
     getTilesOfType(type, relativeTo) {
@@ -78,7 +94,7 @@ class Section {
     }
 
     allItemsCollected() {
-        return !this.tiles.hasItemMatching( tile => tile.hasItem())
+        return !this.tiles.hasItemMatching( tile => tile.hasCoin())
     }
 
     inBounds(coord) {

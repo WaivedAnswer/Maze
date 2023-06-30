@@ -310,4 +310,5 @@ html, body {
    background: red;
    color: white;
    font-size: 36px;
+   animation: flash 2s linear infinite;
 }

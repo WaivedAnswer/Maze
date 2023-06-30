@@ -1,9 +1,10 @@
 const Section = require('../models/section').Section
 const Coordinate = require('../models/coordinate').Coordinate
 
+const ID = 1
 test('section relativeTo origin', () => {
     const origin = new Coordinate(0, 0)
-    const section = new Section(4, origin)
+    const section = new Section(ID, 4, origin)
     const testCoordinate = new Coordinate(5,5)
 
     const result = section.getRelativeCoord(testCoordinate)
@@ -13,7 +14,7 @@ test('section relativeTo origin', () => {
 
 test('section relativeTo positive', () => {
     const offset = new Coordinate(3, 2)
-    const section = new Section(4, offset)
+    const section = new Section(ID, 4, offset)
     const testCoordinate = new Coordinate(5, 5)
 
     const result = section.getRelativeCoord(testCoordinate)
@@ -23,7 +24,7 @@ test('section relativeTo positive', () => {
 
 test('section relativeTo negative', () => {
     const offset = new Coordinate(-3, -4)
-    const section = new Section(4, offset)
+    const section = new Section(ID, 4, offset)
     const testCoordinate = new Coordinate(5, 5)
 
     const result = section.getRelativeCoord(testCoordinate)
@@ -33,7 +34,7 @@ test('section relativeTo negative', () => {
 
 test('section no walls', () => {
     const offset = new Coordinate(0, 0)
-    const section = new Section(4, offset)
+    const section = new Section(ID, 4, offset)
 
     const result = section.getWalls()
 
@@ -42,7 +43,7 @@ test('section no walls', () => {
 
 test('section single wall', () => {
     const offset = new Coordinate(0, 0)
-    const section = new Section(4, offset)
+    const section = new Section(ID, 4, offset)
     section.addWall(new Coordinate(0, 0))
 
     const result = section.getWalls(new Coordinate(0,0))
@@ -52,7 +53,7 @@ test('section single wall', () => {
 
 test('section multi wall', () => {
     const offset = new Coordinate(0, 0)
-    const section = new Section(4, offset)
+    const section = new Section(ID, 4, offset)
     section.addWall(new Coordinate(0,0))
     section.addWall(new Coordinate(1,1))
     section.addWall(new Coordinate(2,2))

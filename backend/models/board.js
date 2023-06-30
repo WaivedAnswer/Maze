@@ -6,12 +6,11 @@ const { Escalator } = require('./escalator')
 const { PortalManager } = require('./portalManager')
 const { DIRECTIONS } = require('./direction')
 const { Item, ItemType } = require('./item')
-const logger = require('../utils/logger')
 
 //deals with section coordinates and section connections
 class Board {
     constructor(dimensions, onBoardChange) {
-        this.sectionCount = 4
+        this.sectionCount = 2
         this.sectionDimensions = dimensions
         this.sections = []
         this.portalManager = new PortalManager()
@@ -19,8 +18,8 @@ class Board {
         this.addSection(new Offset(0, 0), false)
     }
 
-    createSection(offset, exit) {
-        const section = new Section(this.sectionDimensions,
+    createSection(id, offset, exit) {
+        const section = new Section(id, this.sectionDimensions,
             offset)
         if(exit) {
             section.addTile(new Tile(exit, TileType.EXIT))
@@ -57,7 +56,7 @@ class Board {
         section.addTile(new Tile(new Coordinate(4,0), TileType.NORMAL, new Item(ItemType.COIN)))
         section.addTile(new Tile(new Coordinate(6,0), TileType.NORMAL, new Item(ItemType.TIMER)))
         section.addTile(new Tile(new Coordinate(7,4), TileType.PORTAL))
-        section.addEscalator(new Escalator(new Coordinate(6, 3), new Coordinate(7, 2)))
+        section.addEscalator(new Escalator(new Coordinate(6, 3), new Coordinate(9, 2)))
 
         return section
     }
@@ -84,17 +83,8 @@ class Board {
     }
 
     getEscalatorData() {
-        let minCoordinate = this.getMinCoordinate()
-        let escalators = this.sections.flatMap(section => section.escalators)
-        let escalatorData = []
-        for(const escalator of escalators) {
-            let data = {
-                start: escalator.startCoord.relativeTo(minCoordinate),
-                end:  escalator.endCoord.relativeTo(minCoordinate)
-            }
-            escalatorData.push(data)
-        }
-        return escalatorData
+        const minCoordinate = this.getMinCoordinate()
+        return this.sections.flatMap(section => section.getEscalatorData(minCoordinate))
     }
 
 
@@ -169,10 +159,22 @@ class Board {
         return this.portalManager.teleport(token, newCoord)
     }
 
+    escalate(token, escalatorId) {
+        const [sectionId, escalatorIndex] = escalatorId.split('-')
+        const section = this.sections[Number(sectionId)]
+        const escalator = section.escalators[Number(escalatorIndex)]
+        const otherEnd = escalator.getOtherEnd(token.coordinate)
+        if(!otherEnd) {
+            return token.coordinate
+        }
+        return otherEnd
+    }
+
     addSection(offset) {
         const isLast = this.sections.length + 1 >= this.sectionCount
         const exit = isLast ? new Coordinate(9,5) : null
-        let newSection = this.createSection(offset,
+        let newSection = this.createSection(this.sections.length,
+            offset,
             exit)
         this.sections.push(newSection)
 

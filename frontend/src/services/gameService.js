@@ -127,6 +127,15 @@ class GameService {
         ))
     }
 
+    escalate = (escalatorId) => {
+        this.send(JSON.stringify(
+            {
+                type: "ESCALATE",
+                id: escalatorId
+            }
+        ))
+    }
+
 
 }
 

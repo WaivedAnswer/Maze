@@ -2,6 +2,7 @@ import React from 'react'
 import Tile from './tile'
 import Token from './token'
 import Escalator from './escalator'
+import Wall from './wall'
 import isEqual from "lodash.isequal"
 
 const Board = ({ grid, tokens, escalators, gameService }) => {
@@ -29,6 +30,10 @@ const Board = ({ grid, tokens, escalators, gameService }) => {
 
     const onTeleport = (coord) => {
         gameService.teleport(coord)
+    }
+
+    const onEscalate = (escalatorId) => {
+        gameService.escalate(escalatorId)
     }
 
     const gridHeight = grid.length
@@ -60,20 +65,18 @@ const Board = ({ grid, tokens, escalators, gameService }) => {
                 grid.map((row, rowNum) =>
                         row.map((tile, colNum) =>
                             <div className='tile-container' key={tile.coord.toString()} style={tileStyle(tile.coord)}>
-                                <Tile
-                                    tile = {tile}
-                                    onTeleport={onTeleport} />
+                                <Tile tile = {tile} onTeleport={onTeleport} />
                             </div>
 
                         )
                 )}
             {
-                escalators.map( (escalator) => <Escalator escalator={escalator}/>)
+                escalators.map( (escalator) => <Escalator escalator={escalator} onEscalate={onEscalate}/>)
             }
             {
                 tokens.map( (token) => <Token token={token} onTokenSelected={onTokenSelected} style={tileStyle(token.coord)}/>)
             }
-                     
+             <Wall/>        
         </div>
     )
 }

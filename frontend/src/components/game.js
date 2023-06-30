@@ -57,7 +57,7 @@ const getTiles = (tiles) => {
 }
 
 const getEscalators = (escalators) => {
-  return escalators.map( escalator => new EscalatorModel(getCoordinate(escalator.start), getCoordinate(escalator.end)))
+  return escalators.map( escalator => new EscalatorModel(escalator.id, getCoordinate(escalator.start), getCoordinate(escalator.end)))
 }
 
 const getInitials = (str) => {

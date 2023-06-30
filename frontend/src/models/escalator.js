@@ -4,7 +4,8 @@ const EscalatorOrientation = {
 }
 
 class EscalatorModel {
-    constructor(startCoord, endCoord) {
+    constructor(id, startCoord, endCoord) {
+        this.id = id
         this.startCoord = startCoord
         this.endCoord = endCoord
     }
