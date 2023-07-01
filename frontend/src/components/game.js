@@ -62,7 +62,6 @@ const getEscalators = (escalators) => {
 }
 
 const getWalls = (walls) => {
-  console.log(walls.length)
   return walls.map( wall => new WallModel(getCoordinate(wall.start), getCoordinate(wall.end)))
 }
 

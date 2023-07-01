@@ -143,6 +143,15 @@ class Section {
         return nextTile.isPassable() && !blocked
     }
 
+    escalate(token, escalatorIndex){
+        const escalator = this.escalators[Number(escalatorIndex)]
+        const otherEnd = escalator.getOtherEnd(this.getRelativeCoord(token.coordinate))
+        if(!otherEnd) {
+            return token.coordinate
+        }
+        return otherEnd.offset(this.offset)
+    }
+
     isAtSectionCoord(coord, sectionCoord) {
         let relativeCoord = this.getRelativeCoord(coord)
         return sectionCoord.x === relativeCoord.x && sectionCoord.y === relativeCoord.y

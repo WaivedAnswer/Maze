@@ -31,7 +31,8 @@ class Board {
         section.addWall(new Coordinate(10, 6), new Coordinate(10, 10))
 
         section.addWall(new Coordinate(0, 0), new Coordinate(0, 10))
-        section.addWall(new Coordinate(0, 10), new Coordinate(10, 10))
+        section.addWall(new Coordinate(0, 10), new Coordinate(3, 10))
+        section.addWall(new Coordinate(4, 10), new Coordinate(10, 10))
 
         section.addWall(new Coordinate(0, 5), new Coordinate(this.sectionDimensions - 2, 5))
 
@@ -191,12 +192,7 @@ class Board {
     escalate(token, escalatorId) {
         const [sectionId, escalatorIndex] = escalatorId.split('-')
         const section = this.sections[Number(sectionId)]
-        const escalator = section.escalators[Number(escalatorIndex)]
-        const otherEnd = escalator.getOtherEnd(token.coordinate)
-        if(!otherEnd) {
-            return token.coordinate
-        }
-        return otherEnd
+        return section.escalate(token, escalatorIndex)
     }
 
     addSection(offset) {

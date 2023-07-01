@@ -3,7 +3,6 @@ import Tile from './tile'
 import Token from './token'
 import Escalator from './escalator'
 import Wall from './wall'
-import isEqual from "lodash.isequal"
 
 const Board = ({ grid, tokens, escalators, walls, gameService }) => {
     const handleKeyPress = (event) => {

@@ -216,7 +216,6 @@ class Game {
     didWin() {
         const allItems = this.board.allItemsCollected()
         const allEscaped = this.tokens.every(tokenCoord => this.board.isEscaped(tokenCoord))
-        console.log('Items: ' + allItems + ', Escaped: ' + allEscaped)
         return  allItems && allEscaped
     }
 
