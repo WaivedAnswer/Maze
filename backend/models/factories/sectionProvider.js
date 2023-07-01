@@ -13,16 +13,13 @@ class BasicSectionProvider {
         this.remaining = this.sectionCount
     }
 
-    createSection(id, offset) {
+    createSection(id, offset, direction) {
         const isLast = (id + 1) >= this.sectionCount
-        const section = new Section(id, this.sectionDimensions,
-            offset)
+        const section = new Section(id, this.sectionDimensions, offset, direction)
 
 
 
         this.addWalls(section)
-        //this.addWallTiles(section)
-
 
         section.addTile(new Tile(new Coordinate(3,0), TileType.NORMAL, new Item(ItemType.COIN)))
         section.addTile(new Tile(new Coordinate(6,0), TileType.NORMAL, new Item(ItemType.TIMER)))
@@ -74,35 +71,6 @@ class BasicSectionProvider {
 
     }
 
-    addWallTiles(section) {
-        for (let i = 0; i < this.sectionDimensions - 1; i++) {
-            section.addWallTile(new Coordinate(i, 5))
-        }
-
-        for (let i = 0; i < 4; i++) {
-            section.addWallTile(new Coordinate(i, 1))
-        }
-
-        for (let i = 1; i < 6; i++) {
-            section.addWallTile(new Coordinate(i, 7))
-        }
-
-        for (let i = 1; i < 6; i++) {
-            section.addWallTile(new Coordinate(i, 3))
-        }
-
-        for (let j = 0; j < 3; j++) {
-            section.addWallTile(new Coordinate(5, j))
-        }
-
-        for (let j = 7; j < this.sectionDimensions; j++) {
-            section.addWallTile(new Coordinate(6, j))
-        }
-
-        for (let j = 1; j < this.sectionDimensions - 1; j++) {
-            section.addWallTile(new Coordinate(8, j))
-        }
-    }
 }
 
 module.exports = {
