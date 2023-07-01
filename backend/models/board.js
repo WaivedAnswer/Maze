@@ -11,7 +11,7 @@ class Board {
         this.sectionProvider = sectionProvider
         this.portalManager = new PortalManager()
         this.onBoardChange = onBoardChange
-        this.addSection(new Offset(0, 0), false)
+        this.addSection(new Offset(0, 0), DIRECTIONS.UP)
     }
 
     getMinCoordinate() {
@@ -103,13 +103,13 @@ class Board {
             return currCoord
         }
 
-        const connectionOffset = currSection.getConnectingOffset(updatedCoord)
-        
+        const [connectionOffset, direction] = currSection.getConnectingOffset(updatedCoord)
         if (!connectionOffset || this.allSectionsRevealed()) {
             return updatedCoord
         }
 
-        this.addSection(connectionOffset)
+        console.log('Adding at: ' + JSON.stringify(connectionOffset))
+        this.addSection(connectionOffset, direction)
         currSection.connectAt(updatedCoord)
         this.onBoardChange()
         return updatedCoord
@@ -125,9 +125,10 @@ class Board {
         return section.escalate(token, escalatorIndex)
     }
 
-    addSection(offset) {
-        console.log('Adding!')
-        let newSection =  this.sectionProvider.createSection(this.sections.length, offset)
+    addSection(offset, direction) {
+        const id = this.sections.length
+        console.log('Adding Section!: ' + id)
+        const newSection =  this.sectionProvider.createSection(id, offset, direction)
         this.sections.push(newSection)
 
         let newPortals = newSection.getTilesOfType(TileType.PORTAL, new Coordinate(0, 0))

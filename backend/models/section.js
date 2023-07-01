@@ -7,10 +7,11 @@ const { Wall } = require('./wall')
 
 //deals with simple coordinates
 class Section {
-    constructor(id, dimensions, offset) {
+    constructor(id, dimensions, offset, direction) {
         this.id = id
         this.dimensions = dimensions
         this.offset = offset
+        this.direction = direction
 
         this.connections = []
         this.escalators = []
@@ -157,10 +158,12 @@ class Section {
     getConnectingOffset(coord) {
         const connection = this.connections.find( connection => this.isAtSectionCoord(coord, connection.coord))
         if(!connection || connection.connected) {
-            return null
+            return [null, null]
         }
         let connectingOriginCoord = connection.getConnectionOrigin().offset(this.offset)
-        return new Offset(connectingOriginCoord.x, connectingOriginCoord.y)
+        console.log('Offset orientation: ' + connection.orientation)
+        console.log('Connection info: ' + JSON.stringify(connection))
+        return [new Offset(connectingOriginCoord.x, connectingOriginCoord.y), connection.orientation]
     }
 
     connectAt(coord) {
