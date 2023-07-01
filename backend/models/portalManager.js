@@ -1,5 +1,3 @@
-const logger = require('../utils/logger')
-const { Coordinate } = require('./coordinate')
 
 class PortalManager {
     constructor() {
@@ -7,7 +5,6 @@ class PortalManager {
     }
 
     trackPortal(portalCoords) {
-        logger.info('Tracked portal: ' + (portalCoords instanceof Coordinate))
         this.portals.push(portalCoords)
     }
 

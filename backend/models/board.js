@@ -93,6 +93,18 @@ class Board {
         return currSection.getTile(coord)
     }
 
+    updateSections(currSection, updatedCoord) {
+        const [connectionOffset, direction] = currSection.getConnectingOffset(updatedCoord)
+        if (!connectionOffset) {
+            return
+        } else if (this.allSectionsRevealed()) {
+            return
+        }
+        this.addSection(connectionOffset, direction)
+        currSection.connectAt(updatedCoord)
+        this.onBoardChange()
+    }
+
     move(token, movementCommand) {
         const movementVector = DIRECTIONS[movementCommand]
 
@@ -103,15 +115,7 @@ class Board {
             return currCoord
         }
 
-        const [connectionOffset, direction] = currSection.getConnectingOffset(updatedCoord)
-        if (!connectionOffset || this.allSectionsRevealed()) {
-            return updatedCoord
-        }
-
-        console.log('Adding at: ' + JSON.stringify(connectionOffset))
-        this.addSection(connectionOffset, direction)
-        currSection.connectAt(updatedCoord)
-        this.onBoardChange()
+        this.updateSections(currSection, updatedCoord)
         return updatedCoord
     }
 
@@ -122,7 +126,9 @@ class Board {
     escalate(token, escalatorId) {
         const [sectionId, escalatorIndex] = escalatorId.split('-')
         const section = this.sections[Number(sectionId)]
-        return section.escalate(token, escalatorIndex)
+        const updatedCoord = section.escalate(token, escalatorIndex)
+        this.updateSections(section, updatedCoord)
+        return updatedCoord
     }
 
     addSection(offset, direction) {
