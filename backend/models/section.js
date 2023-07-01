@@ -3,9 +3,8 @@ const { CoordinateMap } = require('./coordinateMap')
 const { Offset } = require('./offset')
 const { Tile, TileType } = require('./tile')
 const { Wall } = require('./wall')
-const { getConnection } = require('./connection')
-const { DIRECTIONS } = require('./direction')
-const logger = require('../utils/logger')
+
+
 //deals with simple coordinates
 class Section {
     constructor(id, dimensions, offset) {
@@ -23,9 +22,6 @@ class Section {
                 this.addTile(new Tile(new Coordinate(i, j), TileType.NORMAL))
             }
         }
-
-        this.addConnection(getConnection(DIRECTIONS.UP))
-        this.addConnection(getConnection(DIRECTIONS.RIGHT))
     }
 
     addEscalator(escalator) {
@@ -59,10 +55,11 @@ class Section {
         this.tiles.addItem(tile.coord, tile)
     }
 
-    /*addWallTile(coord) {
+    addWallTile(coord) {
+        //TODO deprecate
         const tile = new Tile(coord, TileType.WALL)
         this.tiles.addItem(coord, tile)
-    }*/
+    }
 
     addWall(from, to) {
         const wall = new Wall(from, to)
@@ -167,6 +164,7 @@ class Section {
     }
 
     connectAt(coord) {
+        console.log('Connecting!: ' + JSON.stringify(coord))
         const connection = this.connections.find( connection => this.isAtSectionCoord(coord, connection.coord))
         if(!connection) {
             return

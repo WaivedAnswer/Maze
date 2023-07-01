@@ -5,6 +5,7 @@ const { Token } = require('./token')
 const { splitMoves } = require('./move')
 const { DIRECTIONS } = require('./direction')
 const logger = require('../utils/logger')
+const { BasicSectionProvider } = require('./factories/sectionProvider')
 
 class Game {
     constructor(gameId) {
@@ -95,10 +96,12 @@ class Game {
 
 
     reset() {
-        this.tokens = [new Token(new Coordinate(0, 0)), new Token(new Coordinate(5, 9))]
+        const sectionProvider = new BasicSectionProvider()
+        const tokenStarts = sectionProvider.getInitialTokenCoordinates()
+        this.tokens = tokenStarts.map( startingCoord => new Token(startingCoord))
         this.selectedTokens = new Map()
         this.complete = false
-        this.board = new Board(10, this.onBoardChange)
+        this.board = new Board(sectionProvider, this.onBoardChange)
         this.pickup = new Pickup(this.onBoardChange, this.onTimerFlip)
         this.remainingSeconds = 120
         clearInterval(this.timerInterval)
