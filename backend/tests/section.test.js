@@ -31,34 +31,3 @@ test('section relativeTo negative', () => {
 
     expect(result).toStrictEqual(new Coordinate(8, 9))
 })
-
-test('section no walls', () => {
-    const offset = new Coordinate(0, 0)
-    const section = new Section(ID, 4, offset)
-
-    const result = section.getWalls()
-
-    expect(result).toStrictEqual([])
-})
-
-test('section single wall', () => {
-    const offset = new Coordinate(0, 0)
-    const section = new Section(ID, 4, offset)
-    section.addWall(new Coordinate(0, 0))
-
-    const result = section.getWalls(new Coordinate(0,0))
-
-    expect(result).toEqual(expect.arrayContaining([{ x:0, y:0 }]))
-})
-
-test('section multi wall', () => {
-    const offset = new Coordinate(0, 0)
-    const section = new Section(ID, 4, offset)
-    section.addWall(new Coordinate(0,0))
-    section.addWall(new Coordinate(1,1))
-    section.addWall(new Coordinate(2,2))
-
-    const result = section.getWalls(new Coordinate(0,0))
-
-    expect(result).toEqual(expect.arrayContaining([{ x:0, y:0 }, { x:1, y:1 }, { x:2, y:2 }]))
-})

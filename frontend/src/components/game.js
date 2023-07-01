@@ -5,6 +5,7 @@ import GameService from '../services/gameService'
 import logger from '../services/logger'
 import Coordinate from '../models/coordinate'
 import {EscalatorModel} from '../models/escalator'
+import {WallModel} from '../models/wallModel'
 import { Tile, TileType } from '../models/tile'
 import { Item } from '../models/item'
 import Token from '../models/token'
@@ -60,6 +61,11 @@ const getEscalators = (escalators) => {
   return escalators.map( escalator => new EscalatorModel(escalator.id, getCoordinate(escalator.start), getCoordinate(escalator.end)))
 }
 
+const getWalls = (walls) => {
+  console.log(walls.length)
+  return walls.map( wall => new WallModel(getCoordinate(wall.start), getCoordinate(wall.end)))
+}
+
 const getInitials = (str) => {
   const split = str.split(" ")
   return split.map(substr => substr[0]).join('')
@@ -84,6 +90,7 @@ const getTokens = (data) => {
 function Game({realPlayerName}) {
   const [updatedTiles, setTiles] = useState([[]])
   const [escalators, setEscalators] = useState([])
+  const [walls, setWalls] = useState([])
   const [tokens, setTokens] = useState([])
   const [allowedMoves, setMoves] = useState([])
   const [allPlayers, setAllPlayers] = useState([])
@@ -120,6 +127,7 @@ function Game({realPlayerName}) {
           logger.debug('Board UPDATE')
           setTiles(getTiles(json.data.board.tiles))
           setEscalators(getEscalators(json.data.board.escalators))
+          setWalls(getWalls(json.data.board.walls))
           setTokens(getTokens(json.data.tokenData))
           clearNotification()
         } else if (json.type === 'win') {
@@ -183,7 +191,7 @@ function Game({realPlayerName}) {
           }
           <button className='button' id='reset-button' onClick={reset}>Reset</button>
         </div>
-        <Board grid={updatedTiles} tokens={tokens} escalators={escalators} gameService={gameService} />
+        <Board grid={updatedTiles} tokens={tokens} escalators={escalators} walls={walls} gameService={gameService} />
       </div>
 
     </div >

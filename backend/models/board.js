@@ -25,33 +25,56 @@ class Board {
             section.addTile(new Tile(exit, TileType.EXIT))
         }
 
-        for (let i = 0; i < this.sectionDimensions - 1; i++) {
-            section.addWall(new Coordinate(i, 5))
+        section.addWall(new Coordinate(0, 0), new Coordinate(2, 0))
+        section.addWall(new Coordinate(3, 0), new Coordinate(10, 0))
+        section.addWall(new Coordinate(10, 0), new Coordinate(10, 5))
+        section.addWall(new Coordinate(10, 6), new Coordinate(10, 10))
+
+        section.addWall(new Coordinate(0, 0), new Coordinate(0, 10))
+        section.addWall(new Coordinate(0, 10), new Coordinate(10, 10))
+
+        section.addWall(new Coordinate(0, 5), new Coordinate(this.sectionDimensions - 2, 5))
+
+        section.addWall(new Coordinate(0, 1), new Coordinate(4, 1))
+
+        section.addWall(new Coordinate(1, 7), new Coordinate(6, 7))
+
+        section.addWall(new Coordinate(1, 3), new Coordinate(6, 3))
+
+        section.addWall(new Coordinate(6, 0), new Coordinate(6, 3))
+
+        section.addWall(new Coordinate(6, 7), new Coordinate(6, this.sectionDimensions))
+
+        section.addWall(new Coordinate(8, 1), new Coordinate(8, this.sectionDimensions - 1))
+
+        /*for (let i = 0; i < this.sectionDimensions - 1; i++) {
+            section.addWallTile(new Coordinate(i, 5))
         }
 
         for (let i = 0; i < 4; i++) {
-            section.addWall(new Coordinate(i, 1))
+            section.addWallTile(new Coordinate(i, 1))
         }
 
         for (let i = 1; i < 6; i++) {
-            section.addWall(new Coordinate(i, 7))
+            section.addWallTile(new Coordinate(i, 7))
         }
 
         for (let i = 1; i < 6; i++) {
-            section.addWall(new Coordinate(i, 3))
+            section.addWallTile(new Coordinate(i, 3))
         }
 
         for (let j = 0; j < 3; j++) {
-            section.addWall(new Coordinate(5, j))
+            section.addWallTile(new Coordinate(5, j))
         }
 
         for (let j = 7; j < this.sectionDimensions; j++) {
-            section.addWall(new Coordinate(6, j))
+            section.addWallTile(new Coordinate(6, j))
         }
 
         for (let j = 1; j < this.sectionDimensions - 1; j++) {
-            section.addWall(new Coordinate(8, j))
-        }
+            section.addWallTile(new Coordinate(8, j))
+        }*/
+
 
         section.addTile(new Tile(new Coordinate(4,0), TileType.NORMAL, new Item(ItemType.COIN)))
         section.addTile(new Tile(new Coordinate(6,0), TileType.NORMAL, new Item(ItemType.TIMER)))
@@ -78,13 +101,19 @@ class Board {
     getData() {
         return {
             tiles: this.getAllData(),
-            escalators: this.getEscalatorData()
+            escalators: this.getEscalatorData(),
+            walls: this.getWallData()
         }
     }
 
     getEscalatorData() {
         const minCoordinate = this.getMinCoordinate()
         return this.sections.flatMap(section => section.getEscalatorData(minCoordinate))
+    }
+
+    getWallData() {
+        const minCoordinate = this.getMinCoordinate()
+        return this.sections.flatMap(section => section.getWallData(minCoordinate))
     }
 
 
@@ -136,11 +165,11 @@ class Board {
 
     move(token, movementCommand) {
         const movementVector = DIRECTIONS[movementCommand]
-        //crash likely means no token
+
         const currCoord = token.coordinate
         const updatedCoord = currCoord.offset(movementVector)
         const currSection = this.getCurrSection(updatedCoord)
-        if(!currSection || !currSection.canMove(updatedCoord)) {
+        if(!currSection || !currSection.canMoveV2(currCoord, updatedCoord)) {
             return currCoord
         }
 

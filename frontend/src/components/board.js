@@ -5,7 +5,7 @@ import Escalator from './escalator'
 import Wall from './wall'
 import isEqual from "lodash.isequal"
 
-const Board = ({ grid, tokens, escalators, gameService }) => {
+const Board = ({ grid, tokens, escalators, walls, gameService }) => {
     const handleKeyPress = (event) => {
         if (event.key.toLowerCase() === 's') {
             gameService.moveDown()
@@ -76,7 +76,9 @@ const Board = ({ grid, tokens, escalators, gameService }) => {
             {
                 tokens.map( (token) => <Token token={token} onTokenSelected={onTokenSelected} style={tileStyle(token.coord)}/>)
             }
-             <Wall/>        
+            {
+                walls.map( (wall) => <Wall wall={wall}/>  )
+            }     
         </div>
     )
 }

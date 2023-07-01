@@ -1,11 +1,15 @@
 
-const Wall = ( ) => {
-    const rowStart = 1
-    const colStart = 1
-    
+const Wall = ( {wall}) => {
     const wallStyle = {
-        gridRow: `${rowStart} / span 4`,
-        gridColumn: `${colStart} / span 1`,
+        gridRow: `${wall.getStartRow()} / span ${wall.getRowSpan()}`,
+        gridColumn: `${wall.getStartCol()} / span ${wall.getColSpan()}`,
+        zIndex: 1
+    }
+
+    if(wall.isHorizontal()) {
+        wallStyle.borderTop = '10px solid #000000'
+    } else {
+        wallStyle.borderLeft = '10px solid #000000'
     }
 
     return (

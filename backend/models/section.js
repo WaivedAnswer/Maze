@@ -2,6 +2,7 @@ const { Coordinate } = require('./coordinate')
 const { CoordinateMap } = require('./coordinateMap')
 const { Offset } = require('./offset')
 const { Tile, TileType } = require('./tile')
+const { Wall } = require('./wall')
 const { getConnection } = require('./connection')
 const { DIRECTIONS } = require('./direction')
 const logger = require('../utils/logger')
@@ -31,13 +32,17 @@ class Section {
         this.escalators.push(escalator)
     }
 
+    getGlobalCoord(coord, originCoordinate) {
+        return coord.offset(this.offset).relativeTo(originCoordinate)
+    }
+
     getEscalatorData(relativeTo) {
         let escalatorData = []
         this.escalators.forEach( (escalator, index) =>  {
             let data = {
                 id: `${this.id}-${index}`,
-                start: escalator.startCoord.relativeTo(relativeTo),
-                end:  escalator.endCoord.relativeTo(relativeTo)
+                start: this.getGlobalCoord(escalator.startCoord, relativeTo),
+                end:  this.getGlobalCoord(escalator.endCoord, relativeTo)
             }
             escalatorData.push(data)
         }
@@ -54,9 +59,27 @@ class Section {
         this.tiles.addItem(tile.coord, tile)
     }
 
-    addWall(coord) {
-       /* const tile = new Tile(coord, TileType.WALL)
-        this.tiles.addItem(coord, tile)*/
+    /*addWallTile(coord) {
+        const tile = new Tile(coord, TileType.WALL)
+        this.tiles.addItem(coord, tile)
+    }*/
+
+    addWall(from, to) {
+        const wall = new Wall(from, to)
+        this.walls.push(wall)
+    }
+
+    getWallData(relativeTo) {
+        let wallData = []
+        this.walls.forEach( wall =>  {
+            let data = {
+                start: this.getGlobalCoord(wall.startCoord, relativeTo),
+                end:  this.getGlobalCoord(wall.endCoord, relativeTo)
+            }
+            wallData.push(data)
+        }
+        )
+        return wallData
     }
 
     getTilesOfType(type, relativeTo) {
@@ -107,16 +130,17 @@ class Section {
     }
 
     getRelativeCoord(coord) {
-        logger.debug(coord)
         return coord.relativeTo(this.offset)
     }
 
-    canMove(coord) {
-        if(!this.inBounds(coord)) {
+    canMoveV2(originalCoord, updatedCoord) {
+        if(!this.inBounds(updatedCoord)) {
             return false
         }
-        const currTile = this.getTile(coord)
-        return currTile.isPassable()
+        const nextTile = this.getTile(updatedCoord)
+        const blocked = this.walls.some( wall => wall.isBetween(this.getRelativeCoord(originalCoord), this.getRelativeCoord(updatedCoord)))
+
+        return nextTile.isPassable() && !blocked
     }
 
     isAtSectionCoord(coord, sectionCoord) {
