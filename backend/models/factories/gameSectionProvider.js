@@ -235,22 +235,42 @@ blockedConnectionWalls[DIRECTIONS.RIGHT] =  { start: { x: 4, y: 2 }, end: { x: 4
 blockedConnectionWalls[DIRECTIONS.UP] =  { start: { x: 2, y: 0 }, end: { x: 3, y: 0 } }
 blockedConnectionWalls[DIRECTIONS.DOWN] =  { start: { x: 1, y: 4 }, end: { x: 2, y: 4 } }
 
+const otherSections = [
+    SECOND,
+    THIRD,
+    FOURTH,
+    FIFTH,
+    SIXTH,
+    SEVENTH,
+    EIGHTH,
+    NINTH,
+]
+
 class GameSectionProvider {
     constructor() {
         this.sectionDimensions = 4
-        this.sectionData = []
-        this.sectionData.push(FIRST)
-        this.sectionData.push(SECOND)
-        this.sectionData.push(THIRD)
-        this.sectionData.push(FOURTH)
-        this.sectionData.push(FIFTH)
-        this.sectionData.push(SIXTH)
-        this.sectionData.push(SEVENTH)
-        this.sectionData.push(EIGHTH)
-        this.sectionData.push(NINTH)
+        this.sectionData = [FIRST].concat(this.shuffle(otherSections))
         this.remaining = this.sectionData.length
     }
 
+    shuffle(array) {
+        let currentIndex = array.length, temporaryValue, randomIndex
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex)
+            currentIndex -= 1
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex]
+            array[currentIndex] = array[randomIndex]
+            array[randomIndex] = temporaryValue
+        }
+
+        return array
+    }
 
     createSection(id, offset, direction) {
         const sectionData = this.sectionData[id]
