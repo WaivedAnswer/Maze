@@ -1,5 +1,5 @@
 const { Coordinate } = require('./coordinate')
-const { DIRECTIONS } = require('./direction')
+const { DIRECTIONS, getNextDirection, getPrevDirection, getOppositeDirection } = require('./direction')
 
 function getRotatedCoord(direction, coord, dimensions) {
     switch(direction) {
@@ -27,8 +27,22 @@ function getRotatedWallCoord(direction, coord, dimensions) {
     }
 }
 
+function getRotatedDirection(direction, originalDirection) {
+    switch(direction) {
+    case DIRECTIONS.UP:
+        return originalDirection
+    case DIRECTIONS.DOWN:
+        return getOppositeDirection(originalDirection)
+    case DIRECTIONS.LEFT:
+        return getPrevDirection(originalDirection)
+    case DIRECTIONS.RIGHT:
+        return getNextDirection(originalDirection)
+    }
+}
+
 
 module.exports = {
     getRotatedCoord,
-    getRotatedWallCoord
+    getRotatedWallCoord,
+    getRotatedDirection
 }

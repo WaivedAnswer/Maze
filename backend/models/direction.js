@@ -12,6 +12,23 @@ const DIRECTIONS = {
     DOWN: getMovementVector(0, 1)
 }
 
+const DIRECTION_ORDER = [
+    DIRECTIONS.UP,
+    DIRECTIONS.RIGHT,
+    DIRECTIONS.DOWN,
+    DIRECTIONS.LEFT
+]
+
+function getNextDirection(direction) {
+    const directionIndex = DIRECTION_ORDER.indexOf(direction)
+    return DIRECTION_ORDER[(directionIndex + 1) % DIRECTION_ORDER.length]
+}
+
+function getPrevDirection(direction) {
+    const directionIndex = DIRECTION_ORDER.indexOf(direction)
+    return DIRECTION_ORDER[(directionIndex - 1) % DIRECTION_ORDER.length]
+}
+
 function getOppositeDirection(orientation) {
     switch (orientation) {
     case DIRECTIONS.RIGHT:
@@ -28,5 +45,7 @@ function getOppositeDirection(orientation) {
 
 module.exports = {
     DIRECTIONS,
-    getOppositeDirection
+    getOppositeDirection,
+    getNextDirection,
+    getPrevDirection
 }
