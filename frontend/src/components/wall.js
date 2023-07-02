@@ -8,8 +8,10 @@ const Wall = ( {wall}) => {
 
     if(wall.isHorizontal()) {
         wallStyle.borderTop = '10px solid #000000'
+        wallStyle.height ='0px'
     } else {
         wallStyle.borderLeft = '10px solid #000000'
+        wallStyle.width = '0px'
     }
 
     return (

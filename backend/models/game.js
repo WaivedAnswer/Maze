@@ -17,9 +17,7 @@ class Game {
             this.sendGameMessage(this.getBoardUpdate())
         }
         this.onTimerFlip = () => {
-            const oldSeconds = this.remainingSeconds
             const newSeconds = 120 - this.remainingSeconds
-            logger.info('Timer Flip! Old: ' + oldSeconds + ' New: ' + newSeconds )
             this.remainingSeconds = newSeconds
         }
         this.reset()

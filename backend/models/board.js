@@ -139,7 +139,6 @@ class Board {
 
     addSection(offset, direction) {
         const id = this.sections.length
-        console.log('Adding Section!: ' + id)
         const newSection =  this.sectionProvider.createSection(id, offset, direction)
         this.sections.push(newSection)
 

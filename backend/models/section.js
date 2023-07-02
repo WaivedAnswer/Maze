@@ -161,13 +161,10 @@ class Section {
             return [null, null]
         }
         let connectingOriginCoord = connection.getConnectionOrigin().offset(this.offset)
-        console.log('Offset orientation: ' + connection.orientation)
-        console.log('Connection info: ' + JSON.stringify(connection))
         return [new Offset(connectingOriginCoord.x, connectingOriginCoord.y), connection.orientation]
     }
 
     connectAt(coord) {
-        console.log('Connecting!: ' + JSON.stringify(coord))
         const connection = this.connections.find( connection => this.isAtSectionCoord(coord, connection.coord))
         if(!connection) {
             return
