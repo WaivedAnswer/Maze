@@ -157,7 +157,7 @@ class Section {
 
     getConnectingOffset(coord) {
         const connection = this.connections.find( connection => this.isAtSectionCoord(coord, connection.coord))
-        if(!connection || connection.connected) {
+        if(!connection) {
             return [null, null]
         }
         let connectingOriginCoord = connection.getConnectionOrigin().offset(this.offset)
@@ -172,7 +172,6 @@ class Section {
         if(!connection) {
             return
         }
-        connection.connected = true
     }
 
     isAtExit(coord) {

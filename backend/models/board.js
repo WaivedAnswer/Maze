@@ -100,6 +100,12 @@ class Board {
         } else if (this.allSectionsRevealed()) {
             return
         }
+
+        const connectingCoords = new Coordinate(0,0).offset(connectionOffset)
+        const alreadyConnected = this.getCurrSection(connectingCoords) !== undefined
+        if ( alreadyConnected ) {
+            return
+        }
         this.addSection(connectionOffset, direction)
         currSection.connectAt(updatedCoord)
         this.onBoardChange()
