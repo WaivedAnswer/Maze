@@ -5,7 +5,6 @@ class Connection {
     constructor(orientation, coord, dimensions) {
         this.orientation = orientation
         this.coord = coord
-        this.connected = false
         this.dimensions = dimensions
     }
 
