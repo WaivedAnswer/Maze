@@ -37,6 +37,8 @@ function getRotatedDirection(direction, originalDirection) {
         return getPrevDirection(originalDirection)
     case DIRECTIONS.RIGHT:
         return getNextDirection(originalDirection)
+    default:
+        throw new Error('Unknown Direction!' + JSON.stringify(direction) + JSON.stringify(originalDirection))
     }
 }
 

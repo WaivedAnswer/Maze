@@ -21,12 +21,18 @@ const DIRECTION_ORDER = [
 
 function getNextDirection(direction) {
     const directionIndex = DIRECTION_ORDER.indexOf(direction)
-    return DIRECTION_ORDER[(directionIndex + 1) % DIRECTION_ORDER.length]
+    const nextIndex = (directionIndex + 1) % DIRECTION_ORDER.length
+    return DIRECTION_ORDER[nextIndex]
 }
 
 function getPrevDirection(direction) {
     const directionIndex = DIRECTION_ORDER.indexOf(direction)
-    return DIRECTION_ORDER[(directionIndex - 1) % DIRECTION_ORDER.length]
+    const nextIndex = directionIndex - 1
+    if(nextIndex >= 0) {
+        return DIRECTION_ORDER[nextIndex]
+    } else {
+        return DIRECTION_ORDER[(DIRECTION_ORDER.length - 1)]
+    }
 }
 
 function getOppositeDirection(orientation) {
@@ -39,6 +45,8 @@ function getOppositeDirection(orientation) {
         return DIRECTIONS.DOWN
     case DIRECTIONS.DOWN:
         return DIRECTIONS.UP
+    default:
+        throw new Error('Invalid orientation' + JSON.stringify(orientation))
     }
 }
 

@@ -1,6 +1,6 @@
 const { getRotatedCoord, getRotatedWallCoord } = require('../models/rotations')
 const { Coordinate } = require('../models/coordinate')
-const { DIRECTIONS } = require('../models/direction')
+const { DIRECTIONS, getNextDirection, getPrevDirection } = require('../models/direction')
 
 
 test('up to up', () => {
@@ -105,4 +105,14 @@ test('up to right origin', () => {
     const result = getRotatedWallCoord(DIRECTIONS.RIGHT, originalCoord, 4)
 
     expect(result).toEqual(new Coordinate(4, 0))
+})
+
+test('next left', () => {
+    const result = getNextDirection(DIRECTIONS.LEFT)
+    expect(result).toEqual(DIRECTIONS.UP)
+})
+
+test('prev up', () => {
+    const result = getPrevDirection(DIRECTIONS.UP)
+    expect(result).toEqual(DIRECTIONS.LEFT)
 })

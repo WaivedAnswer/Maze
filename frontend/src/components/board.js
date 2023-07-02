@@ -41,7 +41,6 @@ const Board = ({ grid, tokens, escalators, walls, gameService }) => {
 
     const boardStyle = {
         margin: '48px',
-        height: '100vh',
         overflow: 'auto',
         display: 'grid',
         gridTemplateColumns: `repeat(${gridWidth}, 64px)`,
