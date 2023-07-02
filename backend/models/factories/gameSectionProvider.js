@@ -316,8 +316,17 @@ class GameSectionProvider {
         items.forEach( item => section.addTile(new Tile(this.getTileCoord(section.direction, item.coord), TileType.NORMAL, new Item(item.type))))
     }
 
+    addPortal(section, portal) {
+        section.addTile(new Tile(this.getTileCoord(section.direction, portal.coord), TileType.PORTAL))
+    }
+
     addPortals(section, portals) {
-        portals.forEach( portal => section.addTile(new Tile(this.getTileCoord(section.direction, portal.coord), TileType.PORTAL)))
+        //adding just a single until portals are token selective
+        const randomIndex = Math.floor(Math.random() * portals.length * 2)
+        if(randomIndex < portals.length) {
+            this.addPortal(section, portals[randomIndex])
+        }
+        //portals.forEach( portal => this.addPortal(section, portal))
     }
 
     createConnection(sectionDirection, direction ) {
