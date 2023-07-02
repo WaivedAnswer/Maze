@@ -217,17 +217,6 @@ const NINTH = {
     ]
 }
 
-const standardWalls = [
-    { start: { x: 0, y: 0 }, end: { x: 2, y: 0 } },
-    { start: { x: 0, y: 0 }, end: { x: 0, y: 1 } },
-    { start: { x: 0, y: 2 }, end: { x: 0, y: 4 } },
-    { start: { x: 3, y: 0 }, end: { x: 4, y: 0 } },
-    { start: { x: 4, y: 0 }, end: { x: 4, y: 2 } },
-    { start: { x: 4, y: 3 }, end: { x: 4, y: 4 } },
-    { start: { x: 4, y: 4 }, end: { x: 2, y: 4 } },
-    { start: { x: 0, y: 4 }, end: { x: 1, y: 4 } },
-]
-
 const blockedConnectionWalls = new Map()
 
 blockedConnectionWalls[DIRECTIONS.LEFT] =  { start: { x: 0, y: 1 }, end: { x: 0, y: 2 } }
@@ -279,7 +268,6 @@ class GameSectionProvider {
 
 
         this.addWalls(section, sectionData.walls)
-        this.addWalls(section, standardWalls)
         this.addItems(section, sectionData.items)
         this.addPortals(section, sectionData.portals)
         this.addConnections(section, sectionData.connections)
@@ -338,6 +326,32 @@ class GameSectionProvider {
 
     addConnections(section, connections) {
         connections.forEach( connectionDirection => section.addConnection(this.createConnection(section.direction, connectionDirection)))
+        if(!connections.includes(DIRECTIONS.UP )) {
+            this.addWall(section, { start: { x: 0, y: 0 }, end: { x: 4, y: 0 } })
+        } else {
+            this.addWall(section, { start: { x: 0, y: 0 }, end: { x: 2, y: 0 } })
+            this.addWall(section, { start: { x: 3, y: 0 }, end: { x: 4, y: 0 } })
+        }
+
+        //down always has opening
+        this.addWall(section, { start: { x: 0, y: 4 }, end: { x: 1, y: 4 } })
+        this.addWall(section, { start: { x: 2, y: 4 }, end: { x: 4, y: 4 } })
+
+        if(!connections.includes(DIRECTIONS.LEFT )) {
+            this.addWall(section, { start: { x: 0, y: 0 }, end: { x: 0, y: 4 } })
+        } else {
+            this.addWall(section, { start: { x: 0, y: 0 }, end: { x: 0, y: 1 } })
+            this.addWall(section, { start: { x: 0, y: 2 }, end: { x: 0, y: 4 } })
+        }
+
+        if(!connections.includes(DIRECTIONS.RIGHT )) {
+            this.addWall(section, { start: { x: 4, y: 0 }, end: { x: 4, y: 4 } })
+        } else {
+            this.addWall(section, { start: { x: 4, y: 0 }, end: { x: 4, y: 2 } })
+            this.addWall(section, { start: { x: 4, y: 3 }, end: { x: 4, y: 4 } })
+        }
+
+        //this.addWalls(section, standardWalls)
     }
 
     getWallCoord(direction, dataCoord) {
