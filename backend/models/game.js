@@ -6,8 +6,6 @@ const { Token } = require('./token')
 const { splitMoves } = require('./move')
 const { DIRECTIONS } = require('./direction')
 const logger = require('../utils/logger')
-const { BasicSectionProvider } = require('./factories/sectionProvider')
-const { WallTileSectionProvider } = require('./factories/wallTileSectionProvider')
 const { GameSectionProvider } = require('./factories/gameSectionProvider')
 
 class Game {
@@ -95,20 +93,8 @@ class Game {
         }
     }
 
-
-    getSectionProvider() {
-        if(this.gameId.toUpperCase().endsWith('@OLD')) {
-            return new WallTileSectionProvider()
-        } else if(this.gameId.toUpperCase().endsWith('@BASIC')) {
-            return new BasicSectionProvider()
-        } else {
-            return new GameSectionProvider()
-        }
-    }
-
-
     reset() {
-        const sectionProvider = this.getSectionProvider()
+        const sectionProvider = new GameSectionProvider()
 
         const tokenStarts = sectionProvider.getInitialTokenCoordinates()
         this.tokens = tokenStarts.map( startingCoord => new Token(startingCoord))
@@ -202,8 +188,8 @@ class Game {
     }
 
     onMove(token, board, updatedCoords) {
-        if(this.tokens.filter(token => !token.escaped).some(otherToken => otherToken.coordinate.getKey() === updatedCoords.getKey())) {
-            console.log('Collision')
+        if(this.tokens.filter(token => !token.escaped)
+            .some(otherToken => otherToken.coordinate.getKey() === updatedCoords.getKey())) {
             return
         }
         token.coordinate = updatedCoords

@@ -17,24 +17,6 @@ class Connection {
     }
 }
 
-function getConnection(orientation, dimensions) {
-    const centre = Math.floor(dimensions / 2)
-    const start = 0
-    const end = dimensions - 1
-    const oppositeCentre = end - centre
-
-    switch (orientation) {
-    case DIRECTIONS.UP:
-        return new Connection(orientation, new Coordinate(centre, start), dimensions)
-    case DIRECTIONS.RIGHT:
-        return new Connection(orientation, new Coordinate(end, centre), dimensions)
-    case DIRECTIONS.DOWN:
-        return new Connection(orientation, new Coordinate(oppositeCentre, end), dimensions)
-    case DIRECTIONS.LEFT:
-        return new Connection(orientation, new Coordinate(start, oppositeCentre), dimensions)
-    }
-}
-
 function getConnectionCoordinate(orientation, dimensions) {
     const centre = Math.floor(dimensions / 2)
     const start = 0
@@ -55,6 +37,5 @@ function getConnectionCoordinate(orientation, dimensions) {
 
 module.exports = {
     Connection,
-    getConnection,
     getConnectionCoordinate
 }
