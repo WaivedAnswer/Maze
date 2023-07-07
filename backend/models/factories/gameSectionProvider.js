@@ -350,8 +350,6 @@ class GameSectionProvider {
             this.addWall(section, { start: { x: 4, y: 0 }, end: { x: 4, y: 2 } })
             this.addWall(section, { start: { x: 4, y: 3 }, end: { x: 4, y: 4 } })
         }
-
-        //this.addWalls(section, standardWalls)
     }
 
     getWallCoord(direction, dataCoord) {
