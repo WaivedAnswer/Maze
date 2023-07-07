@@ -79,10 +79,11 @@ const getSelectedBy = (selections, idx) => {
 }
 
 const getTokens = (data) => {
-  const newTokens = data.tokens.map((pos, idx) =>
+  const newTokens = data.tokens.map((tokenData, idx) =>
   new Token(idx,
-    getCoordinate(pos),
-    getSelectedBy(data.selections, idx)))
+    getCoordinate(tokenData.pos),
+    getSelectedBy(data.selections, idx),
+    tokenData.escaped))
   return newTokens
 }
 

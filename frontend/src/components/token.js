@@ -2,7 +2,7 @@ import React from 'react'
 import tokenImg from "../images/dwarf_right.png"
 
 const Token = ({ token, onTokenSelected, style}) => {
-    if(!token) {
+    if(!token || token.escaped ) {
         return ''
     }
 

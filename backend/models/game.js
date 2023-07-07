@@ -1,4 +1,5 @@
 const { Board } = require('./board')
+const { TileType } = require('./tile')
 const { Coordinate } = require('./coordinate')
 const { Pickup } = require('./pickup')
 const { Token } = require('./token')
@@ -94,7 +95,7 @@ class Game {
         }
     }
 
- 
+
     getSectionProvider() {
         if(this.gameId.toUpperCase().endsWith('@OLD')) {
             return new WallTileSectionProvider()
@@ -157,8 +158,7 @@ class Game {
             return
         }
         const updatedCoord = this.board.move(token, movementCommand)
-        token.coordinate = updatedCoord
-        this.onMove(token, this.board)
+        this.onMove(token, this.board, updatedCoord)
     }
 
     getSelectedToken(player) {
@@ -179,8 +179,7 @@ class Game {
 
         const gameCoord = new Coordinate(viewCoord.x, viewCoord.y).offset(this.board.getMinCoordinate())
         const updatedCoord = this.board.teleport(token, gameCoord)
-        token.coordinate = updatedCoord
-        this.onMove(token, this.board)
+        this.onMove(token, this.board, updatedCoord)
     }
 
     escalate(player, escalatorId) {
@@ -191,8 +190,7 @@ class Game {
         }
 
         const updatedCoord = this.board.escalate(token, escalatorId)
-        token.coordinate = updatedCoord
-        this.onMove(token, this.board)
+        this.onMove(token, this.board, updatedCoord)
 
     }
 
@@ -203,9 +201,17 @@ class Game {
         })
     }
 
-    onMove(token, board) {
+    onMove(token, board, updatedCoords) {
+        if(this.tokens.filter(token => !token.escaped).some(otherToken => otherToken.coordinate.getKey() === updatedCoords.getKey())) {
+            console.log('Collision')
+            return
+        }
+        token.coordinate = updatedCoords
         const tile = board.getTile(token.coordinate)
         this.pickup.interact(token, tile)
+        if(tile.type === TileType.EXIT && this.board.allItemsCollected()) {
+            token.escape()
+        }
     }
 
     select(playerName, selection) {
@@ -236,7 +242,7 @@ class Game {
 
     getTokenData() {
         return {
-            tokens: this.tokens.map(token => token.getPos(this.board.getMinCoordinate())),
+            tokens: this.tokens.map(token => token.getTokenData(this.board.getMinCoordinate())),
             selections: this.getSelections()
         }
     }
