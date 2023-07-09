@@ -1,6 +1,6 @@
 import React from 'react'
 import Tile from './tile'
-import Token from './token'
+import  Token  from './token'
 import Escalator from './escalator'
 import Wall from './wall'
 

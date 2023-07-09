@@ -1,7 +1,11 @@
 import { TileType } from "../models/tile"
+import { TokenType } from "../models/token"
+
 import Item from "./item"
+
 import rockTile from "../images/rock.png"
 import portalTile from "../images/portal.png"
+
 
 const Tile = ({tile, onTeleport }) => {
     let className
@@ -16,6 +20,22 @@ const Tile = ({tile, onTeleport }) => {
         className = 'tile-unknown'
     } else if (type === TileType.CONNECT) {
         className = 'tile-connect'
+        switch(tile.tokenType) {
+            case TokenType.DWARF:
+                className += ' connect-dwarf'
+                break;
+            case TokenType.MAGE:
+                className += ' connect-mage'
+                break;
+            case TokenType.BARBARIAN:
+                className += ' connect-barbarian'
+                break;
+            case TokenType.ELF:
+                className += ' connect-elf'
+                break;
+            default:
+                throw new Error('Unknown token type')
+        }
     } else if (type === TileType.PORTAL) {
         className = 'tile-portal'
         tileImg = portalTile

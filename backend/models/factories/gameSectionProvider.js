@@ -1,5 +1,6 @@
 const { Section } = require('../section')
 const { Tile, TileType } = require('../tile')
+const { Token, TokenType } = require('../token')
 const { Coordinate } = require('../coordinate')
 const { Escalator } = require('../escalator')
 const { Item, ItemType } = require('../item')
@@ -10,10 +11,11 @@ const { getRotatedCoord, getRotatedWallCoord, getRotatedDirection } = require('.
 const FIRST = {
     items: [{ type: ItemType.TIMER, coord: { x: 0, y: 0 } }],
     connections: [
-        DIRECTIONS.UP,
-        DIRECTIONS.LEFT,
-        DIRECTIONS.RIGHT,
-        DIRECTIONS.DOWN],
+        { direction:  DIRECTIONS.UP, type: TokenType.DWARF },
+        { direction:  DIRECTIONS.LEFT, type: TokenType.MAGE },
+        { direction:  DIRECTIONS.RIGHT, type: TokenType.ELF },
+        { direction:  DIRECTIONS.DOWN, type: TokenType.BARBARIAN }
+    ],
     portals: [
         { coord: { x: 3, y: 0 } },
         { coord: { x: 3, y: 1 } },
@@ -34,7 +36,8 @@ const FIRST = {
 const SECOND = {
     items: [],
     connections: [
-        DIRECTIONS.LEFT],
+        { direction:  DIRECTIONS.LEFT, type: TokenType.DWARF }
+    ],
     portals: [
         { coord: { x: 0, y: 3 } },
         { coord: { x: 2, y: 3 } }],
@@ -60,8 +63,8 @@ const SECOND = {
 const THIRD = {
     items: [{ type: ItemType.TIMER, coord: { x: 0, y: 2 } }],
     connections: [
-        DIRECTIONS.LEFT,
-        DIRECTIONS.RIGHT
+        { direction:  DIRECTIONS.LEFT, type: TokenType.MAGE },
+        { direction:  DIRECTIONS.RIGHT, type: TokenType.BARBARIAN },
     ],
     portals: [
         { coord: { x: 2, y: 0 } },
@@ -84,8 +87,8 @@ const THIRD = {
 const FOURTH = {
     items: [{ type: ItemType.TIMER, coord: { x: 1, y: 1 } }],
     connections: [
-        DIRECTIONS.UP,
-        DIRECTIONS.RIGHT
+        { direction:  DIRECTIONS.UP, type: TokenType.MAGE },
+        { direction:  DIRECTIONS.RIGHT, type: TokenType.ELF },
     ],
     portals: [
         { coord: { x: 0, y: 2 } },
@@ -108,9 +111,9 @@ const FOURTH = {
 const FIFTH = {
     items: [{ type: ItemType.TIMER, coord: { x: 2, y: 1 } }],
     connections: [
-        DIRECTIONS.LEFT,
-        DIRECTIONS.UP,
-        DIRECTIONS.RIGHT
+        { direction:  DIRECTIONS.LEFT, type: TokenType.BARBARIAN },
+        { direction:  DIRECTIONS.UP, type: TokenType.DWARF },
+        { direction:  DIRECTIONS.RIGHT, type: TokenType.ELF },
     ],
     portals: [
         { coord: { x: 0, y: 2 } },],
@@ -132,8 +135,8 @@ const FIFTH = {
 const SIXTH = {
     items: [{ type: ItemType.COIN, coord: { x: 3, y: 2 } }],
     connections: [
-        DIRECTIONS.LEFT,
-        DIRECTIONS.UP
+        { direction:  DIRECTIONS.LEFT, type: TokenType.DWARF },
+        { direction:  DIRECTIONS.UP, type: TokenType.ELF },
     ],
     portals: [
         { coord: { x: 0, y: 3 } },],
@@ -155,7 +158,7 @@ const SIXTH = {
 const SEVENTH = {
     items: [{ type: ItemType.COIN, coord: { x: 0, y: 2 } }],
     connections: [
-        DIRECTIONS.RIGHT
+        { direction:  DIRECTIONS.RIGHT, type: TokenType.MAGE },
     ],
     portals: [
         { coord: { x: 2, y: 0 } },
@@ -178,8 +181,8 @@ const SEVENTH = {
 const EIGHTH = {
     items: [{ type: ItemType.COIN, coord: { x: 0, y: 3 } }],
     connections: [
-        DIRECTIONS.RIGHT,
-        DIRECTIONS.LEFT
+        { direction:  DIRECTIONS.RIGHT, type: TokenType.MAGE },
+        { direction:  DIRECTIONS.LEFT, type: TokenType.DWARF },
     ],
     portals: [
         { coord: { x: 2, y: 1 } },
@@ -199,7 +202,7 @@ const EIGHTH = {
 const NINTH = {
     items: [{ type: ItemType.COIN, coord: { x: 3, y: 3 } }],
     connections: [
-        DIRECTIONS.RIGHT,
+        { direction:  DIRECTIONS.RIGHT, type: TokenType.BARBARIAN },
     ],
     portals: [
         { coord: { x: 2, y: 1 } },],
@@ -289,7 +292,9 @@ class GameSectionProvider {
         if(!exit) {
             return
         }
-        section.addTile(new Tile(this.getTileCoord(section.direction, exit.coord), TileType.EXIT))
+        section.addTile(new Tile(this.getTileCoord(section.direction, exit.coord),
+            TileType.EXIT,
+            null))
     }
 
     addWalls(section, walls) {
@@ -301,11 +306,15 @@ class GameSectionProvider {
     }
 
     addItems(section, items) {
-        items.forEach( item => section.addTile(new Tile(this.getTileCoord(section.direction, item.coord), TileType.NORMAL, new Item(item.type))))
+        items.forEach( item => section.addTile(new Tile(this.getTileCoord(section.direction, item.coord),
+            TileType.NORMAL,
+            null,
+            new Item(item.type))))
     }
 
     addPortal(section, portal) {
-        section.addTile(new Tile(this.getTileCoord(section.direction, portal.coord), TileType.PORTAL))
+        section.addTile(new Tile(this.getTileCoord(section.direction, portal.coord),
+            TileType.PORTAL, null))
     }
 
     addPortals(section, portals) {
@@ -321,12 +330,31 @@ class GameSectionProvider {
         const beforeRotation = getConnectionCoordinate(direction, this.sectionDimensions)
         const coordAfterRotation = getRotatedCoord(sectionDirection, beforeRotation, this.sectionDimensions)
         const directionAfterRotation = getRotatedDirection(sectionDirection, direction)
-        return new Connection(directionAfterRotation, coordAfterRotation, this.sectionDimensions)
+        return new Connection(directionAfterRotation, coordAfterRotation, this.sectionDimensions, TokenType.ELF)
+    }
+
+    createConnectionV2(sectionDirection, connectionData ) {
+        const beforeRotation = getConnectionCoordinate(connectionData.direction, this.sectionDimensions)
+        const coordAfterRotation = getRotatedCoord(sectionDirection, beforeRotation, this.sectionDimensions)
+        const directionAfterRotation = getRotatedDirection(sectionDirection, connectionData.direction)
+        return new Connection(directionAfterRotation, coordAfterRotation, this.sectionDimensions, connectionData.type)
     }
 
     addConnections(section, connections) {
-        connections.forEach( connectionDirection => section.addConnection(this.createConnection(section.direction, connectionDirection)))
-        if(!connections.includes(DIRECTIONS.UP )) {
+        connections.forEach( connectionData => {
+            if(connectionData.type) {
+                section.addConnection(this.createConnectionV2(section.direction, connectionData))
+            } else {
+                section.addConnection(this.createConnection(section.direction, connectionData))
+            }
+
+        })
+
+        let occupiedDirections = connections.map(connection => connection.direction).filter(direction => direction !== undefined)
+        if(occupiedDirections.length === 0) {
+            occupiedDirections = connections
+        }
+        if(!occupiedDirections.includes(DIRECTIONS.UP )) {
             this.addWall(section, { start: { x: 0, y: 0 }, end: { x: 4, y: 0 } })
         } else {
             this.addWall(section, { start: { x: 0, y: 0 }, end: { x: 2, y: 0 } })
@@ -337,14 +365,14 @@ class GameSectionProvider {
         this.addWall(section, { start: { x: 0, y: 4 }, end: { x: 1, y: 4 } })
         this.addWall(section, { start: { x: 2, y: 4 }, end: { x: 4, y: 4 } })
 
-        if(!connections.includes(DIRECTIONS.LEFT )) {
+        if(!occupiedDirections.includes(DIRECTIONS.LEFT )) {
             this.addWall(section, { start: { x: 0, y: 0 }, end: { x: 0, y: 4 } })
         } else {
             this.addWall(section, { start: { x: 0, y: 0 }, end: { x: 0, y: 1 } })
             this.addWall(section, { start: { x: 0, y: 2 }, end: { x: 0, y: 4 } })
         }
 
-        if(!connections.includes(DIRECTIONS.RIGHT )) {
+        if(!occupiedDirections.includes(DIRECTIONS.RIGHT )) {
             this.addWall(section, { start: { x: 4, y: 0 }, end: { x: 4, y: 4 } })
         } else {
             this.addWall(section, { start: { x: 4, y: 0 }, end: { x: 4, y: 2 } })
@@ -360,19 +388,15 @@ class GameSectionProvider {
         section.addWall(this.getWallCoord(section.direction, wall.start), this.getWallCoord(section.direction, wall.end))
     }
 
-    /*addBlockedConnections(section, connections) {
-        const directions = Array.from(blockedConnectionWalls.keys())
-        directions.filter( direction => !connections.includes(direction))
-            .forEach( direction => this.addWall(section, blockedConnectionWalls[direction]))
-    }*/
-
     addEscalators(section, escalators) {
         escalators.forEach( escalator => section.addEscalator(new Escalator(this.getTileCoord(section.direction, escalator.start), this.getTileCoord(section.direction, escalator.end))))
     }
 
-    getInitialTokenCoordinates() {
-        //return []
-        return [new Coordinate(1, 1), new Coordinate(2, 2)]
+    getTokens() {
+        return [ new Token(new Coordinate(1, 1), TokenType.MAGE),
+            new Token(new Coordinate(2, 2), TokenType.ELF),
+            new Token(new Coordinate(1, 2), TokenType.BARBARIAN),
+            new Token(new Coordinate(2, 1), TokenType.DWARF)]
     }
 
 

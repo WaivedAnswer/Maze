@@ -61,7 +61,8 @@ class Board {
                     let tileData = {
                         pos: originBasedCoord.getPos(),
                         type: currTile.type,
-                        hasItem: currTile.hasItem()
+                        hasItem: currTile.hasItem(),
+                        tokenType: currTile.tokenType
                     }
                     if(currTile.hasItem()) {
                         tileData.item = currTile.item.getData()
@@ -71,7 +72,8 @@ class Board {
                     row.push({
                         pos: originBasedCoord.getPos(),
                         type: -1,
-                        hasItem: false
+                        hasItem: false,
+                        tokenType: null
                     })
                 }
 
@@ -93,7 +95,12 @@ class Board {
         return currSection.getTile(coord)
     }
 
-    updateSections(currSection, updatedCoord) {
+    updateSections(currSection, updatedCoord, selectedToken) {
+        const currTile = currSection.getTile(updatedCoord)
+        if(!currTile.type === TileType.CONNECT || currTile.tokenType !== selectedToken.type) {
+            return
+        }
+
         const [connectionOffset, direction] = currSection.getConnectingOffset(updatedCoord)
         if (!connectionOffset) {
             return
@@ -121,7 +128,7 @@ class Board {
             return currCoord
         }
 
-        this.updateSections(currSection, updatedCoord)
+        this.updateSections(currSection, updatedCoord, token)
         return updatedCoord
     }
 
@@ -133,7 +140,7 @@ class Board {
         const [sectionId, escalatorIndex] = escalatorId.split('-')
         const section = this.sections[Number(sectionId)]
         const updatedCoord = section.escalate(token, escalatorIndex)
-        this.updateSections(section, updatedCoord)
+        this.updateSections(section, updatedCoord, token)
         return updatedCoord
     }
 

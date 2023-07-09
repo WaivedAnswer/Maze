@@ -8,7 +8,7 @@ import {EscalatorModel} from '../models/escalator'
 import {WallModel} from '../models/wallModel'
 import { Tile, TileType } from '../models/tile'
 import { Item } from '../models/item'
-import Token from '../models/token'
+import { Token } from '../models/token'
 import OtherPlayer from './playerIndicator'
 import Moves from './moves'
 import Notification from './notification'
@@ -45,7 +45,12 @@ const getTile = (tileData) => {
   if(itemData) {
     item = new Item(itemData.type)
   }
-  return new Tile(getCoordinate(tileData.pos), getTileType(tileData.type), tileData.hasItem, item)
+
+  return new Tile(getCoordinate(tileData.pos), 
+  getTileType(tileData.type), 
+  tileData.hasItem, 
+  item,
+  tileData.tokenType)
 }
 
 const getTileRow = (row) => {
@@ -79,11 +84,13 @@ const getSelectedBy = (selections, idx) => {
 }
 
 const getTokens = (data) => {
+  console.log(JSON.stringify(data))
   const newTokens = data.tokens.map((tokenData, idx) =>
   new Token(idx,
     getCoordinate(tokenData.pos),
     getSelectedBy(data.selections, idx),
-    tokenData.escaped))
+    tokenData.escaped,
+    tokenData.type))
   return newTokens
 }
 

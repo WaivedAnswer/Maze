@@ -1,9 +1,10 @@
 const { ItemType } = require('./item')
 class Tile {
-    constructor(coord, type, item) {
+    constructor(coord, type, tokenType, item ) {
         this.coord = coord
         this.type = type
         this.item = item
+        this.tokenType = tokenType
     }
 
     isPassable() {

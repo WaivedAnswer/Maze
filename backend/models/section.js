@@ -2,6 +2,7 @@ const { Coordinate } = require('./coordinate')
 const { CoordinateMap } = require('./coordinateMap')
 const { Offset } = require('./offset')
 const { Tile, TileType } = require('./tile')
+const { TokenType } = require('./token')
 const { Wall } = require('./wall')
 
 
@@ -20,7 +21,7 @@ class Section {
         this.tiles = new CoordinateMap()
         for (let i = 0; i < this.dimensions; i++) {
             for (let j = 0; j < this.dimensions; j++) {
-                this.addTile(new Tile(new Coordinate(i, j), TileType.NORMAL))
+                this.addTile(new Tile(new Coordinate(i, j), TileType.NORMAL, null))
             }
         }
     }
@@ -49,7 +50,7 @@ class Section {
 
     addConnection(connection) {
         this.connections.push(connection)
-        this.addTile(new Tile(connection.coord, TileType.CONNECT))
+        this.addTile(new Tile(connection.coord, TileType.CONNECT, connection.type))
     }
 
     addTile(tile) {
@@ -57,8 +58,7 @@ class Section {
     }
 
     addWallTile(coord) {
-        //TODO deprecate
-        const tile = new Tile(coord, TileType.WALL)
+        const tile = new Tile(coord, TileType.WALL, null)
         this.tiles.addItem(coord, tile)
     }
 

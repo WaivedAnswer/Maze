@@ -1,8 +1,16 @@
+const TokenType = {
+    DWARF: 1,
+    MAGE: 2,
+    BARBARIAN: 3,
+    ELF: 4
+}
+
 class Token {
-    constructor(coordinate) {
+    constructor(coordinate, type) {
         this.coordinate = coordinate
         this.items = []
         this.escaped = false
+        this.type = type
     }
 
     getPos(relativeTo) {
@@ -12,7 +20,8 @@ class Token {
     getTokenData(relativeTo) {
         return {
             pos: this.getPos(relativeTo),
-            escaped: this.escaped
+            escaped: this.escaped,
+            type: this.type
         }
     }
 
@@ -30,5 +39,6 @@ class Token {
 }
 
 module.exports = {
-    Token
+    Token,
+    TokenType
 }

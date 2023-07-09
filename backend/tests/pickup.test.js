@@ -9,7 +9,7 @@ test('item pickup', () => {
     //is it necessary for the tile and the token to have their coordinates?
     //if not then who has them?
     const item = new Item()
-    const tile = new Tile(new Coordinate(0,0), TileType.NORMAL, item)
+    const tile = new Tile(new Coordinate(0,0), TileType.NORMAL, null, item)
     const token = new Token(new Coordinate(0,0))
     const subject = new Pickup(onBoardChange)
 
@@ -21,7 +21,7 @@ test('item pickup', () => {
 
 test('item pickup no tile item, token already has item', () => {
     const item = new Item()
-    const tile = new Tile(new Coordinate(0,0), TileType.NORMAL, null)
+    const tile = new Tile(new Coordinate(0,0), TileType.NORMAL, null, null)
     const token = new Token(new Coordinate(0,0))
     token.pickupItem(item)
 
@@ -35,7 +35,7 @@ test('item pickup no tile item, token already has item', () => {
 test('second item pickup, token already has item', () => {
     const item = new Item()
     const secondItem = new Item()
-    const tile = new Tile(new Coordinate(0,0), TileType.NORMAL, secondItem)
+    const tile = new Tile(new Coordinate(0,0), TileType.NORMAL, null, secondItem)
     const token = new Token(new Coordinate(0,0))
     token.pickupItem(item)
 

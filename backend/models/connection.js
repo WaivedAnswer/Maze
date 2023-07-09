@@ -2,10 +2,11 @@ const { Coordinate } = require('./coordinate')
 const { DIRECTIONS, getOppositeDirection } = require('./direction')
 
 class Connection {
-    constructor(orientation, coord, dimensions) {
+    constructor(orientation, coord, dimensions, type) {
         this.orientation = orientation
         this.coord = coord
         this.dimensions = dimensions
+        this.type = type
     }
 
     getConnectionOrigin() {

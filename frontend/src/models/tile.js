@@ -8,11 +8,12 @@ let TileType = {
 }
 
 class Tile {
-    constructor(coord, type, hasItem, item) {
+    constructor(coord, type, hasItem, item, tokenType) {
         this.coord = coord
         this.type = type
         this.hasItem = hasItem
         this.item = item
+        this.tokenType = tokenType
     }
 }
 

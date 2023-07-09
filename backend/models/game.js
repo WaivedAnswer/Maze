@@ -96,8 +96,7 @@ class Game {
     reset() {
         const sectionProvider = new GameSectionProvider()
 
-        const tokenStarts = sectionProvider.getInitialTokenCoordinates()
-        this.tokens = tokenStarts.map( startingCoord => new Token(startingCoord))
+        this.tokens = sectionProvider.getTokens()
         this.selectedTokens = new Map()
         this.complete = false
         this.board = new Board(sectionProvider, this.onBoardChange)
