@@ -1,19 +1,22 @@
 
 class Item {
-    constructor(type) {
+    constructor(type, tokenType) {
         this.type = type
+        this.tokenType = tokenType
     }
 
     getData() {
         return {
-            type: this.type
+            type: this.type,
+            tokenType: this.tokenType
         }
     }
 }
 
 const ItemType = {
     COIN: 0,
-    TIMER: 1
+    TIMER: 1,
+    WEAPON: 2
 }
 
 module.exports = {

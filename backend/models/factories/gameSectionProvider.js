@@ -133,7 +133,7 @@ const FIFTH = {
 }
 
 const SIXTH = {
-    items: [{ type: ItemType.COIN, coord: { x: 3, y: 2 } }],
+    items: [{ type: ItemType.WEAPON, coord: { x: 3, y: 2 }, tokenType: TokenType.BARBARIAN  }],
     connections: [
         { direction:  DIRECTIONS.LEFT, type: TokenType.DWARF },
         { direction:  DIRECTIONS.UP, type: TokenType.ELF },
@@ -156,7 +156,7 @@ const SIXTH = {
 }
 
 const SEVENTH = {
-    items: [{ type: ItemType.COIN, coord: { x: 0, y: 2 } }],
+    items: [{ type: ItemType.WEAPON, coord: { x: 0, y: 2 } , tokenType: TokenType.DWARF } ],
     connections: [
         { direction:  DIRECTIONS.RIGHT, type: TokenType.MAGE },
     ],
@@ -179,7 +179,7 @@ const SEVENTH = {
 }
 
 const EIGHTH = {
-    items: [{ type: ItemType.COIN, coord: { x: 0, y: 3 } }],
+    items: [{ type: ItemType.WEAPON, coord: { x: 0, y: 3 }, tokenType: TokenType.ELF  }],
     connections: [
         { direction:  DIRECTIONS.RIGHT, type: TokenType.MAGE },
         { direction:  DIRECTIONS.LEFT, type: TokenType.DWARF },
@@ -200,7 +200,7 @@ const EIGHTH = {
 }
 
 const NINTH = {
-    items: [{ type: ItemType.COIN, coord: { x: 3, y: 3 } }],
+    items: [{ type: ItemType.WEAPON, coord: { x: 3, y: 3 }, tokenType: TokenType.MAGE }],
     connections: [
         { direction:  DIRECTIONS.RIGHT, type: TokenType.BARBARIAN },
     ],
@@ -309,7 +309,7 @@ class GameSectionProvider {
         items.forEach( item => section.addTile(new Tile(this.getTileCoord(section.direction, item.coord),
             TileType.NORMAL,
             null,
-            new Item(item.type))))
+            new Item(item.type, item.tokenType ? item.tokenType : null))))
     }
 
     addPortal(section, portal) {

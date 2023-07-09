@@ -29,6 +29,24 @@ body {
    display: block;
 }
 
+.item {
+   z-index: 2;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.weapon {
+   border-radius: 40px;
+}
+
+
+.item > img {
+   height: 100%;
+   width: 100%;
+   display: block;
+}
+
 .token-dwarf > img {
    height: 60% !important;
    width: 60% !important;

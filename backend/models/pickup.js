@@ -8,7 +8,7 @@ class Pickup {
     interact(token, tile) {
         let tileItem = tile.item
 
-        if(tileItem) {
+        if(tileItem && ( tileItem.tokenType === token.type || !tileItem.tokenType )) {
             token.pickupItem(tileItem)
             tile.item = null
             if(tileItem.type === ItemType.TIMER) {

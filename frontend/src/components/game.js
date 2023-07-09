@@ -43,7 +43,7 @@ const getTile = (tileData) => {
   const itemData = tileData.item
   let item
   if(itemData) {
-    item = new Item(itemData.type)
+    item = new Item(itemData.type, itemData.tokenType)
   }
 
   return new Tile(getCoordinate(tileData.pos), 

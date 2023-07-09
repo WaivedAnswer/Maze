@@ -1,11 +1,13 @@
 let ItemType = {
     COIN: 0,
-    TIMER: 1
+    TIMER: 1,
+    WEAPON: 2
 }
 
 class Item {
-    constructor(type) {
+    constructor(type, tokenType) {
         this.type = type
+        this.tokenType = tokenType
     }
 }
 
