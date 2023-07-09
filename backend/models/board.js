@@ -97,7 +97,10 @@ class Board {
 
     updateSections(currSection, updatedCoord, selectedToken) {
         const currTile = currSection.getTile(updatedCoord)
-        if(!currTile.type === TileType.CONNECT || currTile.tokenType !== selectedToken.type) {
+        if(!currTile.type === TileType.CONNECT ) {
+            return
+        }
+        else if( currTile.tokenType !== selectedToken.type ) {
             return
         }
 
