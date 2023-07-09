@@ -393,10 +393,18 @@ class GameSectionProvider {
     }
 
     getTokens() {
-        return [ new Token(new Coordinate(1, 1), TokenType.MAGE),
-            new Token(new Coordinate(2, 2), TokenType.ELF),
-            new Token(new Coordinate(1, 2), TokenType.BARBARIAN),
-            new Token(new Coordinate(2, 1), TokenType.DWARF)]
+        const startingCoords = [ new Coordinate(1, 1),
+            new Coordinate(2, 2),
+            new Coordinate(1, 2),
+            new Coordinate(2, 1)
+        ]
+
+        const tokenTypes = [ TokenType.MAGE,
+            TokenType.ELF,
+            TokenType.BARBARIAN,
+            TokenType.DWARF]
+
+        return this.shuffle(startingCoords).map((coord, i) => new Token(coord, tokenTypes[i]))
     }
 
 
