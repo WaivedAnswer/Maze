@@ -15,12 +15,13 @@ body {
    z-index:0;
 }
 
-.token {
-   top: 0;
-   left: 0;
-   display: flex;
+.token, .token-selected{
    z-index: 3;
+   display: flex;
+   justify-content: center;
+   align-items: center;
 }
+
 
 .token > img {
    height: 100%;
@@ -28,10 +29,11 @@ body {
    display: block;
 }
 
-.token-selected {
-   display: flex;
-   z-index: 3;
+.token-dwarf > img {
+   height: 60% !important;
+   width: 60% !important;
 }
+
 
 .token-selected > img {
    height: 100%;
@@ -52,9 +54,20 @@ body {
    border-color: limegreen;
 }
 
-.tile-connect {
+.connect-elf {
    background-color: mediumaquamarine;
-   border-color: green;
+}
+
+.connect-dwarf {
+   background-color: darkorange;
+}
+
+.connect-barbarian {
+   background-color: yellow;
+}
+
+.connect-mage {
+   background-color: purple;
 }
 
 
