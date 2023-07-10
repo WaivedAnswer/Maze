@@ -2,7 +2,6 @@ const { Board } = require('./board')
 const { TileType } = require('./tile')
 const { Coordinate } = require('./coordinate')
 const { Pickup } = require('./pickup')
-const { Token } = require('./token')
 const { splitMoves } = require('./move')
 const { DIRECTIONS } = require('./direction')
 const logger = require('../utils/logger')
@@ -18,6 +17,9 @@ class Game {
         this.onTimerFlip = () => {
             const newSeconds = 120 - this.remainingSeconds
             this.remainingSeconds = newSeconds
+        }
+        this.onPickupWeapon = () => {
+            this.pickupAllWeapons()
         }
         this.reset()
     }
@@ -100,7 +102,7 @@ class Game {
         this.selectedTokens = new Map()
         this.complete = false
         this.board = new Board(sectionProvider, this.onBoardChange)
-        this.pickup = new Pickup(this.onBoardChange, this.onTimerFlip)
+        this.pickup = new Pickup(this.onBoardChange, this.onTimerFlip, this.onPickupWeapon)
         this.remainingSeconds = 120
         clearInterval(this.timerInterval)
         this.timerInterval = setInterval(() => {
@@ -184,6 +186,10 @@ class Game {
             type: 'token-update',
             data: this.getTokenData()
         })
+    }
+
+    pickupAllWeapons() {
+        this.pickup.pickupAllWeapons(this.tokens, this.tokens.map( token => this.board.getTile(token.coordinate)))
     }
 
     onMove(token, board, updatedCoords) {
