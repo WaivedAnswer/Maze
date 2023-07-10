@@ -17,10 +17,10 @@ const FIRST = {
         { direction:  DIRECTIONS.DOWN, type: TokenType.BARBARIAN }
     ],
     portals: [
-        { coord: { x: 3, y: 0 } },
-        { coord: { x: 3, y: 1 } },
-        { coord: { x: 0, y: 2 } },
-        { coord: { x: 0, y: 3 } }],
+        { coord: { x: 3, y: 0 }, type: TokenType.BARBARIAN },
+        { coord: { x: 3, y: 1 }, type: TokenType.ELF },
+        { coord: { x: 0, y: 2 }, type: TokenType.DWARF },
+        { coord: { x: 0, y: 3 }, type: TokenType.MAGE }],
     walls: [
         { start: { x: 0, y: 1 }, end: { x: 1, y: 1 } },
         { start: { x: 3, y: 1 }, end: { x: 4, y: 1 } },
@@ -39,8 +39,8 @@ const SECOND = {
         { direction:  DIRECTIONS.LEFT, type: TokenType.DWARF }
     ],
     portals: [
-        { coord: { x: 0, y: 3 } },
-        { coord: { x: 2, y: 3 } }],
+        { coord: { x: 0, y: 3 }, type: TokenType.ELF },
+        { coord: { x: 2, y: 3 }, type: TokenType.DWARF }],
     walls: [
         { start: { x: 0, y: 1 }, end: { x: 3, y: 1 } },
         { start: { x: 2, y: 0 }, end: { x: 3, y: 0 } },
@@ -67,8 +67,8 @@ const THIRD = {
         { direction:  DIRECTIONS.RIGHT, type: TokenType.BARBARIAN },
     ],
     portals: [
-        { coord: { x: 2, y: 0 } },
-        { coord: { x: 3, y: 1 } }],
+        { coord: { x: 2, y: 0 }, type: TokenType.DWARF },
+        { coord: { x: 3, y: 1 }, type: TokenType.BARBARIAN }],
     walls: [
         { start: { x: 1, y: 1 }, end: { x: 1, y: 2 } },
         { start: { x: 0, y: 2 }, end: { x: 1, y: 2 } },
@@ -91,8 +91,8 @@ const FOURTH = {
         { direction:  DIRECTIONS.RIGHT, type: TokenType.ELF },
     ],
     portals: [
-        { coord: { x: 0, y: 2 } },
-        { coord: { x: 3, y: 0 } }],
+        { coord: { x: 0, y: 2 }, type: TokenType.DWARF },
+        { coord: { x: 3, y: 0 }, type: TokenType.BARBARIAN }],
     walls: [
         { start: { x: 2, y: 2 }, end: { x: 2, y: 1 } },
     ],
@@ -116,7 +116,7 @@ const FIFTH = {
         { direction:  DIRECTIONS.RIGHT, type: TokenType.ELF },
     ],
     portals: [
-        { coord: { x: 0, y: 2 } },],
+        { coord: { x: 0, y: 2 }, type: TokenType.BARBARIAN },],
     walls: [
         { start: { x: 2, y: 0 }, end: { x: 2, y: 2 } },
         { start: { x: 2, y: 1 }, end: { x: 3, y: 1 } },
@@ -139,7 +139,7 @@ const SIXTH = {
         { direction:  DIRECTIONS.UP, type: TokenType.ELF },
     ],
     portals: [
-        { coord: { x: 0, y: 3 } },],
+        { coord: { x: 0, y: 3 }, type: TokenType.MAGE },],
     walls: [
         { start: { x: 0, y: 2 }, end: { x: 2, y: 2 } },
     ],
@@ -161,8 +161,8 @@ const SEVENTH = {
         { direction:  DIRECTIONS.RIGHT, type: TokenType.MAGE },
     ],
     portals: [
-        { coord: { x: 2, y: 0 } },
-        { coord: { x: 3, y: 3 } },
+        { coord: { x: 2, y: 0 }, type: TokenType.MAGE },
+        { coord: { x: 3, y: 3 }, type: TokenType.ELF },
     ],
     walls: [
     ],
@@ -185,7 +185,7 @@ const EIGHTH = {
         { direction:  DIRECTIONS.LEFT, type: TokenType.DWARF },
     ],
     portals: [
-        { coord: { x: 2, y: 1 } },
+        { coord: { x: 2, y: 1 }, type: TokenType.MAGE },
     ],
     walls: [
         { start: { x: 3, y: 1 }, end: { x: 3, y: 2 } },
@@ -205,7 +205,7 @@ const NINTH = {
         { direction:  DIRECTIONS.RIGHT, type: TokenType.BARBARIAN },
     ],
     portals: [
-        { coord: { x: 2, y: 1 } },],
+        { coord: { x: 2, y: 1 }, type: TokenType.BARBARIAN },],
     walls: [
         { start: { x: 1, y: 1 }, end: { x: 3, y: 1 } },
         { start: { x: 1, y: 2 }, end: { x: 3, y: 2 } },
@@ -314,16 +314,17 @@ class GameSectionProvider {
 
     addPortal(section, portal) {
         section.addTile(new Tile(this.getTileCoord(section.direction, portal.coord),
-            TileType.PORTAL, null))
+            TileType.PORTAL,
+            portal.type))
     }
 
     addPortals(section, portals) {
         //adding just a single until portals are token selective
-        const randomIndex = Math.floor(Math.random() * portals.length * 2)
+        /*const randomIndex = Math.floor(Math.random() * portals.length * 2)
         if(randomIndex < portals.length) {
             this.addPortal(section, portals[randomIndex])
-        }
-        //portals.forEach( portal => this.addPortal(section, portal))
+        }*/
+        portals.forEach( portal => this.addPortal(section, portal))
     }
 
     createConnection(sectionDirection, direction ) {

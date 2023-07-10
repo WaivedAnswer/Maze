@@ -2,8 +2,8 @@ const { Coordinate } = require('./coordinate')
 const { CoordinateMap } = require('./coordinateMap')
 const { Offset } = require('./offset')
 const { Tile, TileType } = require('./tile')
-const { TokenType } = require('./token')
 const { Wall } = require('./wall')
+const { Portal } = require('./portal')
 
 
 //deals with simple coordinates
@@ -84,6 +84,12 @@ class Section {
         return this.tiles.getItems()
             .filter( tile => tile.type === type)
             .map( tile => this.getAbsolutePos(tile.coord, relativeTo))
+    }
+
+    getPortals(relativeTo) {
+        return this.tiles.getItems()
+            .filter( tile => tile.type === TileType.PORTAL)
+            .map( tile => new Portal(this.getAbsolutePos(tile.coord, relativeTo), tile.tokenType))
     }
 
     getExitTiles() {

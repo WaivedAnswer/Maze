@@ -4,7 +4,10 @@ import { TokenType } from "../models/token"
 import Item from "./item"
 
 import rockTile from "../images/rock.png"
-import portalTile from "../images/portal.png"
+import greenPortal from "../images/green-portal.png"
+import orangePortal from "../images/orange-portal.png"
+import yellowPortal from "../images/yellow-portal.png"
+import purplePortal from "../images/purple-portal.png"
 
 
 const Tile = ({tile, onTeleport }) => {
@@ -38,7 +41,22 @@ const Tile = ({tile, onTeleport }) => {
         }
     } else if (type === TileType.PORTAL) {
         className = 'tile-portal'
-        tileImg = portalTile
+        switch(tile.tokenType) {
+            case TokenType.DWARF:
+                tileImg = orangePortal
+                break;
+            case TokenType.MAGE:
+                tileImg = purplePortal
+                break;
+            case TokenType.BARBARIAN:
+                tileImg = yellowPortal
+                break;
+            case TokenType.ELF:
+                tileImg = greenPortal
+                break;
+            default:
+                throw new Error('Unknown token type')
+        }
     }
     else {
         className = 'tile'

@@ -4,15 +4,25 @@ class PortalManager {
         this.portals = []
     }
 
-    trackPortal(portalCoords) {
-        this.portals.push(portalCoords)
+    trackPortal(portal) {
+        this.portals.push(portal)
+        console.log(JSON.stringify(this.portals))
     }
 
     teleport(selectedToken, portalCoord) {
         const tokenCoordinate = selectedToken.coordinate
-        const validPortal = this.portals.some(portal => portal.getKey() === portalCoord.getKey())
-        const onPortal = this.portals.some(portal => portal.getKey() === tokenCoordinate.getKey())
-        if( validPortal && onPortal) {
+        const selectedPortal = this.portals.find(portal => portal.coord.getKey() === portalCoord.getKey())
+        if(!selectedPortal) {
+            return tokenCoordinate
+        }
+        const currPortal = this.portals.find(portal => portal.coord.getKey() === tokenCoordinate.getKey())
+        if(!currPortal) {
+            return tokenCoordinate
+        }
+
+        const portalsMatch = currPortal.tokenType === selectedPortal.tokenType
+        const tokenCanPassPortals = selectedToken.type === currPortal.tokenType
+        if( portalsMatch && tokenCanPassPortals) {
             return portalCoord
         }
         return tokenCoordinate

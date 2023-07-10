@@ -152,7 +152,7 @@ class Board {
         const newSection =  this.sectionProvider.createSection(id, offset, direction)
         this.sections.push(newSection)
 
-        let newPortals = newSection.getTilesOfType(TileType.PORTAL, new Coordinate(0, 0))
+        let newPortals = newSection.getPortals(new Coordinate(0, 0))
         for(const portal of newPortals) {
             this.portalManager.trackPortal(portal)
         }
