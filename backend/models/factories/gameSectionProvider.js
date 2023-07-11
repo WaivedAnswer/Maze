@@ -57,7 +57,7 @@ const SECOND = {
         { coord: { x: 3, y: 2 } },
         { coord: { x: 3, y: 3 } },
     ],
-    exit: { coord: { x: 3, y: 0 } }
+    exit: { coord: { x: 3, y: 0 }, tokenType: TokenType.MAGE }
 }
 
 const THIRD = {
@@ -220,12 +220,79 @@ const NINTH = {
     ]
 }
 
-const blockedConnectionWalls = new Map()
+const TENTH = {
+    items: [],
+    connections: [
+        { direction:  DIRECTIONS.RIGHT, type: TokenType.BARBARIAN },
+        { direction:  DIRECTIONS.LEFT, type: TokenType.MAGE },
+    ],
+    portals: [
+        { coord: { x: 2, y: 0 }, type: TokenType.DWARF },
+        { coord: { x: 0, y: 3 }, type: TokenType.ELF },
+    ],
+    walls: [
+        { start: { x: 0, y: 1 }, end: { x: 1, y: 1 } },
+    ],
+    escalators: [{ start: { x: 1, y: 1 }, end: { x: 2, y: 2 } }],
+    barriers: [
+        { coord: { x: 0, y: 2 } },
+        { coord: { x: 1, y: 2 } },
+        { coord: { x: 3, y: 0 } },
+        { coord: { x: 3, y: 1 } },
+        { coord: { x: 2, y: 1 } },
+        { coord: { x: 3, y: 3 } },
+    ],
+    exit: { coord: { x: 0, y: 0 }, tokenType: TokenType.ELF }
+}
 
-blockedConnectionWalls[DIRECTIONS.LEFT] =  { start: { x: 0, y: 1 }, end: { x: 0, y: 2 } }
-blockedConnectionWalls[DIRECTIONS.RIGHT] =  { start: { x: 4, y: 2 }, end: { x: 4, y: 3 } }
-blockedConnectionWalls[DIRECTIONS.UP] =  { start: { x: 2, y: 0 }, end: { x: 3, y: 0 } }
-blockedConnectionWalls[DIRECTIONS.DOWN] =  { start: { x: 1, y: 4 }, end: { x: 2, y: 4 } }
+const ELEVENTH = {
+    items: [],
+    connections: [
+        { direction:  DIRECTIONS.RIGHT, type: TokenType.DWARF },
+        { direction:  DIRECTIONS.LEFT, type: TokenType.ELF },
+    ],
+    portals: [
+        { coord: { x: 2, y: 3 }, type: TokenType.BARBARIAN },],
+    walls: [
+        { start: { x: 0, y: 2 }, end: { x: 1, y: 2 } },
+        { start: { x: 2, y: 1 }, end: { x: 2, y: 3 } },
+        { start: { x: 1, y: 1 }, end: { x: 2, y: 1 } },
+        { start: { x: 1, y: 3 }, end: { x: 3, y: 3 } },
+    ],
+    escalators: [],
+    barriers: [
+        { coord: { x: 3, y: 1 } },
+        { coord: { x: 3, y: 3 } },
+    ],
+    exit: { coord: { x: 3, y: 0 }, tokenType: TokenType.BARBARIAN }
+}
+
+const TWELFTH = {
+    items: [{ type: ItemType.WEAPON, coord: { x: 3, y: 3 }, tokenType: TokenType.MAGE }],
+    connections: [
+        { direction:  DIRECTIONS.UP, type: TokenType.BARBARIAN },
+    ],
+    portals: [
+        { coord: { x: 0, y: 3 }, type: TokenType.MAGE },
+        { coord: { x: 2, y: 3 }, type: TokenType.DWARF },
+    ],
+    walls: [
+        { start: { x: 0, y: 1 }, end: { x: 1, y: 1 } },
+        { start: { x: 0, y: 3 }, end: { x: 1, y: 3 } },
+        { start: { x: 2, y: 3 }, end: { x: 3, y: 3 } },
+    ],
+    escalators: [
+        { start: { x: 0, y: 1 }, end: { x: 1, y: 0 } },
+        { start: { x: 2, y: 2 }, end: { x: 3, y: 1 } }
+    ],
+    barriers: [
+        { coord: { x: 1, y: 1 } },
+        { coord: { x: 2, y: 1 } },
+        { coord: { x: 3, y: 2 } },
+        { coord: { x: 3, y: 3 } },
+    ],
+    exit: { coord: { x: 0, y: 0 }, tokenType: TokenType.DWARF }
+}
 
 const otherSections = [
     SECOND,
@@ -236,12 +303,16 @@ const otherSections = [
     SEVENTH,
     EIGHTH,
     NINTH,
+    TENTH,
+    ELEVENTH,
+    TWELFTH
 ]
+
 
 class GameSectionProvider {
     constructor() {
         this.sectionDimensions = 4
-        this.sectionData = [FIRST].concat(this.shuffle(otherSections))
+        this.sectionData = [FIRST].concat([TENTH, ELEVENTH, TWELFTH, SECOND])
         this.remaining = this.sectionData.length
     }
 
@@ -274,7 +345,6 @@ class GameSectionProvider {
         this.addItems(section, sectionData.items)
         this.addPortals(section, sectionData.portals)
         this.addConnections(section, sectionData.connections)
-        //this.addBlockedConnections(section, sectionData.connections)
         this.addEscalators(section, sectionData.escalators)
         this.addBarriers(section, sectionData.barriers)
         this.addExit(section, sectionData.exit)
@@ -294,7 +364,7 @@ class GameSectionProvider {
         }
         section.addTile(new Tile(this.getTileCoord(section.direction, exit.coord),
             TileType.EXIT,
-            null))
+            exit.tokenType))
     }
 
     addWalls(section, walls) {

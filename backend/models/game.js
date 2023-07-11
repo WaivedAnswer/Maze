@@ -203,7 +203,7 @@ class Game {
         token.coordinate = updatedCoords
         const tile = board.getTile(token.coordinate)
         this.pickup.interact(token, tile)
-        if(tile.type === TileType.EXIT && this.board.allItemsCollected()) {
+        if(tile.type === TileType.EXIT && this.board.allItemsCollected() && token.type === tile.tokenType) {
             token.escape()
         }
     }

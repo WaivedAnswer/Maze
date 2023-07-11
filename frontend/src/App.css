@@ -67,25 +67,26 @@ body {
   border-color: black;
 }
 
-.tile-exit {
+.tile-exit img {
+   height: 100%;
+   width: 100%;
+   display: block;
+}
+
+.connect-elf, .exit-elf {
    background-color: limegreen;
-   border-color: limegreen;
 }
 
-.connect-elf {
-   background-color: mediumaquamarine;
-}
-
-.connect-dwarf {
+.connect-dwarf, .exit-dwarf{
    background-color: darkorange;
 }
 
-.connect-barbarian {
-   background-color: yellow;
+.connect-barbarian, .exit-barbarian {
+   background-color: gold;
 }
 
-.connect-mage {
-   background-color: purple;
+.connect-mage, .exit-mage {
+   background-color: darkorchid;
 }
 
 

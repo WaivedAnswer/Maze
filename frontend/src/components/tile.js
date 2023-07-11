@@ -4,6 +4,7 @@ import { TokenType } from "../models/token"
 import Item from "./item"
 
 import rockTile from "../images/rock.png"
+import exit from "../images/s1.png"
 import greenPortal from "../images/green-portal.png"
 import orangePortal from "../images/orange-portal.png"
 import yellowPortal from "../images/yellow-portal.png"
@@ -16,6 +17,23 @@ const Tile = ({tile, onTeleport }) => {
     const type = tile.type
     if (type === TileType.EXIT) {
         className = 'tile-exit'
+        tileImg = exit
+        switch(tile.tokenType) {
+            case TokenType.DWARF:
+                className += ' exit-dwarf'
+                break;
+            case TokenType.MAGE:
+                className += ' exit-mage'
+                break;
+            case TokenType.BARBARIAN:
+                className += ' exit-barbarian'
+                break;
+            case TokenType.ELF:
+                className += ' exit-elf'
+                break;
+            default:
+                throw new Error('Unknown token type')
+        }
     } else if (type === TileType.WALL) {
         className = 'tile-wall'
         tileImg = rockTile
