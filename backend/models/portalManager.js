@@ -11,7 +11,6 @@ class PortalManager {
 
     trackPortal(portal) {
         this.portals.push(portal)
-        console.log(JSON.stringify(this.portals))
     }
 
     teleport(selectedToken, portalCoord) {

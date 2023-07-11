@@ -23,7 +23,7 @@ function getDirection(tile, grid) {
     if(grid.length === 0 ) {
         return TileDirection.UNKNOWN
     }
-    console.log(JSON.stringify(tile))
+
     const left = getTile(grid, new Coordinate(tile.coord.x - 1, tile.coord.y))
     const right = getTile(grid, new Coordinate(tile.coord.x + 1, tile.coord.y))
     const up = getTile(grid, new Coordinate(tile.coord.x, tile.coord.y - 1))

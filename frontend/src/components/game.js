@@ -84,7 +84,6 @@ const getSelectedBy = (selections, idx) => {
 }
 
 const getTokens = (data) => {
-  console.log(JSON.stringify(data))
   const newTokens = data.tokens.map((tokenData, idx) =>
   new Token(idx,
     getCoordinate(tokenData.pos),
