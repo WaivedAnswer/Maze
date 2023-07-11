@@ -312,7 +312,7 @@ const otherSections = [
 class GameSectionProvider {
     constructor() {
         this.sectionDimensions = 4
-        this.sectionData = [FIRST].concat([TENTH, ELEVENTH, TWELFTH, SECOND])
+        this.sectionData = [FIRST].concat(this.shuffle(otherSections))
         this.remaining = this.sectionData.length
     }
 
