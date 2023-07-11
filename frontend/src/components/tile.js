@@ -1,5 +1,6 @@
 import { TileType } from "../models/tile"
 import { TokenType } from "../models/token"
+import { TileDirection } from "../models/tileDirection"
 
 import Item from "./item"
 
@@ -9,9 +10,12 @@ import greenPortal from "../images/green-portal.png"
 import orangePortal from "../images/orange-portal.png"
 import yellowPortal from "../images/yellow-portal.png"
 import purplePortal from "../images/purple-portal.png"
+import up from "../images/up.png"
+import down from "../images/down.png"
+import left from "../images/left.png"
+import right from "../images/right.png"
 
-
-const Tile = ({tile, onTeleport }) => {
+const Tile = ({tile, onTeleport, getTileDirection }) => {
     let className
     let tileImg
     const type = tile.type
@@ -41,6 +45,23 @@ const Tile = ({tile, onTeleport }) => {
         className = 'tile-unknown'
     } else if (type === TileType.CONNECT) {
         className = 'tile-connect'
+        const tileDirection = getTileDirection(tile)
+        switch(tileDirection) {
+            case TileDirection.UP:
+                tileImg = up
+                break
+            case TileDirection.DOWN:
+                tileImg = down
+                break
+            case TileDirection.LEFT:
+                tileImg = left
+                break
+            case TileDirection.RIGHT:
+                tileImg = right
+                break
+            default:
+                //do nothing
+        }
         switch(tile.tokenType) {
             case TokenType.DWARF:
                 className += ' connect-dwarf'

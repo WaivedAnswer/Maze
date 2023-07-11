@@ -1,6 +1,7 @@
 import React from 'react'
 import Tile from './tile'
-import  Token  from './token'
+import { getDirection } from '../models/tileDirection'
+import Token  from './token'
 import Escalator from './escalator'
 import Wall from './wall'
 
@@ -35,6 +36,10 @@ const Board = ({ grid, tokens, escalators, walls, gameService }) => {
         gameService.escalate(escalatorId)
     }
 
+    const getTileDirection = (tile) => {
+        return getDirection(tile, grid)
+    }
+
     const gridHeight = grid.length
 
     const gridWidth = grid.length === 0 ? 0 : grid[0].length
@@ -63,7 +68,7 @@ const Board = ({ grid, tokens, escalators, walls, gameService }) => {
                 grid.map((row, rowNum) =>
                         row.map((tile, colNum) =>
                             <div className='tile-container' key={tile.coord.toString()} style={tileStyle(tile.coord)}>
-                                <Tile tile = {tile} onTeleport={onTeleport} />
+                                <Tile tile = {tile} onTeleport={onTeleport} getTileDirection={getTileDirection} />
                             </div>
 
                         )

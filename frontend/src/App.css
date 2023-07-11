@@ -10,6 +10,18 @@ body {
    z-index:0;
 }
 
+.tile-connect {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.tile-connect > img {
+   height: 50%;
+   width: 50%;
+   display: block;
+}
+
 .tile-container {
    position:relative;
    z-index:0;
