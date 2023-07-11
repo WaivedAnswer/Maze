@@ -16,9 +16,9 @@ class Tile {
         return this.item != null
     }
 
-    hasCoin() {
+    hasNeededItem() {
         // eslint-disable-next-line eqeqeq
-        return this.item != null && this.item.type === ItemType.COIN
+        return this.item != null && ( this.item.type !== ItemType.TIMER)
     }
 }
 

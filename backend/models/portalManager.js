@@ -2,6 +2,11 @@
 class PortalManager {
     constructor() {
         this.portals = []
+        this.disabled = false
+    }
+
+    disablePortals() {
+        this.disabled = true
     }
 
     trackPortal(portal) {
@@ -11,6 +16,10 @@ class PortalManager {
 
     teleport(selectedToken, portalCoord) {
         const tokenCoordinate = selectedToken.coordinate
+        if(this.disabled) {
+            return tokenCoordinate
+        }
+
         const selectedPortal = this.portals.find(portal => portal.coord.getKey() === portalCoord.getKey())
         if(!selectedPortal) {
             return tokenCoordinate

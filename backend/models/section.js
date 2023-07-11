@@ -121,7 +121,7 @@ class Section {
     }
 
     allItemsCollected() {
-        return !this.tiles.hasItemMatching( tile => tile.hasCoin())
+        return !this.tiles.hasItemMatching( tile => tile.hasNeededItem())
     }
 
     inBounds(coord) {

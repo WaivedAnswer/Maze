@@ -190,6 +190,9 @@ class Game {
 
     pickupAllWeapons() {
         this.pickup.pickupAllWeapons(this.tokens, this.tokens.map( token => this.board.getTile(token.coordinate)))
+        if(this.board.allItemsCollected()) {
+            this.board.disablePortals()
+        }
     }
 
     onMove(token, board, updatedCoords) {

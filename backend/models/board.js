@@ -83,6 +83,10 @@ class Board {
         return allTiles
     }
 
+    disablePortals() {
+        this.portalManager.disablePortals()
+    }
+
     allItemsCollected() {
         return this.sections.every(section => section.allItemsCollected())
     }
