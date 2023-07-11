@@ -142,6 +142,9 @@ class Board {
     escalate(token, escalatorId) {
         const [sectionId, escalatorIndex] = escalatorId.split('-')
         const section = this.sections[Number(sectionId)]
+        if(section !== this.getCurrSection(token.coordinate)) {
+            return token.coordinate
+        }
         const updatedCoord = section.escalate(token, escalatorIndex)
         this.updateSections(section, updatedCoord, token)
         return updatedCoord

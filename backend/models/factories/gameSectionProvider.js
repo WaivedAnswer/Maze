@@ -17,10 +17,10 @@ const FIRST = {
         { direction:  DIRECTIONS.DOWN, type: TokenType.BARBARIAN }
     ],
     portals: [
-        { coord: { x: 3, y: 0 }, type: TokenType.BARBARIAN },
-        { coord: { x: 3, y: 1 }, type: TokenType.ELF },
+        { coord: { x: 3, y: 0 }, type: TokenType.MAGE },
+        { coord: { x: 3, y: 1 }, type: TokenType.BARBARIAN },
         { coord: { x: 0, y: 2 }, type: TokenType.DWARF },
-        { coord: { x: 0, y: 3 }, type: TokenType.MAGE }],
+        { coord: { x: 0, y: 3 }, type: TokenType.ELF }],
     walls: [
         { start: { x: 0, y: 1 }, end: { x: 1, y: 1 } },
         { start: { x: 3, y: 1 }, end: { x: 4, y: 1 } },
@@ -40,7 +40,7 @@ const SECOND = {
     ],
     portals: [
         { coord: { x: 0, y: 3 }, type: TokenType.ELF },
-        { coord: { x: 2, y: 3 }, type: TokenType.DWARF }],
+        { coord: { x: 2, y: 3 }, type: TokenType.MAGE }],
     walls: [
         { start: { x: 0, y: 1 }, end: { x: 3, y: 1 } },
         { start: { x: 2, y: 0 }, end: { x: 3, y: 0 } },
@@ -68,7 +68,7 @@ const THIRD = {
     ],
     portals: [
         { coord: { x: 2, y: 0 }, type: TokenType.DWARF },
-        { coord: { x: 3, y: 1 }, type: TokenType.BARBARIAN }],
+        { coord: { x: 3, y: 1 }, type: TokenType.ELF }],
     walls: [
         { start: { x: 1, y: 1 }, end: { x: 1, y: 2 } },
         { start: { x: 0, y: 2 }, end: { x: 1, y: 2 } },
@@ -116,7 +116,7 @@ const FIFTH = {
         { direction:  DIRECTIONS.RIGHT, type: TokenType.ELF },
     ],
     portals: [
-        { coord: { x: 0, y: 2 }, type: TokenType.BARBARIAN },],
+        { coord: { x: 0, y: 2 }, type: TokenType.MAGE },],
     walls: [
         { start: { x: 2, y: 0 }, end: { x: 2, y: 2 } },
         { start: { x: 2, y: 1 }, end: { x: 3, y: 1 } },
@@ -161,8 +161,8 @@ const SEVENTH = {
         { direction:  DIRECTIONS.RIGHT, type: TokenType.MAGE },
     ],
     portals: [
-        { coord: { x: 2, y: 0 }, type: TokenType.MAGE },
-        { coord: { x: 3, y: 3 }, type: TokenType.ELF },
+        { coord: { x: 2, y: 0 }, type: TokenType.ELF },
+        { coord: { x: 3, y: 3 }, type: TokenType.BARBARIAN },
     ],
     walls: [
     ],
@@ -185,7 +185,7 @@ const EIGHTH = {
         { direction:  DIRECTIONS.LEFT, type: TokenType.DWARF },
     ],
     portals: [
-        { coord: { x: 2, y: 1 }, type: TokenType.MAGE },
+        { coord: { x: 2, y: 1 }, type: TokenType.BARBARIAN },
     ],
     walls: [
         { start: { x: 3, y: 1 }, end: { x: 3, y: 2 } },
@@ -202,7 +202,7 @@ const EIGHTH = {
 const NINTH = {
     items: [{ type: ItemType.WEAPON, coord: { x: 3, y: 3 }, tokenType: TokenType.MAGE }],
     connections: [
-        { direction:  DIRECTIONS.RIGHT, type: TokenType.BARBARIAN },
+        { direction:  DIRECTIONS.RIGHT, type: TokenType.DWARF },
     ],
     portals: [
         { coord: { x: 2, y: 1 }, type: TokenType.BARBARIAN },],
