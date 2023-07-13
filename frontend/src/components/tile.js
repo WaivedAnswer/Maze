@@ -62,22 +62,29 @@ const Tile = ({tile, onTeleport, getTileDirection }) => {
             default:
                 //do nothing
         }
-        switch(tile.tokenType) {
-            case TokenType.DWARF:
-                className += ' connect-dwarf'
-                break;
-            case TokenType.MAGE:
-                className += ' connect-mage'
-                break;
-            case TokenType.BARBARIAN:
-                className += ' connect-barbarian'
-                break;
-            case TokenType.ELF:
-                className += ' connect-elf'
-                break;
-            default:
-                throw new Error('Unknown token type')
+        //temporary hack, when the tile direction is unknown the connection point must be connected
+        const isConnected = tileDirection === TileDirection.UNKNOWN
+        if(!isConnected) {
+            switch(tile.tokenType) {
+                case TokenType.DWARF:
+                    className += ' connect-dwarf'
+                    break;
+                case TokenType.MAGE:
+                    className += ' connect-mage'
+                    break;
+                case TokenType.BARBARIAN:
+                    className += ' connect-barbarian'
+                    break;
+                case TokenType.ELF:
+                    className += ' connect-elf'
+                    break;
+                default:
+                    throw new Error('Unknown token type')
+            }
+        } else {
+            className += ' connected'
         }
+
     } else if (type === TileType.PORTAL) {
         className = 'tile-portal'
         switch(tile.tokenType) {

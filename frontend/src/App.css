@@ -85,20 +85,24 @@ body {
    display: block;
 }
 
+.connected {
+   background-color: lightslategray;
+}
+
 .connect-elf, .exit-elf {
-   background-color: limegreen;
+   background-color: limegreen !important;
 }
 
 .connect-dwarf, .exit-dwarf{
-   background-color: darkorange;
+   background-color: darkorange !important;
 }
 
 .connect-barbarian, .exit-barbarian {
-   background-color: gold;
+   background-color: gold !important;
 }
 
 .connect-mage, .exit-mage {
-   background-color: darkorchid;
+   background-color: darkorchid !important;
 }
 
 
