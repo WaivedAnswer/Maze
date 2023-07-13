@@ -1,6 +1,6 @@
 import React from 'react'
 import dwarf from "../images/dwarf_right.png"
-import warrior from "../images/warrior.png"
+import warrior from "../images/warrior2.png"
 import elf from "../images/elf_bow.png"
 import mage from "../images/mage.png"
 import { TokenType } from "../models/token"
