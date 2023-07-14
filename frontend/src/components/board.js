@@ -5,7 +5,7 @@ import Token  from './token'
 import Escalator from './escalator'
 import Wall from './wall'
 
-const Board = ({ grid, tokens, escalators, walls, gameService }) => {
+const Board = ({ showConnections, grid, tokens, escalators, walls, gameService }) => {
     const handleKeyPress = (event) => {
         if (event.key.toLowerCase() === 's') {
             gameService.moveDown()
@@ -45,7 +45,8 @@ const Board = ({ grid, tokens, escalators, walls, gameService }) => {
     const gridWidth = grid.length === 0 ? 0 : grid[0].length
 
     const boardStyle = {
-        margin: '48px',
+        marginLeft: '36px',
+        marginTop: '36px',
         overflow: 'auto',
         display: 'grid',
         gridTemplateColumns: `repeat(${gridWidth}, 64px)`,
@@ -68,7 +69,7 @@ const Board = ({ grid, tokens, escalators, walls, gameService }) => {
                 grid.map((row, rowNum) =>
                         row.map((tile, colNum) =>
                             <div className='tile-container' key={tile.coord.toString()} style={tileStyle(tile.coord)}>
-                                <Tile tile = {tile} onTeleport={onTeleport} getTileDirection={getTileDirection} />
+                                <Tile tile = {tile} onTeleport={onTeleport} getTileDirection={getTileDirection} showConnections={showConnections} />
                             </div>
 
                         )

@@ -15,7 +15,7 @@ import down from "../images/down.png"
 import left from "../images/left.png"
 import right from "../images/right.png"
 
-const Tile = ({tile, onTeleport, getTileDirection }) => {
+const Tile = ({tile, onTeleport, getTileDirection, showConnections }) => {
     let className
     let tileImg
     const type = tile.type
@@ -46,25 +46,25 @@ const Tile = ({tile, onTeleport, getTileDirection }) => {
     } else if (type === TileType.CONNECT) {
         className = 'tile-connect'
         const tileDirection = getTileDirection(tile)
-        switch(tileDirection) {
-            case TileDirection.UP:
-                tileImg = up
-                break
-            case TileDirection.DOWN:
-                tileImg = down
-                break
-            case TileDirection.LEFT:
-                tileImg = left
-                break
-            case TileDirection.RIGHT:
-                tileImg = right
-                break
-            default:
-                //do nothing
-        }
         //temporary hack, when the tile direction is unknown the connection point must be connected
-        const isConnected = tileDirection === TileDirection.UNKNOWN
-        if(!isConnected) {
+        const show = tileDirection !== TileDirection.UNKNOWN && showConnections
+        if(show) {
+            switch(tileDirection) {
+                case TileDirection.UP:
+                    tileImg = up
+                    break
+                case TileDirection.DOWN:
+                    tileImg = down
+                    break
+                case TileDirection.LEFT:
+                    tileImg = left
+                    break
+                case TileDirection.RIGHT:
+                    tileImg = right
+                    break
+                default:
+                    //do nothing
+            }
             switch(tile.tokenType) {
                 case TokenType.DWARF:
                     className += ' connect-dwarf'

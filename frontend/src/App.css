@@ -146,9 +146,20 @@ body {
 .board-space {
     display: grid;
     grid-template-columns: 300px 1fr;
+    grid-template-rows: 1fr 14fr;
     height: 100vh;
     overflow: hidden;
     background: lavender;
+}
+
+.toolbar {
+   display: flex;
+   justify-content: center;
+   background-color: midnightblue;
+   font-size: 2rem;
+   grid-column: 1 / span 2;
+   color: white;
+   padding: 10px 20px;
 }
 
 #mainPlayer {
@@ -162,7 +173,6 @@ body {
    display: flex;
    flex-direction: column;
    background-color: steelblue;
-   height: 100vh;
    border-color:black;
    border-style: none solid none none;
    border-width: thick;

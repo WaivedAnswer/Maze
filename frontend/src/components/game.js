@@ -12,6 +12,7 @@ import { Token } from '../models/token'
 import OtherPlayer from './playerIndicator'
 import Moves from './moves'
 import Notification from './notification'
+import Toolbar from './toolbar'
 import Timer from './Timer'
 import { useParams } from 'react-router-dom'
 
@@ -103,7 +104,9 @@ function Game({realPlayerName}) {
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [remainingSeconds, setRemainingSeconds] = useState(null)
   const [gameService, setGameService] = useState(null)
+  const [remainingSections, setRemainingSections] = useState(0)
 
+  console.log(typeof(remainingSections))
   const clearNotification = () => {
     setNotificationMessage(null)
   }
@@ -135,6 +138,7 @@ function Game({realPlayerName}) {
           setEscalators(getEscalators(json.data.board.escalators))
           setWalls(getWalls(json.data.board.walls))
           setTokens(getTokens(json.data.tokenData))
+          setRemainingSections(json.data.remainingSections)
           clearNotification()
         } else if (json.type === 'win') {
           notify("You have won the game!", false, true)
@@ -177,11 +181,12 @@ function Game({realPlayerName}) {
   }
 
   const otherPlayers = allPlayers.filter(playerInfo => playerInfo.playerName !== realPlayerName)
-
+  const showConnections = remainingSections !== 0
   return (
     <div className="App">
       <Notification notification={notificationMessage} />
       <div className="board-space">
+        <Toolbar remaining={remainingSections}/>
         <div className="board-controls">
           <Timer remainingSeconds={remainingSeconds} />
           <br />
@@ -197,7 +202,7 @@ function Game({realPlayerName}) {
           }
           <button className='button' id='reset-button' onClick={reset}>Reset</button>
         </div>
-        <Board grid={updatedTiles} tokens={tokens} escalators={escalators} walls={walls} gameService={gameService} />
+        <Board showConnections={showConnections} grid={updatedTiles} tokens={tokens} escalators={escalators} walls={walls} gameService={gameService} />
       </div>
 
     </div >

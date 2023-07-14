@@ -96,12 +96,13 @@ class Game {
     }
 
     reset() {
-        const sectionProvider = new GameSectionProvider()
+        console.log('Reset + create section provider')
+        this.sectionProvider = new GameSectionProvider()
 
-        this.tokens = sectionProvider.getTokens()
+        this.tokens = this.sectionProvider.getTokens()
         this.selectedTokens = new Map()
         this.complete = false
-        this.board = new Board(sectionProvider, this.onBoardChange)
+        this.board = new Board(this.sectionProvider, this.onBoardChange)
         this.pickup = new Pickup(this.onBoardChange, this.onTimerFlip, this.onPickupWeapon)
         this.remainingSeconds = 120
         clearInterval(this.timerInterval)
@@ -141,7 +142,7 @@ class Game {
     move(player, movementCommand) {
         const token = this.getSelectedToken(player)
         if(!token) {
-            logger.debug('Trying to move with no selected token?')
+            logger.debug('Trying o move with no selected token?')
             return
         }
         const updatedCoord = this.board.move(token, movementCommand)
@@ -254,7 +255,8 @@ class Game {
             type: 'board-update',
             data: {
                 board: this.board.getData(),
-                tokenData: this.getTokenData()
+                tokenData: this.getTokenData(),
+                remainingSections: this.sectionProvider.remaining
             }
         }
     }
