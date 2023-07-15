@@ -6,12 +6,13 @@ const { DIRECTIONS } = require('./direction')
 
 //deals with section coordinates and section connections
 class Board {
-    constructor(sectionProvider, onBoardChange) {
+    constructor(sectionProvider, onBoardChange, onAllSectionsRevealed) {
         this.sections = []
         this.sectionProvider = sectionProvider
         this.portalManager = new PortalManager()
         this.onBoardChange = onBoardChange
         this.addSection(new Offset(0, 0), DIRECTIONS.UP)
+        this.onAllSectionsRevealed = onAllSectionsRevealed
     }
 
     getMinCoordinate() {
@@ -122,6 +123,9 @@ class Board {
         }
         this.addSection(connectionOffset, direction)
         currSection.connectAt(updatedCoord)
+        if(this.allSectionsRevealed()) {
+            this.onAllSectionsRevealed()
+        }
         this.onBoardChange()
     }
 

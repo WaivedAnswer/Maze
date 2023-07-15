@@ -1,9 +1,36 @@
 import React from 'react'
+import { GameStates } from "../models/gameState"
 
-const Toolbar = ({ remaining }) => {
+const Toolbar = ({ gameState, remaining }) => {
+
+    let message = ""
+    if(gameState !== null) {
+        switch(gameState) {
+            case GameStates.EXPLORE:
+                console.log('Exploring!')
+                message = "Remaining Sections: " + remaining
+                break
+            case GameStates.STEAL:
+                message = "Steal the weapons!"
+                break
+            case GameStates.ESCAPE:
+                message = "Escape the Maze!"
+                break
+            case GameStates.LOSS:
+                message = "Game Over"
+                break
+            case GameStates.WIN:
+                message = "Win!"
+                break
+            default:
+                throw new Error("Invalid game state")
+        }
+    }
+    
+
     return (
         <div className='toolbar'>
-            {remaining ? "Remaining Sections: " + remaining : ""}
+            {message}
         </div>
     )
 }

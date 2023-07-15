@@ -87,7 +87,7 @@ wsServer.on('request', function (request) {
             }
             if (command.type === 'RESET') {
                 game.reset()
-            } else if (game.complete) {
+            } else if (game.isCompleted()) {
                 return
             } else if (command.type === 'INITIAL') {
                 game.addPlayer(player)

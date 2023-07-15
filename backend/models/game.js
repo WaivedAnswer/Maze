@@ -2,10 +2,13 @@ const { Board } = require('./board')
 const { TileType } = require('./tile')
 const { Coordinate } = require('./coordinate')
 const { Pickup } = require('./pickup')
+const { State, GameStates } = require('./gameState')
 const { splitMoves } = require('./move')
 const { DIRECTIONS } = require('./direction')
 const logger = require('../utils/logger')
 const { GameSectionProvider } = require('./factories/gameSectionProvider')
+
+
 
 class Game {
     constructor(gameId) {
@@ -20,6 +23,9 @@ class Game {
         }
         this.onPickupWeapon = () => {
             this.pickupAllWeapons()
+        }
+        this.onAllSectionsRevealed = () => {
+            this.allSectionsRevealed()
         }
         this.reset()
     }
@@ -95,20 +101,28 @@ class Game {
         }
     }
 
-    reset() {
-        console.log('Reset + create section provider')
-        this.sectionProvider = new GameSectionProvider()
+    isCompleted() {
+        return this.complete
+    }
 
+    allSectionsRevealed() {
+        this.state.allSectionsRevealed()
+    }
+
+    reset() {
+        this.sectionProvider = new GameSectionProvider()
+        this.state = new State()
         this.tokens = this.sectionProvider.getTokens()
         this.selectedTokens = new Map()
         this.complete = false
-        this.board = new Board(this.sectionProvider, this.onBoardChange)
+        this.board = new Board(this.sectionProvider, this.onBoardChange, this.onAllSectionsRevealed)
         this.pickup = new Pickup(this.onBoardChange, this.onTimerFlip, this.onPickupWeapon)
-        this.remainingSeconds = 120
+        this.remainingSeconds = 10
         clearInterval(this.timerInterval)
         this.timerInterval = setInterval(() => {
             if (this.remainingSeconds === 0) {
                 clearInterval(this.timerInterval)
+                this.state.timesUp()
                 this.sendGameMessage({
                     type: 'lose'
                 })
@@ -195,6 +209,7 @@ class Game {
         }
         this.pickup.pickupAllWeapons(this.tokens, this.tokens.map( token => this.board.getTile(token.coordinate)))
         if(this.board.allItemsCollected()) {
+            this.state.weaponsStolen()
             this.board.disablePortals()
         }
     }
@@ -224,6 +239,7 @@ class Game {
 
     checkWin() {
         if (this.didWin()) {
+            this.state.win()
             this.sendGameMessage({
                 type: 'win'
             })
@@ -233,6 +249,7 @@ class Game {
     }
 
     didWin() {
+        //TODO refactor to state
         const allItems = this.board.allItemsCollected()
         const allEscaped = this.tokens.every(tokenCoord => this.board.isEscaped(tokenCoord))
         return  allItems && allEscaped
@@ -256,7 +273,8 @@ class Game {
             data: {
                 board: this.board.getData(),
                 tokenData: this.getTokenData(),
-                remainingSections: this.sectionProvider.remaining
+                remainingSections: this.sectionProvider.remaining,
+                state: this.state.state
             }
         }
     }

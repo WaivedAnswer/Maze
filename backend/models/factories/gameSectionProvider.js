@@ -268,7 +268,7 @@ const ELEVENTH = {
 }
 
 const TWELFTH = {
-    items: [{ type: ItemType.WEAPON, coord: { x: 3, y: 3 }, tokenType: TokenType.MAGE }],
+    items: [],
     connections: [
         { direction:  DIRECTIONS.UP, type: TokenType.BARBARIAN },
     ],
@@ -296,9 +296,9 @@ const TWELFTH = {
 
 const otherSections = [
     SECOND,
-    THIRD,
+    /*THIRD,
     FOURTH,
-    FIFTH,
+    FIFTH,*/
     SIXTH,
     SEVENTH,
     EIGHTH,

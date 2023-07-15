@@ -4,6 +4,7 @@ import Board from './board'
 import GameService from '../services/gameService'
 import logger from '../services/logger'
 import Coordinate from '../models/coordinate'
+import {GameStates} from '../models/gameState'
 import {EscalatorModel} from '../models/escalator'
 import {WallModel} from '../models/wallModel'
 import { Tile, TileType } from '../models/tile'
@@ -105,8 +106,8 @@ function Game({realPlayerName}) {
   const [remainingSeconds, setRemainingSeconds] = useState(null)
   const [gameService, setGameService] = useState(null)
   const [remainingSections, setRemainingSections] = useState(0)
+  const [gameState, setGameState] = useState(null)
 
-  console.log(typeof(remainingSections))
   const clearNotification = () => {
     setNotificationMessage(null)
   }
@@ -139,9 +140,11 @@ function Game({realPlayerName}) {
           setWalls(getWalls(json.data.board.walls))
           setTokens(getTokens(json.data.tokenData))
           setRemainingSections(json.data.remainingSections)
+          console.log(json.data.state)
+          setGameState(json.data.state)
           clearNotification()
         } else if (json.type === 'win') {
-          notify("You have won the game!", false, true)
+          setGameState(GameStates.WIN)
         } else if (json.type === 'movements') {
           logger.debug("Setting movement")
           service.setMovements(json.data.movements)
@@ -157,7 +160,7 @@ function Game({realPlayerName}) {
           //timer-update is sent only on time pickups and connections
           setRemainingSeconds(json.data.seconds)
         } else if (json.type === 'lose') {
-          notify("You have lost the game..", false, false)
+          setGameState(GameStates.LOSS)
         }
       }
     }
@@ -186,7 +189,7 @@ function Game({realPlayerName}) {
     <div className="App">
       <Notification notification={notificationMessage} />
       <div className="board-space">
-        <Toolbar remaining={remainingSections}/>
+        <Toolbar gameState={gameState} remaining={remainingSections}/>
         <div className="board-controls">
           <Timer remainingSeconds={remainingSeconds} />
           <br />
