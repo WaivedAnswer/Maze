@@ -117,7 +117,7 @@ class Game {
         this.complete = false
         this.board = new Board(this.sectionProvider, this.onBoardChange, this.onAllSectionsRevealed)
         this.pickup = new Pickup(this.onBoardChange, this.onTimerFlip, this.onPickupWeapon)
-        this.remainingSeconds = 10
+        this.remainingSeconds = 120
         clearInterval(this.timerInterval)
         this.timerInterval = setInterval(() => {
             if (this.remainingSeconds === 0) {

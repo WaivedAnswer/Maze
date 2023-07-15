@@ -296,9 +296,9 @@ const TWELFTH = {
 
 const otherSections = [
     SECOND,
-    /*THIRD,
+    THIRD,
     FOURTH,
-    FIFTH,*/
+    FIFTH,
     SIXTH,
     SEVENTH,
     EIGHTH,
