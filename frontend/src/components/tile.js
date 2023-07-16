@@ -1,125 +1,52 @@
 import { TileType } from "../models/tile"
-import { TokenType } from "../models/token"
-import { TileDirection } from "../models/tileDirection"
 
-import Item from "./item"
+import Connect from "./tileConnect"
+import Portal from "./tilePortal"
+import Exit from "./tileExit"
+import Barrier from "./tileBarrier"
+import NormalTile from "./tileNormal"
+import UnknownTile from "./tileUnknown"
 
-import rockTile from "../images/rock.png"
-import exit from "../images/s1.png"
-import greenPortal from "../images/green-portal.png"
-import orangePortal from "../images/orange-portal.png"
-import yellowPortal from "../images/yellow-portal.png"
-import purplePortal from "../images/purple-portal.png"
-import up from "../images/up.png"
-import down from "../images/down.png"
-import left from "../images/left.png"
-import right from "../images/right.png"
 
-const Tile = ({tile, onTeleport, getTileDirection, showConnections }) => {
-    let className
-    let tileImg
-    const type = tile.type
-    if (type === TileType.EXIT) {
-        className = 'tile-exit'
-        tileImg = exit
-        switch(tile.tokenType) {
-            case TokenType.DWARF:
-                className += ' exit-dwarf'
-                break;
-            case TokenType.MAGE:
-                className += ' exit-mage'
-                break;
-            case TokenType.BARBARIAN:
-                className += ' exit-barbarian'
-                break;
-            case TokenType.ELF:
-                className += ' exit-elf'
-                break;
-            default:
-                throw new Error('Unknown token type')
-        }
-    } else if (type === TileType.WALL) {
-        className = 'tile-wall'
-        tileImg = rockTile
-    } else if (type === TileType.UNKNOWN) {
-        className = 'tile-unknown'
-    } else if (type === TileType.CONNECT) {
-        className = 'tile-connect'
-        const tileDirection = getTileDirection(tile)
-        //temporary hack, when the tile direction is unknown the connection point must be connected
-        const show = tileDirection !== TileDirection.UNKNOWN && showConnections
-        if(show) {
-            switch(tileDirection) {
-                case TileDirection.UP:
-                    tileImg = up
-                    break
-                case TileDirection.DOWN:
-                    tileImg = down
-                    break
-                case TileDirection.LEFT:
-                    tileImg = left
-                    break
-                case TileDirection.RIGHT:
-                    tileImg = right
-                    break
-                default:
-                    //do nothing
-            }
-            switch(tile.tokenType) {
-                case TokenType.DWARF:
-                    className += ' connect-dwarf'
-                    break;
-                case TokenType.MAGE:
-                    className += ' connect-mage'
-                    break;
-                case TokenType.BARBARIAN:
-                    className += ' connect-barbarian'
-                    break;
-                case TokenType.ELF:
-                    className += ' connect-elf'
-                    break;
-                default:
-                    throw new Error('Unknown token type')
-            }
-        } else {
-            className += ' connected'
-        }
-
-    } else if (type === TileType.PORTAL) {
-        className = 'tile-portal'
-        switch(tile.tokenType) {
-            case TokenType.DWARF:
-                tileImg = orangePortal
-                break;
-            case TokenType.MAGE:
-                tileImg = purplePortal
-                break;
-            case TokenType.BARBARIAN:
-                tileImg = yellowPortal
-                break;
-            case TokenType.ELF:
-                tileImg = greenPortal
-                break;
-            default:
-                throw new Error('Unknown token type')
-        }
-    }
-    else {
-        className = 'tile'
+const Tile = ({tile, onTeleport, getTileDirection, gameState }) => {
+    let content
+    switch (tile.type) {
+        case TileType.EXIT:
+            content = <Exit tile={tile} gameState={gameState} />
+            break
+        case TileType.WALL:
+            content = <Barrier/>
+            break
+        case TileType.UNKNOWN:
+            content = <UnknownTile />
+            break
+        case TileType.CONNECT:
+            content = <Connect tile={tile} gameState={gameState} getTileDirection={getTileDirection} />
+            break
+        case TileType.PORTAL:
+            content = <Portal tile={tile} gameState={gameState} onTeleport={onTeleport}/>
+            break
+        case TileType.NORMAL:
+            content = <NormalTile tile={tile}/>
+            break
+        default:
+            throw new Error("Invalid tile type")
     }
 
-    const handleClick = () => {
-        if(type !== TileType.PORTAL) {
-            return
-        }
-        onTeleport(tile.coord)
+    const tileStyle = (tileCoord) => {
+        const style =  {
+        gridColumnStart: `${tileCoord.x + 1}`,
+        gridRowStart: `${tileCoord.y + 1}`,
+     }
+     return style
     }
 
     return (
-        <div className={className}>
-            { tileImg ? <img src={tileImg} className="tile-image" onClick={handleClick} alt='' /> : null}
-            { tile.hasItem ? <Item item={tile.item}/> : null}
+        <div className='tile-container' style={tileStyle(tile.coord)}>
+            { content }
+           
         </div>
+       
     )
 }
 
