@@ -5,7 +5,7 @@ import elf from "../images/elf_bow.png"
 import mage from "../images/mage.png"
 import { TokenType } from "../models/token"
 
-const Token = ({ token, onTokenSelected, style}) => {
+const Token = ({ token, onTokenSelected}) => {
     if(!token || token.escaped ) {
         return ''
     }
@@ -45,10 +45,18 @@ const Token = ({ token, onTokenSelected, style}) => {
         }
     }
 
+    const tileStyle = (tileCoord) => {
+        const style =  {
+        gridColumnStart: `${tileCoord.x + 1}`,
+        gridRowStart: `${tileCoord.y + 1}`,
+     }
+     return style
+    }
+
 
 
     return (
-        <div className={imgClass} style={style} onClick={onClick}>
+        <div className={imgClass} style={tileStyle(token.coord)} onClick={onClick}>
             <img src={img} alt='token' />
         </div>
     )

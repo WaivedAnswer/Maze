@@ -205,7 +205,7 @@ function Game({realPlayerName}) {
           }
           <button className='button' id='reset-button' onClick={reset}>Reset</button>
         </div>
-        <Board showConnections={showConnections} grid={updatedTiles} tokens={tokens} escalators={escalators} walls={walls} gameService={gameService} />
+        <Board gameState={gameState} grid={updatedTiles} tokens={tokens} escalators={escalators} walls={walls} gameService={gameService} />
       </div>
 
     </div >

@@ -32,11 +32,23 @@ class State {
         this.state = GameStates.LOSS
     }
 
-    win() {
+    escaped() {
         if(this.state !== GameStates.ESCAPE) {
             throw new Error('Invalid state change')
         }
         this.state = GameStates.WIN
+    }
+
+    canEscape() {
+        return this.state === GameStates.ESCAPE
+    }
+
+    canSteal() {
+        return this.state === GameStates.STEAL
+    }
+
+    isCompleted() {
+        return this.state === GameStates.WIN || this.state === GameStates.LOSS
     }
 }
 

@@ -101,6 +101,7 @@ class Board {
     }
 
     updateSections(currSection, updatedCoord, selectedToken) {
+        //can refactor to game state, out of this class
         const currTile = currSection.getTile(updatedCoord)
         if(!currTile.type === TileType.CONNECT ) {
             return
@@ -138,7 +139,7 @@ class Board {
         if(!currSection || !currSection.canMoveV2(currCoord, updatedCoord)) {
             return currCoord
         }
-
+        //could potentially move this to pickup interact as well and be game state dependendent
         this.updateSections(currSection, updatedCoord, token)
         return updatedCoord
     }

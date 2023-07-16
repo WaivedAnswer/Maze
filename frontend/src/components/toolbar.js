@@ -8,7 +8,7 @@ const Toolbar = ({ gameState, remaining }) => {
         switch(gameState) {
             case GameStates.EXPLORE:
                 console.log('Exploring!')
-                message = "Remaining Sections: " + remaining
+                message = "Explore the maze! Remaining: " + remaining
                 break
             case GameStates.STEAL:
                 message = "Steal the weapons!"

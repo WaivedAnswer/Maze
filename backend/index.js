@@ -105,7 +105,6 @@ wsServer.on('request', function (request) {
             }
 
             game.updateTokens()
-            checkWin(game)
         }
     })
 
@@ -116,9 +115,3 @@ wsServer.on('request', function (request) {
         gameManager.removePlayer(playerName)
     })
 })
-
-
-
-function checkWin(game) {
-    game.checkWin()
-}

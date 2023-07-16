@@ -5,7 +5,7 @@ import Token  from './token'
 import Escalator from './escalator'
 import Wall from './wall'
 
-const Board = ({ showConnections, grid, tokens, escalators, walls, gameService }) => {
+const Board = ({ gameState, grid, tokens, escalators, walls, gameService }) => {
     const handleKeyPress = (event) => {
         if (event.key.toLowerCase() === 's') {
             gameService.moveDown()
@@ -52,33 +52,21 @@ const Board = ({ showConnections, grid, tokens, escalators, walls, gameService }
         gridTemplateColumns: `repeat(${gridWidth}, 64px)`,
         gridTemplateRows: `repeat(${gridHeight}, 64px)`,
         gap: '0px'
-     }
-
-     const tileStyle = (tileCoord) => {
-        const style =  {
-        gridColumnStart: `${tileCoord.x + 1}`,
-        gridRowStart: `${tileCoord.y + 1}`,
-     }
-
-     return style
-    }
+     } 
 
     return (
         <div className="game-board" style= {boardStyle} onKeyPress={handleKeyPress} tabIndex={0}>
             {
                 grid.map((row, rowNum) =>
                         row.map((tile, colNum) =>
-                            <div className='tile-container' key={tile.coord.toString()} style={tileStyle(tile.coord)}>
-                                <Tile tile = {tile} onTeleport={onTeleport} getTileDirection={getTileDirection} showConnections={showConnections} />
-                            </div>
-
+                            <Tile key={tile.coord.toString()} tile = {tile} onTeleport={onTeleport} getTileDirection={getTileDirection} gameState={gameState} />
                         )
                 )}
             {
                 escalators.map( (escalator) => <Escalator escalator={escalator} onEscalate={onEscalate}/>)
             }
             {
-                tokens.map( (token) => <Token token={token} onTokenSelected={onTokenSelected} style={tileStyle(token.coord)}/>)
+                tokens.map( (token) => <Token token={token} onTokenSelected={onTokenSelected}/>)
             }
             {
                 walls.map( (wall) => <Wall wall={wall}/>  )

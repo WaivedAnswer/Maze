@@ -2,7 +2,7 @@ const { Board } = require('./board')
 const { TileType } = require('./tile')
 const { Coordinate } = require('./coordinate')
 const { Pickup } = require('./pickup')
-const { State, GameStates } = require('./gameState')
+const { State } = require('./gameState')
 const { splitMoves } = require('./move')
 const { DIRECTIONS } = require('./direction')
 const logger = require('../utils/logger')
@@ -102,7 +102,7 @@ class Game {
     }
 
     isCompleted() {
-        return this.complete
+        return this.state.isCompleted()
     }
 
     allSectionsRevealed() {
@@ -114,19 +114,17 @@ class Game {
         this.state = new State()
         this.tokens = this.sectionProvider.getTokens()
         this.selectedTokens = new Map()
-        this.complete = false
         this.board = new Board(this.sectionProvider, this.onBoardChange, this.onAllSectionsRevealed)
         this.pickup = new Pickup(this.onBoardChange, this.onTimerFlip, this.onPickupWeapon)
         this.remainingSeconds = 120
         clearInterval(this.timerInterval)
         this.timerInterval = setInterval(() => {
             if (this.remainingSeconds === 0) {
-                clearInterval(this.timerInterval)
                 this.state.timesUp()
+                clearInterval(this.timerInterval)
                 this.sendGameMessage({
                     type: 'lose'
                 })
-                this.complete = true
             }
             if (this.remainingSeconds > 0) {
                 this.remainingSeconds -= 1
@@ -221,9 +219,18 @@ class Game {
         }
         token.coordinate = updatedCoords
         const tile = board.getTile(token.coordinate)
+
+        //can refactor escape logic to pickup interaction
         this.pickup.interact(token, tile)
-        if(tile.type === TileType.EXIT && this.board.allItemsCollected() && token.type === tile.tokenType) {
+        if(tile.type === TileType.EXIT && token.type === tile.tokenType && this.state.canEscape()) {
             token.escape()
+            if(this.allEscaped()) {
+                this.state.escaped()
+                this.sendGameMessage({
+                    type: 'win'
+                })
+                clearInterval(this.timerInterval)
+            }
         }
     }
 
@@ -237,22 +244,8 @@ class Game {
         this.selectedTokens.set(playerName, selection)
     }
 
-    checkWin() {
-        if (this.didWin()) {
-            this.state.win()
-            this.sendGameMessage({
-                type: 'win'
-            })
-            this.complete = true
-            clearInterval(this.timerInterval)
-        }
-    }
-
-    didWin() {
-        //TODO refactor to state
-        const allItems = this.board.allItemsCollected()
-        const allEscaped = this.tokens.every(tokenCoord => this.board.isEscaped(tokenCoord))
-        return  allItems && allEscaped
+    allEscaped() {
+        return this.tokens.every(tokenCoord => this.board.isEscaped(tokenCoord))
     }
 
     getTokenData() {
