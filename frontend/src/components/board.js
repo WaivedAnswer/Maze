@@ -1,4 +1,7 @@
-import React from 'react'
+import React, {useRef} from 'react'
+
+
+import BoardContext from './boardContext'
 import Tile from './tile'
 import { getDirection } from '../models/tileDirection'
 import Token  from './token'
@@ -6,6 +9,8 @@ import Escalator from './escalator'
 import Wall from './wall'
 
 const Board = ({ gameState, grid, tokens, escalators, walls, gameService }) => {
+    
+    const myRef = useRef(null)
     const handleKeyPress = (event) => {
         if (event.key.toLowerCase() === 's') {
             gameService.moveDown()
@@ -55,23 +60,25 @@ const Board = ({ gameState, grid, tokens, escalators, walls, gameService }) => {
      } 
 
     return (
-        <div className="game-board" style= {boardStyle} onKeyPress={handleKeyPress} tabIndex={0}>
-            {
-                grid.map((row, rowNum) =>
-                        row.map((tile, colNum) =>
-                            <Tile key={tile.coord.toString()} tile = {tile} onTeleport={onTeleport} getTileDirection={getTileDirection} gameState={gameState} />
-                        )
-                )}
-            {
-                escalators.map( (escalator) => <Escalator escalator={escalator} onEscalate={onEscalate}/>)
-            }
-            {
-                tokens.map( (token) => <Token token={token} onTokenSelected={onTokenSelected}/>)
-            }
-            {
-                walls.map( (wall) => <Wall wall={wall}/>  )
-            }     
-        </div>
+        <BoardContext.Provider value={myRef}>
+            <div className="game-board" ref={myRef} style= {boardStyle} onKeyPress={handleKeyPress} tabIndex={0}>
+                {
+                    grid.map((row, rowNum) =>
+                            row.map((tile, colNum) =>
+                                <Tile key={tile.coord.toString()} tile = {tile} onTeleport={onTeleport} getTileDirection={getTileDirection} gameState={gameState} />
+                            )
+                    )}
+                {
+                    escalators.map( (escalator) => <Escalator escalator={escalator} onEscalate={onEscalate}/>)
+                }
+                {
+                    tokens.map( (token) => <Token token={token} onTokenSelected={onTokenSelected}/>)
+                }
+                {
+                    walls.map( (wall) => <Wall wall={wall}/>  )
+                }     
+            </div>
+        </BoardContext.Provider>
     )
 }
 

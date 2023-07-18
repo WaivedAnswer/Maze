@@ -140,7 +140,6 @@ function Game({realPlayerName}) {
           setWalls(getWalls(json.data.board.walls))
           setTokens(getTokens(json.data.tokenData))
           setRemainingSections(json.data.remainingSections)
-          console.log(json.data.state)
           setGameState(json.data.state)
           clearNotification()
         } else if (json.type === 'win') {

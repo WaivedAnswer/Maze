@@ -9,7 +9,7 @@ import purplePortal from "../images/purple-portal.png"
 import NormalTile from "./tileNormal"
 
 const Portal = ({tile, gameState, onTeleport }) => {
-    const show = gameState === GameStates.EXPLORE || gameState === GameStates.STEAL
+    const show = gameState !== GameStates.ESCAPE
     if(!show) {
         return (<NormalTile tile = {tile}/>)
     }

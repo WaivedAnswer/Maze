@@ -27,6 +27,22 @@ body {
    z-index:0;
 }
 
+.offscreen {
+   position: absolute;
+   height: 64px;
+   width: 64px;
+   margin: 12px;
+}
+
+.offscreen-image {
+   height: 100%;
+   width:100%;
+}
+.offscreen-direction {
+   height: 25%;
+   width:25%;
+}
+
 .token, .token-selected{
    z-index: 3;
    display: flex;
