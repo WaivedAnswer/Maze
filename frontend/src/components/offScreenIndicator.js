@@ -1,4 +1,5 @@
-import {TileDirection} from"../models/tileDirection"
+import {TileDirection} from "../models/tileDirection"
+import {TokenType} from "../models/token"
 
 import up from "../images/up.png"
 import down from "../images/down.png"
@@ -14,7 +15,25 @@ const OffScreenIndicator = ({indicatorImg, indicatorInfo }) => {
         justifyContent: "center",
         alignItems: "center"
     }
-    console.log('Offscreen!')
+    let imgClassName = "offscreen-image"
+
+    console.log(typeof(indicatorInfo.tokenType))
+    switch(indicatorInfo.tokenType) {
+        case TokenType.BARBARIAN:
+            imgClassName += " barbarian"
+            break
+        case TokenType.DWARF:
+            imgClassName += " dwarf"
+            break
+        case TokenType.ELF:
+            imgClassName += " elf"
+            break
+        case TokenType.MAGE:
+            imgClassName += " mage"
+            break
+        default:
+    }
+
     switch(indicatorInfo.direction) {
         case TileDirection.UP:
             directionImg = up
@@ -42,7 +61,7 @@ const OffScreenIndicator = ({indicatorImg, indicatorInfo }) => {
     return (
         <div className='offscreen' style={indicatorPositionStyle}>
             <img src={directionImg} className="offscreen-direction" alt="offscreen direction"/>
-            <img src={indicatorImg} className="offscreen-image" alt='offscreen indicator' /> 
+            <img src={indicatorImg} className={imgClassName} alt='offscreen indicator' /> 
         </div>
        
     )

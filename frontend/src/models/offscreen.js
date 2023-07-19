@@ -15,10 +15,10 @@ const getIndicatorInfo = (myRef, parent) => {
     const tokenRect = myRef.current.getBoundingClientRect()
     const boardRect = parent.current.getBoundingClientRect()
     const isInView = (
-        tokenRect.top < boardRect.bottom &&
-        tokenRect.left < boardRect.right &&
-        tokenRect.bottom > boardRect.top &&
-        tokenRect.right > boardRect.left
+        tokenRect.top <= boardRect.bottom &&
+        tokenRect.left <= boardRect.right &&
+        tokenRect.bottom >= boardRect.top &&
+        tokenRect.right >= boardRect.left
     );
     if(isInView) {
         return null

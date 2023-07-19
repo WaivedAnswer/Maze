@@ -46,7 +46,11 @@ const Item = ({item}) => {
     useEffect(() => {
     const parent = parentRef
     function checkIfInView() {
-        setIndicatorInfo(getIndicatorInfo(myRef, parentRef))
+        const indicatorInfo = getIndicatorInfo(myRef, parentRef)
+        if(indicatorInfo) {
+            indicatorInfo.tokenType = item.tokenType
+        }
+        setIndicatorInfo(indicatorInfo)
     }
 
     parent.current.addEventListener('scroll', checkIfInView);

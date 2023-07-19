@@ -11,7 +11,7 @@ import BoardContext from "./boardContext"
 import OffScreenIndicator from './offScreenIndicator'
 
 const Token = ({ token, onTokenSelected}) => {
-    /*const [indicatorInfo, setIndicatorInfo] = useState(null)
+    const [indicatorInfo, setIndicatorInfo] = useState(null)
     const myRef = useRef(null);
     const parentRef = useContext(BoardContext)
     useEffect(() => {
@@ -26,7 +26,7 @@ const Token = ({ token, onTokenSelected}) => {
     return () => {
         parent.current.removeEventListener('scroll', checkIfInView);
     };
-    }, [parentRef]);*/
+    }, [parentRef]);
 
     if(!token || token.escaped ) {
         return ''
@@ -79,11 +79,10 @@ const Token = ({ token, onTokenSelected}) => {
 
     return (
         <div 
-        // ref={myRef} 
+        ref={myRef} 
         className={imgClass} style={tileStyle(token.coord)} onClick={onClick}>
             <img src={img} alt='token' />
-           { // indicatorInfo !== null ? <OffScreenIndicator indicatorInfo={indicatorInfo} indicatorImg={img} /> : ""  
-           }
+           { indicatorInfo !== null ? <OffScreenIndicator indicatorInfo={indicatorInfo} indicatorImg={img} /> : ""  }
         </div>
     )
 }

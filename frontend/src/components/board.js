@@ -50,8 +50,7 @@ const Board = ({ gameState, grid, tokens, escalators, walls, gameService }) => {
     const gridWidth = grid.length === 0 ? 0 : grid[0].length
 
     const boardStyle = {
-        marginLeft: '36px',
-        marginTop: '36px',
+        padding: '36px',
         overflow: 'auto',
         display: 'grid',
         gridTemplateColumns: `repeat(${gridWidth}, 64px)`,

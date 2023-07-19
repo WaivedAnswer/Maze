@@ -94,7 +94,7 @@ body {
   border-color: black;
 }
 
-.tile-exit img {
+.tile-exit > img {
    height: 100%;
    width: 100%;
    display: block;
@@ -104,19 +104,19 @@ body {
    background-color: lightslategray;
 }
 
-.connect-elf, .exit-elf {
+.connect-elf, .exit-elf, .elf {
    background-color: limegreen !important;
 }
 
-.connect-dwarf, .exit-dwarf{
+.connect-dwarf, .exit-dwarf, .dwarf{
    background-color: darkorange !important;
 }
 
-.connect-barbarian, .exit-barbarian {
+.connect-barbarian, .exit-barbarian, .barbarian {
    background-color: gold !important;
 }
 
-.connect-mage, .exit-mage {
+.connect-mage, .exit-mage, .mage {
    background-color: darkorchid !important;
 }
 

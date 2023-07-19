@@ -1,8 +1,34 @@
+import React, {useState, useEffect, useRef, useContext} from 'react'
 import { TokenType } from "../models/token"
 
 import exit from "../images/s1.png"
+import { getIndicatorInfo } from '../models/offscreen'
+
+import BoardContext from "./boardContext"
+import OffScreenIndicator from './offScreenIndicator'
 
 const Exit = ({tile, gameState }) => {
+    const [indicatorInfo, setIndicatorInfo] = useState(null)
+    const myRef = useRef(null);
+    const parentRef = useContext(BoardContext)
+    useEffect(() => {
+    const parent = parentRef
+    function checkIfInView() {
+        const indicatorInfo = getIndicatorInfo(myRef, parentRef)
+        if(indicatorInfo) {
+            indicatorInfo.tokenType = tile.tokenType
+        }
+        setIndicatorInfo(indicatorInfo)
+    }
+
+    parent.current.addEventListener('scroll', checkIfInView);
+    checkIfInView();
+
+    return () => {
+        parent.current.removeEventListener('scroll', checkIfInView);
+    };
+    }, [parentRef]);
+
     let className = 'tile-exit'
     const tileImg = exit
     switch(tile.tokenType) {
@@ -23,8 +49,9 @@ const Exit = ({tile, gameState }) => {
     }
 
     return (
-        <div className={className}>
+        <div ref={myRef} className={className}>
             <img src={tileImg} className="tile-image"  alt='' /> 
+            {  indicatorInfo !== null ? <OffScreenIndicator indicatorInfo={indicatorInfo} indicatorImg={tileImg} /> : ""  }
         </div>
     )
 }
