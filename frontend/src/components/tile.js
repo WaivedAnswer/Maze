@@ -27,7 +27,7 @@ const Tile = ({tile, onTeleport, getTileDirection, gameState }) => {
             content = <Portal tile={tile} gameState={gameState} onTeleport={onTeleport}/>
             break
         case TileType.NORMAL:
-            content = <NormalTile tile={tile}/>
+            content = <NormalTile tile={tile} gameState={gameState}/>
             break
         default:
             throw new Error("Invalid tile type")

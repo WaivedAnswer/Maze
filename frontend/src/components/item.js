@@ -7,6 +7,7 @@ import bow from "../images/arrows2.png"
 import potion from "../images/potion.png"
 import {ItemType} from "../models/item"
 import {TokenType} from "../models/token"
+import {GameStates} from "../models/gameState"
 import { getIndicatorInfo } from '../models/offscreen'
 
 import BoardContext from "./boardContext"
@@ -39,7 +40,7 @@ const getWeapon = ( item ) => {
     }
 }
     
-const Item = ({item}) => {
+const Item = ({item, gameState}) => {
     const [indicatorInfo, setIndicatorInfo] = useState(null)
     const myRef = useRef(null);
     const parentRef = useContext(BoardContext)
@@ -63,6 +64,7 @@ const Item = ({item}) => {
     let itemImg
     let className = 'item'
     let style = {}
+    let showOffscreenIndicator = false
     switch(item.type) {
         case ItemType.COIN:
             itemImg = coinImg
@@ -77,16 +79,16 @@ const Item = ({item}) => {
             itemImg = weapon.img
             className += ' weapon'
             style.backgroundColor = weapon.color
+            showOffscreenIndicator = indicatorInfo !== null && (gameState === GameStates.STEAL)
             break
         default:
             throw new Error('Unknown item type: ' + JSON.stringify(item))
     }
 
-
     return (
         <div  ref={myRef} className={className} style={style} >
             <img src={itemImg} alt='item' />
-            {  indicatorInfo !== null ? <OffScreenIndicator indicatorInfo={indicatorInfo} indicatorImg={itemImg} /> : ""  }
+            { showOffscreenIndicator ?  <OffScreenIndicator indicatorInfo={indicatorInfo} indicatorImg={itemImg} /> : ""  }
         </div>
     )
 }

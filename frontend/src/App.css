@@ -21,10 +21,6 @@ body {
    display: block;
 }
 
-.tile-container {
-   z-index:0;
-}
-
 .offscreen {
    position: absolute;
    height: 64px;

@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef, useContext} from 'react'
 import { TokenType } from "../models/token"
+import {GameStates} from "../models/gameState"
 
 import exit from "../images/s1.png"
 import { getIndicatorInfo } from '../models/offscreen'
@@ -51,7 +52,7 @@ const Exit = ({tile, gameState }) => {
     return (
         <div ref={myRef} className={className}>
             <img src={tileImg} className="tile-image"  alt='' /> 
-            {  indicatorInfo !== null ? <OffScreenIndicator indicatorInfo={indicatorInfo} indicatorImg={tileImg} /> : ""  }
+            {  indicatorInfo !== null && gameState === GameStates.ESCAPE ? <OffScreenIndicator indicatorInfo={indicatorInfo} indicatorImg={tileImg} /> : ""  }
         </div>
     )
 }
