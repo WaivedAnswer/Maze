@@ -1,12 +1,28 @@
 import {TileDirection} from"../models/tileDirection"
 
-const getRightOffset = (boardRect, tokenRect) => {
-    return Math.min(boardRect.width, Math.max(boardRect.right - tokenRect.right, 0))
+
+const getHorizontalOffset = (boardRect, tokenRect) => {
+    const left = Math.max(boardRect.left, tokenRect.left)
+    if(left < boardRect.right - tokenRect.width) {
+        return {left: left}
+    } else {
+        return {right: window.innerWidth - boardRect.right}
+    }
 }
 
-const getBottomOffset = (boardRect, tokenRect) => {
-    return Math.min(boardRect.height, Math.max(boardRect.bottom - tokenRect.bottom, 0))
-} 
+const getVerticalOffset = (boardRect, tokenRect) => {
+    const top = Math.max(boardRect.top, tokenRect.top)
+    if(top < boardRect.bottom - tokenRect.height) {
+        return {top: top}
+    } else {
+        return {bottom: window.innerHeight - boardRect.bottom}
+    }
+}
+
+const getOffsets = (boardRect, tokenRect) => {
+    return { ...getHorizontalOffset(boardRect, tokenRect),
+        ...getVerticalOffset(boardRect, tokenRect)}
+}
 
 const getIndicatorInfo = (myRef, parent) => {
     if(!myRef.current || !parent.current) {
@@ -30,22 +46,20 @@ const getIndicatorInfo = (myRef, parent) => {
 
 
     const maxDist = Math.max(upDist, downDist, leftDist, rightDist)
+    const offsets = getOffsets(boardRect, tokenRect)
     if(upDist === maxDist) {
        return {direction: TileDirection.UP, 
-            bottom: 0,
-            right: getRightOffset(boardRect, tokenRect)}
+            ...offsets}
     } else if(downDist === maxDist) {
         return {direction: TileDirection.DOWN,
-            bottom: 0,
-            right: getRightOffset(boardRect, tokenRect)}
+            bottom: window.innerHeight - boardRect.bottom,
+            ...offsets}
     } else if(rightDist === maxDist) {
         return{direction: TileDirection.RIGHT,
-            bottom:  getBottomOffset(boardRect, tokenRect),
-            right: 0}
+            ...offsets}
     } else if(leftDist === maxDist) {
         return{direction: TileDirection.LEFT,
-            bottom:  getBottomOffset(boardRect, tokenRect),
-            right: 0}
+            ...offsets}
     } else {
         throw new Error("No direction specified")
     }

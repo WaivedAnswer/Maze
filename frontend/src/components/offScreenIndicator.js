@@ -11,6 +11,8 @@ const OffScreenIndicator = ({indicatorImg, indicatorInfo }) => {
     let indicatorPositionStyle = {
         display: "flex",
         bottom: indicatorInfo.bottom,
+        top: indicatorInfo.top,
+        left: indicatorInfo.left,
         right: indicatorInfo.right,
         justifyContent: "center",
         alignItems: "center"

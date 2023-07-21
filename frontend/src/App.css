@@ -22,7 +22,7 @@ body {
 }
 
 .offscreen {
-   position: absolute;
+   position: fixed;
    height: 64px;
    width: 64px;
    margin: 12px;
