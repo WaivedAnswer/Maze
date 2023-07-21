@@ -1,18 +1,11 @@
-import { TileType } from "../models/tile"
-import { TokenType } from "../models/token"
-
 import Item from "./item"
-import Connect from "./tileConnect"
-import Portal from "./tilePortal"
-import Exit from "./tileExit"
-import Barrier from "./tileBarrier"
 
 
-const NormalTile = ({tile }) => {
+const NormalTile = ({tile, gameState }) => {
     let className = 'tile'
     return (
         <div className={className}>
-            { tile.hasItem ? <Item item={tile.item}/> : null}
+            { tile.hasItem ? <Item item={tile.item} gameState={gameState}/> : null}
         </div>
        
     )
