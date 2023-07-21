@@ -17,7 +17,11 @@ const Token = ({ token, onTokenSelected}) => {
     useEffect(() => {
     const parent = parentRef
     function checkIfInView() {
-        setIndicatorInfo(getIndicatorInfo(myRef, parentRef))
+        const indicatorInfo = getIndicatorInfo(myRef, parentRef)
+        if (indicatorInfo && token && token.type === TokenType.DWARF) {
+            indicatorInfo.imgScale = "60%"
+        }
+        setIndicatorInfo(indicatorInfo)
     }
 
     parent.current.addEventListener('scroll', checkIfInView);

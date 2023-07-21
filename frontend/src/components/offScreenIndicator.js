@@ -17,9 +17,12 @@ const OffScreenIndicator = ({indicatorImg, indicatorInfo }) => {
         justifyContent: "center",
         alignItems: "center"
     }
+    const imgStyle = {
+        height: indicatorInfo.imgScale,
+        width: indicatorInfo.imgScale
+    }
     let imgClassName = "offscreen-image"
 
-    console.log(typeof(indicatorInfo.tokenType))
     switch(indicatorInfo.tokenType) {
         case TokenType.BARBARIAN:
             imgClassName += " barbarian"
@@ -63,7 +66,7 @@ const OffScreenIndicator = ({indicatorImg, indicatorInfo }) => {
     return (
         <div className='offscreen' style={indicatorPositionStyle}>
             <img src={directionImg} className="offscreen-direction" alt="offscreen direction"/>
-            <img src={indicatorImg} className={imgClassName} alt='offscreen indicator' /> 
+            <img src={indicatorImg} style={imgStyle} className={imgClassName} alt='offscreen indicator' /> 
         </div>
        
     )
