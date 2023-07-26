@@ -21,6 +21,11 @@ body {
    display: block;
 }
 
+img {
+   -webkit-user-drag: none;
+   user-select: none;
+}
+
 .offscreen {
    position: fixed;
    height: 48px;
