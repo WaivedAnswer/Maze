@@ -60,7 +60,7 @@ const Board = ({ gameState, grid, tokens, escalators, walls, gameService }) => {
 
     return (
         <BoardContext.Provider value={myRef}>
-            <div className="game-board" ref={myRef} style= {boardStyle} onKeyPress={handleKeyPress} tabIndex={0}>
+            <div className="game-board" ref={myRef} style= {boardStyle} onKeyDown={handleKeyPress} tabIndex={0}>
                 {
                     grid.map((row, rowNum) =>
                             row.map((tile, colNum) =>
