@@ -22,19 +22,19 @@ const OffScreenIndicator = ({indicatorImg, indicatorInfo }) => {
         width: indicatorInfo.imgScale
     }
     let imgClassName = "offscreen-image"
-
+    let containerClassName = "offscreen"
     switch(indicatorInfo.tokenType) {
         case TokenType.BARBARIAN:
-            imgClassName += " barbarian"
+            containerClassName += " barbarian"
             break
         case TokenType.DWARF:
-            imgClassName += " dwarf"
+            containerClassName += " dwarf"
             break
         case TokenType.ELF:
-            imgClassName += " elf"
+            containerClassName += " elf"
             break
         case TokenType.MAGE:
-            imgClassName += " mage"
+            containerClassName += " mage"
             break
         default:
     }
@@ -64,7 +64,7 @@ const OffScreenIndicator = ({indicatorImg, indicatorInfo }) => {
 
     
     return (
-        <div className='offscreen' style={indicatorPositionStyle}>
+        <div className={containerClassName} style={indicatorPositionStyle}>
             <img src={directionImg} className="offscreen-direction" alt="offscreen direction"/>
             <img src={indicatorImg} style={imgStyle} className={imgClassName} alt='offscreen indicator' /> 
         </div>

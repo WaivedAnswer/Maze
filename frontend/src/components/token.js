@@ -18,8 +18,11 @@ const Token = ({ token, onTokenSelected}) => {
     const parent = parentRef
     function checkIfInView() {
         const indicatorInfo = getIndicatorInfo(myRef, parentRef)
-        if (indicatorInfo && token && token.type === TokenType.DWARF) {
-            indicatorInfo.imgScale = "60%"
+        if (indicatorInfo && token ) {
+            indicatorInfo.tokenType = token.type
+            if(token.type === TokenType.DWARF) {
+                indicatorInfo.imgScale = "60%"
+            }
         }
         setIndicatorInfo(indicatorInfo)
     }
