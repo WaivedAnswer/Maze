@@ -131,7 +131,6 @@ function Game({realPlayerName}) {
       id: 'app-updates',
       handle: (json) => {
         if (json.type === 'token-update') {
-          logger.debug('Token update!')
           setTokens(getTokens(json.data))
         } else if (json.type === 'board-update') {
           logger.debug('Board UPDATE')
@@ -145,7 +144,6 @@ function Game({realPlayerName}) {
         } else if (json.type === 'win') {
           setGameState(GameStates.WIN)
         } else if (json.type === 'movements') {
-          logger.debug("Setting movement")
           service.setMovements(json.data.movements)
           setMoves(json.data.movements)
         } else if (json.type === 'all-players') {
