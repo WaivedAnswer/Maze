@@ -171,6 +171,7 @@ class Game {
     }
 
     teleport(player, viewCoord) {
+        console.log('TELEPORT' + JSON.stringify(viewCoord))
         const token = this.getSelectedToken(player)
         if(!token) {
             logger.debug('Trying to teleport with no selected token?')

@@ -1,10 +1,12 @@
 import { TileType } from "./tile"
 import { TileDirection } from "./tileDirection"
+import {PortalSelector} from './portalSelector'
 import Coordinate from "./coordinate"
 
 class BoardModel {
     constructor(grid) {
         this.grid = grid
+        this.portalSelector =  new PortalSelector(this.getPortals())
     }
 
     getHeight() {
@@ -25,6 +27,11 @@ class BoardModel {
         }
         return this.grid[coord.y][coord.x]
     }
+
+    getPortals() {
+        return this.grid.flatMap(row => row.filter( tile => tile.type === TileType.PORTAL ))
+    }
+
     
     getDirection(tile) {
         if(this.grid.length === 0 ) {
