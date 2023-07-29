@@ -13,6 +13,13 @@ class Token {
         this.escaped = escaped
         this.type = type
     }
+
+    isMySelection() {
+        if(!this.selectedBy) {
+            return false
+        }
+        return this.selectedBy.isSelf
+    }
 }
 
 export { Token, TokenType }

@@ -7,6 +7,8 @@ import Coordinate from '../models/coordinate'
 import {GameStates} from '../models/gameState'
 import {EscalatorModel} from '../models/escalator'
 import {WallModel} from '../models/wallModel'
+import {Selection} from '../models/selection'
+import {BoardModel} from '../models/board'
 import { Tile, TileType } from '../models/tile'
 import { Item } from '../models/item'
 import { Token } from '../models/token'
@@ -60,7 +62,7 @@ const getTileRow = (row) => {
 
 const getTiles = (tiles) => {
   const grid = tiles.map( row => getTileRow(row))
-  return grid
+  return new BoardModel(grid)
 }
 
 const getEscalators = (escalators) => {
@@ -71,31 +73,26 @@ const getWalls = (walls) => {
   return walls.map( wall => new WallModel(getCoordinate(wall.start), getCoordinate(wall.end)))
 }
 
-const getInitials = (str) => {
-  const split = str.split(" ")
-  return split.map(substr => substr[0]).join('')
-}
-
-const getSelectedBy = (selections, idx) => {
+const getSelectedBy = (selections, idx, myPlayerName) => {
   let selection = selections.find(selection => selection.selection === idx)
   if (selection) {
-    return getInitials(selection.selectedBy)
+    return new Selection(selection.selectedBy, selection.selectedBy === myPlayerName)
   }
   return null
 }
 
-const getTokens = (data) => {
+const getTokens = (data, myPlayerName) => {
   const newTokens = data.tokens.map((tokenData, idx) =>
   new Token(idx,
     getCoordinate(tokenData.pos),
-    getSelectedBy(data.selections, idx),
+    getSelectedBy(data.selections, idx, myPlayerName),
     tokenData.escaped,
     tokenData.type))
   return newTokens
 }
 
 function Game({realPlayerName}) {
-  const [updatedTiles, setTiles] = useState([[]])
+  const [updatedTiles, setTiles] = useState(new BoardModel([]))
   const [escalators, setEscalators] = useState([])
   const [walls, setWalls] = useState([])
   const [tokens, setTokens] = useState([])
@@ -130,7 +127,7 @@ function Game({realPlayerName}) {
       id: 'app-updates',
       handle: (json) => {
         if (json.type === 'token-update') {
-          setTokens(getTokens(json.data))
+          setTokens(getTokens(json.data, realPlayerName))
         } else if (json.type === 'board-update') {
           logger.debug('Board UPDATE')
           setTiles(getTiles(json.data.board.tiles))
@@ -197,7 +194,7 @@ function Game({realPlayerName}) {
           }
           <button className='button' id='reset-button' onClick={reset}>Reset</button>
         </div>
-        <Board gameState={gameState} grid={updatedTiles} tokens={tokens} escalators={escalators} walls={walls} gameService={gameService} />
+        <Board gameState={gameState} board={updatedTiles} tokens={tokens} escalators={escalators} walls={walls} gameService={gameService} />
       </div>
 
     </div >
