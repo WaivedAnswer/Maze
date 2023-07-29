@@ -1,0 +1,8 @@
+class PortalSelector {
+    constructor() {
+    }
+
+    handle() {
+        
+    }
+}

@@ -3,13 +3,12 @@ import React, {useRef} from 'react'
 
 import BoardContext from './boardContext'
 import Tile from './tile'
-import { getDirection } from '../models/tileDirection'
+import {TileType} from '../models/tile'
 import Token  from './token'
 import Escalator from './escalator'
 import Wall from './wall'
 
-const Board = ({ gameState, grid, tokens, escalators, walls, gameService }) => {
-    
+const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => {
     const myRef = useRef(null)
     const handleKeyPress = (event) => {
         if (event.key.toLowerCase() === 's') {
@@ -21,19 +20,22 @@ const Board = ({ gameState, grid, tokens, escalators, walls, gameService }) => {
         } else if (event.key.toLowerCase() === 'd') {
             gameService.moveRight()
         } else if (event.key.toLowerCase() === 'e' ) {
-            // const selectedToken = tokens.find(t => t.selectedBy)
-            // if(selectedToken) {
-            //     const matchingEscalator = escalators.find(e => e.startCoord.toString() === selectedToken.coord.toString() || e.endCoord.toString() === selectedToken.coord.toString())
-            //     if(matchingEscalator) {
+            const selectedToken = tokens.find(t => t.isMySelection())
+            if(selectedToken) {
+                const currTile = board.getTile(selectedToken.coord)
+                if(currTile.type === TileType.PORTAL) {
+                    //
+                    //portalSelector.handle()
+                    /* if(state === selection) {}
+                    */
+                } else {
                     gameService.escalate()
-            //    }
-            //}
-
+                }
+            }
         }
     }
 
     const onTokenSelected = (token) => {
-        //sends with token.id (Where does this come from? is it always populated correctly?)
         gameService.send(JSON.stringify(
             {
                 type: "SELECTED",
@@ -47,12 +49,12 @@ const Board = ({ gameState, grid, tokens, escalators, walls, gameService }) => {
     }
 
     const getTileDirection = (tile) => {
-        return getDirection(tile, grid)
+        return board.getDirection(tile)
     }
 
-    const gridHeight = grid.length
+    const gridHeight = board.getHeight()
 
-    const gridWidth = grid.length === 0 ? 0 : grid[0].length
+    const gridWidth = board.getWidth()
 
     const boardStyle = {
         padding: '36px',
@@ -67,7 +69,7 @@ const Board = ({ gameState, grid, tokens, escalators, walls, gameService }) => {
         <BoardContext.Provider value={myRef}>
             <div className="game-board" ref={myRef} style= {boardStyle} onKeyDown={handleKeyPress} tabIndex={0}>
                 {
-                    grid.map((row, rowNum) =>
+                    board.grid.map((row, rowNum) =>
                             row.map((tile, colNum) =>
                                 <Tile key={tile.coord.toString()} tile = {tile} onTeleport={onTeleport} getTileDirection={getTileDirection} gameState={gameState} />
                             )
