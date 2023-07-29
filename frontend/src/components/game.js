@@ -180,7 +180,6 @@ function Game({realPlayerName}) {
   }
 
   const otherPlayers = allPlayers.filter(playerInfo => playerInfo.playerName !== realPlayerName)
-  const showConnections = remainingSections !== 0
   return (
     <div className="App">
       <Notification notification={notificationMessage} />

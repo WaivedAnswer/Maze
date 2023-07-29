@@ -21,13 +21,13 @@ const Board = ({ gameState, grid, tokens, escalators, walls, gameService }) => {
         } else if (event.key.toLowerCase() === 'd') {
             gameService.moveRight()
         } else if (event.key.toLowerCase() === 'e' ) {
-            const selectedToken = tokens.find(t => t.selectedBy)
-            if(selectedToken) {
-                const matchingEscalator = escalators.find(e => e.startCoord.toString() === selectedToken.coord.toString() || e.endCoord.toString() === selectedToken.coord.toString())
-                if(matchingEscalator) {
-                    gameService.escalate(matchingEscalator.id)
-                }
-            }
+            // const selectedToken = tokens.find(t => t.selectedBy)
+            // if(selectedToken) {
+            //     const matchingEscalator = escalators.find(e => e.startCoord.toString() === selectedToken.coord.toString() || e.endCoord.toString() === selectedToken.coord.toString())
+            //     if(matchingEscalator) {
+                    gameService.escalate()
+            //    }
+            //}
 
         }
     }

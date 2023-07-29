@@ -12,6 +12,10 @@ class Escalator {
         }
         return null
     }
+
+    isEndpoint(coord) {
+        return coord.getKey() === this.endCoord.getKey() || coord.getKey() === this.startCoord.getKey()
+    }
 }
 
 module.exports = {

@@ -101,7 +101,7 @@ wsServer.on('request', function (request) {
             } else if (command.type === 'TELEPORT') {
                 game.teleport(player, command.coord)
             } else if (command.type === 'ESCALATE') {
-                game.escalate(player, command.id)
+                game.escalate(player)
             }
 
             game.updateTokens()

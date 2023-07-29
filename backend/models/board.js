@@ -148,13 +148,12 @@ class Board {
         return this.portalManager.teleport(token, newCoord)
     }
 
-    escalate(token, escalatorId) {
-        const [sectionId, escalatorIndex] = escalatorId.split('-')
-        const section = this.sections[Number(sectionId)]
-        if(section !== this.getCurrSection(token.coordinate)) {
+    escalate(token) {
+        const section = this.getCurrSection(token.coordinate)
+        if(!section) {
             return token.coordinate
         }
-        const updatedCoord = section.escalate(token, escalatorIndex)
+        const updatedCoord = section.escalate(token)
         this.updateSections(section, updatedCoord, token)
         return updatedCoord
     }

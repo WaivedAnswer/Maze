@@ -147,8 +147,12 @@ class Section {
         return nextTile.isPassable() && !blocked
     }
 
-    escalate(token, escalatorIndex){
-        const escalator = this.escalators[Number(escalatorIndex)]
+    escalate(token){
+        const relativeCoord = this.getRelativeCoord(token.coordinate)
+        const escalator = this.escalators.find(esc => esc.isEndpoint(relativeCoord))
+        if(!escalator) {
+            return token.coordinate
+        }
         const otherEnd = escalator.getOtherEnd(this.getRelativeCoord(token.coordinate))
         if(!otherEnd) {
             return token.coordinate

@@ -182,14 +182,14 @@ class Game {
         this.onMove(token, this.board, updatedCoord)
     }
 
-    escalate(player, escalatorId) {
+    escalate(player) {
         const token = this.getSelectedToken(player)
         if(!token) {
             logger.debug('Trying to teleport with no selected token?')
             return
         }
 
-        const updatedCoord = this.board.escalate(token, escalatorId)
+        const updatedCoord = this.board.escalate(token)
         this.onMove(token, this.board, updatedCoord)
 
     }
