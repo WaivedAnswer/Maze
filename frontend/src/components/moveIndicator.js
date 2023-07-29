@@ -2,6 +2,7 @@ import up from "../images/up.png"
 import down from "../images/down.png"
 import left from "../images/left.png"
 import right from "../images/right.png"
+import escalate from "../images/staircase.png"
 const MoveIndicator = ({ move, isSelf }) => {
     let imgSrc
     let keyIcon
@@ -17,7 +18,11 @@ const MoveIndicator = ({ move, isSelf }) => {
     } else if(move ==='DOWN') {
         imgSrc = down
         keyIcon = 'S'
-    } else {
+    } else if(move ==='ESCALATE') {
+        imgSrc = escalate
+        keyIcon = 'E'
+    }
+    else {
         console.log("Fail, move: " + move)
     }
     return (

@@ -20,6 +20,15 @@ const Board = ({ gameState, grid, tokens, escalators, walls, gameService }) => {
             gameService.moveLeft()
         } else if (event.key.toLowerCase() === 'd') {
             gameService.moveRight()
+        } else if (event.key.toLowerCase() === 'e' ) {
+            const selectedToken = tokens.find(t => t.selectedBy)
+            if(selectedToken) {
+                const matchingEscalator = escalators.find(e => e.startCoord.toString() === selectedToken.coord.toString() || e.endCoord.toString() === selectedToken.coord.toString())
+                if(matchingEscalator) {
+                    gameService.escalate(matchingEscalator.id)
+                }
+            }
+
         }
     }
 
@@ -35,10 +44,6 @@ const Board = ({ gameState, grid, tokens, escalators, walls, gameService }) => {
 
     const onTeleport = (coord) => {
         gameService.teleport(coord)
-    }
-
-    const onEscalate = (escalatorId) => {
-        gameService.escalate(escalatorId)
     }
 
     const getTileDirection = (tile) => {
@@ -68,7 +73,7 @@ const Board = ({ gameState, grid, tokens, escalators, walls, gameService }) => {
                             )
                     )}
                 {
-                    escalators.map( (escalator) => <Escalator escalator={escalator} onEscalate={onEscalate}/>)
+                    escalators.map( (escalator) => <Escalator escalator={escalator}/>)
                 }
                 {
                     tokens.map( (token) => <Token token={token} onTokenSelected={onTokenSelected}/>)

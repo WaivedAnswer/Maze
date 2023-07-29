@@ -1,6 +1,7 @@
 import MoveIndicator from './moveIndicator'
 
 const Moves = ({ playerName, allowedMoves }) => {
+    const allMoves = allowedMoves.concat(['ESCALATE'])
 
     return (
         < div className='player-self'>
@@ -8,7 +9,7 @@ const Moves = ({ playerName, allowedMoves }) => {
             <h2>Moves</h2>
             <div className = 'player-moves' >
                 {
-                    allowedMoves.map(move =>  <MoveIndicator key={move} move={move} isSelf={true}></MoveIndicator>)
+                    allMoves.map(move =>  <MoveIndicator key={move} move={move} isSelf={true}></MoveIndicator>)
                 }
             </div>
         </div>

@@ -1,7 +1,8 @@
 import React from 'react'
 import { GameStates } from "../models/gameState"
+import Timer from './Timer'
 
-const Toolbar = ({ gameState, remaining }) => {
+const Toolbar = ({ gameState, remaining, remainingSeconds }) => {
 
     let message = ""
     if(gameState !== null) {
@@ -29,7 +30,9 @@ const Toolbar = ({ gameState, remaining }) => {
 
     return (
         <div className='toolbar'>
+            <Timer remainingSeconds={remainingSeconds} />
             {message}
+            <div/>
         </div>
     )
 }

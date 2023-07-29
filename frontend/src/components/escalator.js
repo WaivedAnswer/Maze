@@ -22,13 +22,10 @@ const Escalator = ({ escalator, onEscalate }) => {
         gridColumn: `${colStart} / span ${escalator.getColSpan()}`,
     }
 
-    const handleClick = () => {
-        onEscalate(escalator.id)
-    }
 
     return (
         < div className = 'escalator' style = {tileStyle} >
-            <img className = 'escalator-img' src={escImg} onClick={handleClick} alt='escalator' />
+            <img className = 'escalator-img' src={escImg} alt='escalator' />
         </div>
     )
 }

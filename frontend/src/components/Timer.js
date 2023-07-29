@@ -1,9 +1,6 @@
 import React from 'react'
 
 const Timer = ({ remainingSeconds }) => {
-    if (!remainingSeconds) {
-        return ""
-    }
     const getTimeStr = (num) => {
         const paddedString = "00" + num
         return paddedString.substr(paddedString.length - 2)

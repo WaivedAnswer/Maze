@@ -14,7 +14,6 @@ import OtherPlayer from './playerIndicator'
 import Moves from './moves'
 import Notification from './notification'
 import Toolbar from './toolbar'
-import Timer from './Timer'
 import { useParams } from 'react-router-dom'
 
 
@@ -186,12 +185,9 @@ function Game({realPlayerName}) {
     <div className="App">
       <Notification notification={notificationMessage} />
       <div className="board-space">
-        <Toolbar gameState={gameState} remaining={remainingSections}/>
+        <Toolbar gameState={gameState} remaining={remainingSections} remainingSeconds={remainingSeconds}/>
         <div className="board-controls">
-          <Timer remainingSeconds={remainingSeconds} />
-          <br />
           <Moves playerName={realPlayerName} allowedMoves={allowedMoves} />
-          <br />
           <h2 hidden={!otherPlayers.length}>Other Players:</h2>
           {
             otherPlayers.map(player => <OtherPlayer key={player.playerName}
