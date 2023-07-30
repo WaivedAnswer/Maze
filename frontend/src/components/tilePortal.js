@@ -8,7 +8,7 @@ import purplePortal from "../images/purple-portal.png"
 
 import NormalTile from "./tileNormal"
 
-const Portal = ({tile, gameState, onTeleport }) => {
+const Portal = ({tile, gameState }) => {
     const show = gameState === GameStates.EXPLORE || gameState === GameStates.STEAL
     if(!show) {
         return (<NormalTile tile = {tile}/>)
@@ -33,13 +33,10 @@ const Portal = ({tile, gameState, onTeleport }) => {
             throw new Error('Unknown token type')
     }
 
-    const handleClick = () => {
-        onTeleport(tile.coord)
-    }
 
     return (
         <div className={className}>
-            <img src={tileImg} className="tile-image" onClick={handleClick} alt='' /> 
+            <img src={tileImg} className="tile-image" alt='' /> 
         </div>
     )
 }

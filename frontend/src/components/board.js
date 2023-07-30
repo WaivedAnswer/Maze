@@ -80,10 +80,6 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
         ))
     }
 
-    const onTeleport = (coord) => {
-        gameService.teleport(coord)
-    }
-
     const getTileDirection = (tile) => {
         return board.getDirection(tile)
     }
@@ -102,7 +98,7 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
                 {
                     board.grid.map((row, rowNum) =>
                             row.map((tile, colNum) =>
-                                <Tile key={tile.coord.toString()} tile = {tile} onTeleport={onTeleport} getTileDirection={getTileDirection} gameState={gameState} />
+                                <Tile key={tile.coord.toString()} tile = {tile} getTileDirection={getTileDirection} gameState={gameState} />
                             )
                     )}
                 {
