@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useRef} from 'react'
 
 
 import BoardContext from './boardContext'
@@ -14,14 +14,14 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
 
     const gridHeight = board.getHeight()
     const gridWidth = board.getWidth()
-    const scrollToTile = (tile) => {
+    const scrollToTile = (tileCoord) => {
         if (boardRef.current) {
           const boardRect = boardRef.current.getBoundingClientRect();
           const tileWidth = 64
           const tileHeight = 64
     
-          const tileX = tile.coord.x * tileWidth
-          const tileY = tile.coord.y * tileHeight
+          const tileX = tileCoord.x * tileWidth
+          const tileY = tileCoord.y * tileHeight
 
           const scrollX = tileX - (boardRect.width / 2) + (tileWidth / 2) ;
           const scrollY = tileY - boardRect.height / 2 + (tileHeight / 2);
@@ -46,7 +46,21 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
             gameService.moveLeft()
         } else if (event.key.toLowerCase() === 'd') {
             gameService.moveRight()
-        } else if (event.key.toLowerCase() === 'e' ) {
+        } else if (event.key.toLowerCase() === 'q') {
+            const selectedToken = tokens.find(t => t.isMySelection())
+            if(!selectedToken) {
+                const firstToken = tokens[0]
+                scrollToTile(firstToken.coord)
+                gameService.select(firstToken.id)
+            } else {
+                const tokenIndex = tokens.indexOf(selectedToken)
+                const nextIndex = (tokenIndex + 1) % tokens.length
+                const nextToken = tokens[nextIndex]
+                scrollToTile(nextToken.coord)
+                gameService.select(nextToken.id)
+            }
+        }
+        else if (event.key.toLowerCase() === 'e' ) {
             const selectedToken = tokens.find(t => t.isMySelection())
             if(selectedToken) {
                 const currTile = board.getTile(selectedToken.coord)
