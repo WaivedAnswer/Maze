@@ -70,6 +70,15 @@ class GameService {
         this.connection.send(gameMessage)
     }
 
+    select(id) {
+        this.send(JSON.stringify(
+            {
+                type: "SELECTED",
+                selected: id
+            }
+        ))
+    }
+
     setMovements = (movements) => {
         this.allowedMovements = movements
     }

@@ -37,7 +37,7 @@ class PortalSelector {
         }
         if(this.selectablePortals.length) {
             const newSelection = this.selectablePortals[this.selectedIndex]
-            scrollToTile(newSelection)
+            scrollToTile(newSelection.coord)
         }
     }
 
