@@ -17,18 +17,27 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
     const scrollToTile = (tile) => {
         if (boardRef.current) {
           const boardRect = boardRef.current.getBoundingClientRect();
+          const tileWidth = 64
+          const tileHeight = 64
     
-          const scrollX = elementRect.left + elementRect.width / 2 - ancestorRect.left - ancestorRect.width / 2;
-          const scrollY = elementRect.top + elementRect.height / 2 - ancestorRect.top - ancestorRect.height / 2;
-    
-          ancestorRef.current.scrollTo({
-            top: ancestorRef.current.scrollTop + scrollY,
-            left: ancestorRef.current.scrollLeft + scrollX,
+          const tileX = tile.coord.x * tileWidth
+          const tileY = tile.coord.y * tileHeight
+
+          const scrollX = tileX - (boardRect.width / 2) + (tileWidth / 2) ;
+          const scrollY = tileY - boardRect.height / 2 + (tileHeight / 2);
+
+          const scrollTo = {
+            top: scrollY,
+            left: scrollX,
             behavior: 'smooth',
-          });
+          }
+    
+          boardRef.current.scrollTo(scrollTo);
         }
+    }
     
     const handleKeyPress = (event) => {
+        let selecting = false
         if (event.key.toLowerCase() === 's') {
             gameService.moveDown()
         } else if (event.key.toLowerCase() === 'w') {
@@ -42,7 +51,8 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
             if(selectedToken) {
                 const currTile = board.getTile(selectedToken.coord)
                 if(currTile.type === TileType.PORTAL) {
-                    board.portalSelector.handle(selectedToken, currTile)
+                    selecting = true
+                    board.portalSelector.handle(selectedToken, currTile, scrollToTile)
                 } else {
                     gameService.escalate()
                 }
@@ -51,9 +61,12 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
             if(!board.portalSelector.isActive()) {
                 return
             }
-            //TODO change to id based 
+            selecting = true
             const selectedPortal = board.portalSelector.select()
             gameService.teleport(selectedPortal.coord)
+        }
+        if(!selecting) {
+            board.portalSelector.cancel()
         }
     }
 
@@ -76,7 +89,6 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
     }
 
     const boardStyle = {
-        padding: '36px',
         overflow: 'auto',
         display: 'grid',
         gridTemplateColumns: `repeat(${gridWidth}, 64px)`,

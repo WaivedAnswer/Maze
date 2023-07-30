@@ -6,17 +6,21 @@ const SelectionState = {
 
 class PortalSelector {
     constructor(portals) {
+        this.resetSelection()
+        this.portals = portals
+    }
+
+    resetSelection() {
         this.state = SelectionState.INACTIVE
         this.selectedIndex = null
         this.selectablePortals = []
-        this.portals = portals
     }
 
     isActive() {
         return this.state !== SelectionState.INACTIVE
     }
 
-    handle(selectedToken, currPortal) {
+    handle(selectedToken, currPortal, scrollToTile) {
         if(selectedToken.type !== currPortal.tokenType) {
             return
         }
@@ -31,17 +35,28 @@ class PortalSelector {
         } else {
             throw new Error('Cannot handle that state yet')
         }
+        if(this.selectablePortals.length) {
+            const newSelection = this.selectablePortals[this.selectedIndex]
+            scrollToTile(newSelection)
+        }
     }
 
     select() {
         if(this.state === SelectionState.INACTIVE) {
             throw new Error('Cannot choose selection while not selecting')
         } else if(this.state === SelectionState.ACTIVE) {
-            this.state = SelectionState.INACTIVE
-            return this.selectablePortals[this.selectedIndex]
+            const selection = this.selectablePortals[this.selectedIndex]
+            this.resetSelection()
+            return selection
         }
         else {
             throw new Error('Cannot handle that state yet')
+        }
+    }
+
+    cancel() {
+        if(this.state === SelectionState.ACTIVE) {
+            this.resetSelection()
         }
     }
 }
