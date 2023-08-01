@@ -48,14 +48,15 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
             gameService.moveRight()
         } else if (event.key.toLowerCase() === 'q') {
             const selectedToken = tokens.find(t => t.isMySelection())
-            if(!selectedToken) {
-                const firstToken = tokens[0]
+            const selectableTokens = tokens.filter(t => !t.escaped)
+            if(!selectedToken || selectedToken.escaped) {
+                const firstToken = selectableTokens[0]
                 scrollToTile(firstToken.coord)
                 gameService.select(firstToken.id)
             } else {
-                const tokenIndex = tokens.indexOf(selectedToken)
-                const nextIndex = (tokenIndex + 1) % tokens.length
-                const nextToken = tokens[nextIndex]
+                const tokenIndex = selectableTokens.indexOf(selectedToken)
+                const nextIndex = (tokenIndex + 1) % selectableTokens.length
+                const nextToken = selectableTokens[nextIndex]
                 scrollToTile(nextToken.coord)
                 gameService.select(nextToken.id)
             }

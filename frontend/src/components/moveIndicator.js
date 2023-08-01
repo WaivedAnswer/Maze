@@ -3,6 +3,9 @@ import down from "../images/down.png"
 import left from "../images/left.png"
 import right from "../images/right.png"
 import escalate from "../images/staircase.png"
+import select from "../images/selection.png"
+import portal from "../images/portal2.png"
+
 const MoveIndicator = ({ move, isSelf }) => {
     let imgSrc
     let keyIcon
@@ -21,6 +24,13 @@ const MoveIndicator = ({ move, isSelf }) => {
     } else if(move ==='ESCALATE') {
         imgSrc = escalate
         keyIcon = 'E'
+    } else if(move ==='PORTAL') {
+        imgSrc = portal
+        keyIcon = 'E'
+    }
+    else if(move === 'SELECT') {
+        imgSrc = select
+        keyIcon = 'Q'
     }
     else {
         console.log("Fail, move: " + move)

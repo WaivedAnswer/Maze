@@ -241,7 +241,6 @@ class Game {
         if(selection > this.tokens.length || selection < 0) {
             logger.error(`Error: Tried to set ${selection} as selection`)
         }
-        logger.error(playerName, selection)
         this.selectedTokens.set(playerName, selection)
     }
 

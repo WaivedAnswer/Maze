@@ -15,7 +15,7 @@ class Token {
     }
 
     isMySelection() {
-        if(!this.selectedBy) {
+        if(!this.selectedBy ) {
             return false
         }
         return this.selectedBy.isSelf

@@ -1,7 +1,7 @@
 import MoveIndicator from './moveIndicator'
 
 const Moves = ({ playerName, allowedMoves }) => {
-    const allMoves = allowedMoves.concat(['ESCALATE'])
+    const allMoves = ([ 'SELECT', 'ESCALATE','PORTAL'].concat(allowedMoves))
 
     return (
         < div className='player-self'>
