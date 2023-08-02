@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useRef, useEffect} from 'react'
 
 
 import BoardContext from './boardContext'
@@ -11,6 +11,10 @@ import Wall from './wall'
 
 const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => {
     const boardRef = useRef(null)
+
+    useEffect(() => {
+        boardRef.current.focus();
+      }, []);
 
     const gridHeight = board.getHeight()
     const gridWidth = board.getWidth()
