@@ -40,9 +40,9 @@ const Token = ({ token, onTokenSelected}) => {
     }
 
     let imgClass
-    if (token.selectedBy) {
+    if (token.selections.length !== 0) {
         imgClass = 'token-selected'
-    } else if (!token.selectedBy) {
+    } else if (token.selections.length === 0) {
         imgClass = 'token'
     }
 

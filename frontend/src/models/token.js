@@ -6,19 +6,16 @@ const TokenType = {
 }
 
 class Token {
-    constructor(id, coord, selectedBy, escaped, type) {
+    constructor(id, coord, selections, escaped, type) {
         this.id = id
         this.coord = coord
-        this.selectedBy = selectedBy
+        this.selections = selections
         this.escaped = escaped
         this.type = type
     }
 
     isMySelection() {
-        if(!this.selectedBy ) {
-            return false
-        }
-        return this.selectedBy.isSelf
+        return this.selections.find(selection => selection.isSelf)
     }
 }
 

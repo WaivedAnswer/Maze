@@ -74,11 +74,9 @@ const getWalls = (walls) => {
 }
 
 const getSelectedBy = (selections, idx, myPlayerName) => {
-  let selection = selections.find(selection => selection.selection === idx)
-  if (selection) {
-    return new Selection(selection.selectedBy, selection.selectedBy === myPlayerName)
-  }
-  return null
+  return selections.filter(selection => selection.selection === idx)
+    .map(selection => new Selection(selection.selectedBy, selection.selectedBy === myPlayerName))
+
 }
 
 const getTokens = (data, myPlayerName) => {
