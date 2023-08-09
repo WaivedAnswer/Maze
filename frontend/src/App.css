@@ -211,6 +211,14 @@ img {
    row-gap: 8px;
 }
 
+.toolbar-icon {
+   width: 36px;
+   height: 36px;
+   background-color: purple;
+   border: 2px solid green;
+   border-radius: 12px;
+}
+
 .move-icon > span{
    display: inline-block;
 }

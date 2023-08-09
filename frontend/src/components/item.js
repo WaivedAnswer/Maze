@@ -79,6 +79,9 @@ const Item = ({item, gameState}) => {
             itemImg = weapon.img
             className += ' weapon'
             style.backgroundColor = weapon.color
+            if(gameState !== GameStates.STEAL) {
+                style.opacity = "30%"
+            }
             showOffscreenIndicator = indicatorInfo !== null && (gameState === GameStates.STEAL)
             break
         default:

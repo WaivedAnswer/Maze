@@ -118,7 +118,7 @@ class Game {
         this.pickup = new Pickup(this.onBoardChange, this.onTimerFlip, this.onPickupWeapon)
         this.remainingSeconds = 120
         clearInterval(this.timerInterval)
-        this.timerInterval = setInterval(() => {
+        /*this.timerInterval = setInterval(() => {
             if (this.remainingSeconds === 0) {
                 this.state.timesUp()
                 clearInterval(this.timerInterval)
@@ -130,7 +130,7 @@ class Game {
                 this.remainingSeconds -= 1
                 this.sendGameMessage(this.getTimeMessage())
             }
-        }, 1000)
+        }, 1000)*/
         this.sendGameMessage(this.getTimeMessage(this.getRemainingSeconds()))
         this.onBoardChange()
     }

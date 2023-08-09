@@ -49,8 +49,13 @@ const Exit = ({tile, gameState }) => {
             throw new Error('Unknown token type')
     }
 
+    const style = {}
+    if(gameState !== GameStates.ESCAPE && gameState !== GameStates.WIN) {
+        style.opacity = "40%"
+    }
+
     return (
-        <div ref={myRef} className={className}>
+        <div ref={myRef} className={className} style={style}>
             <img src={tileImg} className="tile-image"  alt='' /> 
             {  indicatorInfo !== null && gameState === GameStates.ESCAPE ? <OffScreenIndicator indicatorInfo={indicatorInfo} indicatorImg={tileImg} /> : ""  }
         </div>
