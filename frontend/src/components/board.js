@@ -39,18 +39,11 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
           boardRef.current.scrollTo(scrollTo);
         }
     }
-    
-    const handleKeyPress = (event) => {
+
+    const handleKeyUp = (event) => {
+        //the action based commands like escalator, portal, player selection should have some delay to allow for screen update
         let selecting = false
-        if (event.key.toLowerCase() === 's') {
-            gameService.moveDown()
-        } else if (event.key.toLowerCase() === 'w') {
-            gameService.moveUp()
-        } else if (event.key.toLowerCase() === 'a') {
-            gameService.moveLeft()
-        } else if (event.key.toLowerCase() === 'd') {
-            gameService.moveRight()
-        } else if (event.key.toLowerCase() === 'q') {
+        if (event.key.toLowerCase() === 'q') {
             const selectedToken = tokens.find(t => t.isMySelection())
             const selectableTokens = tokens.filter(t => !t.escaped)
             if(!selectedToken || selectedToken.escaped) {
@@ -88,6 +81,19 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
             board.portalSelector.cancel()
         }
     }
+    
+    const handleKeyDown = (event) => {
+        //movement commands like to be continuous to allow all one movement
+        if (event.key.toLowerCase() === 's') {
+            gameService.moveDown()
+        } else if (event.key.toLowerCase() === 'w') {
+            gameService.moveUp()
+        } else if (event.key.toLowerCase() === 'a') {
+            gameService.moveLeft()
+        } else if (event.key.toLowerCase() === 'd') {
+            gameService.moveRight()
+        }
+    }
 
 
     const onTokenSelected = (token) => {
@@ -113,7 +119,7 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
 
     return (
         <BoardContext.Provider value={boardRef}>
-            <div className="game-board" ref={boardRef} style= {boardStyle} onKeyDown={handleKeyPress} tabIndex={0}>
+            <div className="game-board" ref={boardRef} style= {boardStyle} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} tabIndex={0}>
                 {
                     board.grid.map((row, rowNum) =>
                             row.map((tile, colNum) =>
