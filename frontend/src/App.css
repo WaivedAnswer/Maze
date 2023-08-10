@@ -211,12 +211,18 @@ img {
    row-gap: 8px;
 }
 
+.toolbar-icon-container {
+   display: flex;
+   flex-direction: row;
+   gap: 4px;
+}
+
 .toolbar-icon {
    width: 36px;
    height: 36px;
    background-color: purple;
-   border: 2px solid green;
    border-radius: 12px;
+   border: 1px solid white
 }
 
 .move-icon > span{

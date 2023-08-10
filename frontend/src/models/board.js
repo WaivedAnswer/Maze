@@ -2,6 +2,7 @@ import { TileType } from "./tile"
 import { TileDirection } from "./tileDirection"
 import {PortalSelector} from './portalSelector'
 import Coordinate from "./coordinate"
+import {ItemType} from "./item"
 
 class BoardModel {
     constructor(grid) {
@@ -32,6 +33,9 @@ class BoardModel {
         return this.grid.flatMap(row => row.filter( tile => tile.type === TileType.PORTAL ))
     }
 
+    getWeaponTiles() {
+        return this.grid.flatMap(row => row.filter( tile => tile.item && tile.item.type === ItemType.WEAPON))
+    }
     
     getDirection(tile) {
         if(this.grid.length === 0 ) {

@@ -1,44 +1,15 @@
 import React, {useState, useEffect, useRef, useContext} from 'react'
 import coinImg from "../images/coins_new.png"
 import timerImg from "../images/timer.png"
-import axe from "../images/axe2.png"
-import sword from "../images/sword.png"
-import bow from "../images/arrows2.png"
-import potion from "../images/potion.png"
+
 import {ItemType} from "../models/item"
-import {TokenType} from "../models/token"
 import {GameStates} from "../models/gameState"
 import { getIndicatorInfo } from '../models/offscreen'
+import { getWeapon} from './weaponStyle'
 
 import BoardContext from "./boardContext"
 import OffScreenIndicator from './offScreenIndicator'
 
-const getWeapon = ( item ) => {
-    switch(item.tokenType) {
-        case TokenType.DWARF:
-            return {
-                img: axe,
-                color: 'orange'
-            }
-        case TokenType.BARBARIAN:
-            return {
-                img: sword,
-                color: 'yellow'
-            }
-        case TokenType.ELF:
-            return {
-                img: bow,
-                color: 'green'
-            }
-        case TokenType.MAGE:
-            return {
-                img: potion,
-                color: 'purple'
-            }
-        default:
-            throw new Error( "Invalid token type" )
-    }
-}
     
 const Item = ({item, gameState}) => {
     const [indicatorInfo, setIndicatorInfo] = useState(null)
@@ -75,7 +46,7 @@ const Item = ({item, gameState}) => {
             className += ' time'
             break;
         case ItemType.WEAPON:
-            const weapon = getWeapon(item)
+            const weapon = getWeapon(item.tokenType)
             itemImg = weapon.img
             className += ' weapon'
             style.backgroundColor = weapon.color

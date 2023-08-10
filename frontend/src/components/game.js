@@ -179,7 +179,7 @@ function Game({realPlayerName}) {
     <div className="App">
       <Notification notification={notificationMessage} />
       <div className="board-space">
-        <Toolbar gameState={gameState} remaining={remainingSections} remainingSeconds={remainingSeconds}/>
+        <Toolbar gameState={gameState} tokens={tokens} board={updatedTiles} remaining={remainingSections} remainingSeconds={remainingSeconds}/>
         <div className="board-controls">
           <Moves playerName={realPlayerName} allowedMoves={allowedMoves} />
           <h2 hidden={!otherPlayers.length}>Other Players:</h2>
