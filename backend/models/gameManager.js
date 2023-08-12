@@ -6,9 +6,9 @@ class GameManager {
         this.games = []
     }
 
-    createGame(gameId) {
+    createGame(gameId, isTutorial) {
         logger.debug('Create: ' + gameId)
-        let game = new Game(gameId)
+        let game = new Game(gameId, isTutorial)
         this.games.push(game)
         return game
     }

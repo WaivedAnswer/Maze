@@ -325,6 +325,7 @@ html, body {
 .menuRow {
    display: flex;
    justify-content: space-evenly;
+   gap: 8px;
    margin-bottom: 2em;
 }
 

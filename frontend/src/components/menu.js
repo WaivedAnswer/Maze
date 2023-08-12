@@ -9,8 +9,9 @@ function Menu({playerName, setPlayerName}) {
   const navigate = useNavigate();
   const joinCodeRef = useRef(null)
 
-  const createGameClick = async () => {
-    const response = await axios.post('/games', {gameId: joinCodeRef.current.value});
+  const createGameClick = async (isTutorial) => {
+    const response = await axios.post('/games', {gameId: joinCodeRef.current.value,
+    isTutorial: isTutorial});
 
     logger.debug(response.data)
     // The server responds with the id of the new user
@@ -39,7 +40,8 @@ function Menu({playerName, setPlayerName}) {
         <input type="text" ref={joinCodeRef} placeholder='Game Code' className="inputText" />
         </div>
         <div className ="menuRow">
-          <button onClick={() => createGameClick()} className = "button" >Create</button>
+          <button onClick={() => createGameClick(true)} className = "button" >Tutorial</button>
+          <button onClick={() => createGameClick(false)} className = "button" >Create</button>
           <button onClick={joinGameClick} className = "button" >Join</button>
         </div>
       </div>

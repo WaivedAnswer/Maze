@@ -11,8 +11,9 @@ const { GameSectionProvider } = require('./factories/gameSectionProvider')
 
 
 class Game {
-    constructor(gameId) {
+    constructor(gameId, isTutorial) {
         this.gameId = gameId
+        this.isTutorial = isTutorial
         this.players = []
         this.onBoardChange = () => {
             this.sendGameMessage(this.getBoardUpdate())
@@ -20,6 +21,7 @@ class Game {
         this.onTimerFlip = () => {
             const newSeconds = 120 - this.remainingSeconds
             this.remainingSeconds = newSeconds
+            this.sendGameMessage(this.getTimeMessage())
         }
         this.onPickupWeapon = () => {
             this.pickupAllWeapons()
@@ -110,13 +112,18 @@ class Game {
     }
 
     reset() {
-        this.sectionProvider = new GameSectionProvider()
+        this.sectionProvider = new GameSectionProvider(this.isTutorial)
         this.state = new State()
         this.tokens = this.sectionProvider.getTokens()
         this.selectedTokens = new Map()
         this.board = new Board(this.sectionProvider, this.onBoardChange, this.onAllSectionsRevealed)
         this.pickup = new Pickup(this.onBoardChange, this.onTimerFlip, this.onPickupWeapon)
-        this.remainingSeconds = 120
+        if(this.isTutorial) {
+            this.remainingSeconds = 5
+        } else {
+            this.remainingSeconds = 120
+        }
+
         clearInterval(this.timerInterval)
         this.timerInterval = setInterval(() => {
             if (this.remainingSeconds === 0) {
@@ -126,7 +133,7 @@ class Game {
                     type: 'lose'
                 })
             }
-            if (this.remainingSeconds > 0) {
+            if (this.remainingSeconds > 0 && !this.isTutorial) {
                 this.remainingSeconds -= 1
                 this.sendGameMessage(this.getTimeMessage())
             }
