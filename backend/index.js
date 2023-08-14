@@ -24,8 +24,7 @@ app.post('/games', async (req, res) => {
         logger.debug('Post: ' + JSON.stringify(req.body))
 
         const gameId = req.body.gameId
-        const isTutorial = req.body.isTutorial
-        let game = await gameManager.createGame(gameId, isTutorial)
+        let game = await gameManager.createGame(gameId)
 
         res.json({ gameId: game.getGameId() })
     } catch (error) {

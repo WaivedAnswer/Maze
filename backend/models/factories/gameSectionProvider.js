@@ -30,8 +30,7 @@ const FIRST = {
         { start: { x: 0, y: 3 }, end: { x: 1, y: 3 } },
         { start: { x: 0, y: 0 }, end: { x: 0, y: 0 } }],
     escalators: [{ start: { x: 2, y: 3 }, end: { x: 3, y: 2 } }],
-    barriers: [ { coord: { x: 3, y: 3 } }],
-    exits: []
+    barriers: [ { coord: { x: 3, y: 3 } }]
 }
 
 const SECOND = {
@@ -58,8 +57,7 @@ const SECOND = {
         { coord: { x: 3, y: 2 } },
         { coord: { x: 3, y: 3 } },
     ],
-    exit: { coord: { x: 3, y: 0 }, tokenType: TokenType.MAGE },
-    exits: []
+    exit: { coord: { x: 3, y: 0 }, tokenType: TokenType.MAGE }
 }
 
 const THIRD = {
@@ -83,8 +81,7 @@ const THIRD = {
         { coord: { x: 0, y: 3 } },
         { coord: { x: 3, y: 3 } },
         { coord: { x: 3, y: 0 } },
-    ],
-    exits: []
+    ]
 }
 
 const FOURTH = {
@@ -108,8 +105,7 @@ const FOURTH = {
         { coord: { x: 0, y: 3 } },
         { coord: { x: 2, y: 3 } },
         { coord: { x: 3, y: 3 } },
-    ],
-    exits: []
+    ]
 }
 
 const FIFTH = {
@@ -133,8 +129,7 @@ const FIFTH = {
     barriers: [
         { coord: { x: 0, y: 3 } },
         { coord: { x: 3, y: 3 } },
-    ],
-    exits: []
+    ]
 }
 
 const SIXTH = {
@@ -157,8 +152,7 @@ const SIXTH = {
         { coord: { x: 3, y: 3 } },
         { coord: { x: 3, y: 0 } },
         { coord: { x: 3, y: 1 } },
-    ],
-    exits: []
+    ]
 }
 
 const SEVENTH = {
@@ -181,8 +175,7 @@ const SEVENTH = {
         { coord: { x: 2, y: 2 } },
         { coord: { x: 0, y: 3 } },
         { coord: { x: 2, y: 3 } },
-    ],
-    exits: []
+    ]
 }
 
 const EIGHTH = {
@@ -203,8 +196,7 @@ const EIGHTH = {
         { coord: { x: 0, y: 2 } },
         { coord: { x: 1, y: 2 } },
         { coord: { x: 2, y: 2 } },
-    ],
-    exits: []
+    ]
 }
 
 const NINTH = {
@@ -225,8 +217,7 @@ const NINTH = {
         { coord: { x: 1, y: 1 } },
         { coord: { x: 2, y: 2 } },
         { coord: { x: 2, y: 3 } },
-    ],
-    exits: []
+    ]
 }
 
 const TENTH = {
@@ -251,8 +242,7 @@ const TENTH = {
         { coord: { x: 2, y: 1 } },
         { coord: { x: 3, y: 3 } },
     ],
-    exit: { coord: { x: 0, y: 0 }, tokenType: TokenType.ELF },
-    exits: []
+    exit: { coord: { x: 0, y: 0 }, tokenType: TokenType.ELF }
 }
 
 const ELEVENTH = {
@@ -274,8 +264,7 @@ const ELEVENTH = {
         { coord: { x: 3, y: 1 } },
         { coord: { x: 3, y: 3 } },
     ],
-    exit: { coord: { x: 3, y: 0 }, tokenType: TokenType.BARBARIAN },
-    exits: []
+    exit: { coord: { x: 3, y: 0 }, tokenType: TokenType.BARBARIAN }
 }
 
 const TWELFTH = {
@@ -302,8 +291,7 @@ const TWELFTH = {
         { coord: { x: 3, y: 2 } },
         { coord: { x: 3, y: 3 } },
     ],
-    exit: { coord: { x: 0, y: 0 }, tokenType: TokenType.DWARF },
-    exits: []
+    exit: { coord: { x: 0, y: 0 }, tokenType: TokenType.DWARF }
 }
 
 const otherSections = [
@@ -320,62 +308,11 @@ const otherSections = [
     TWELFTH
 ]
 
-const TUTORIAL_SECOND = {
-    items: [{ type: ItemType.WEAPON, coord: { x: 0, y: 0 }, tokenType: TokenType.ELF },
-        { type: ItemType.WEAPON, coord: { x: 3, y: 0 }, tokenType: TokenType.MAGE },
-        { type: ItemType.WEAPON, coord: { x: 0, y: 3 }, tokenType: TokenType.BARBARIAN },
-        { type: ItemType.WEAPON, coord: { x: 3, y: 3 }, tokenType: TokenType.DWARF }],
-    connections: [
-    ],
-    portals: [
-        { coord: { x: 1, y: 0 }, type: TokenType.ELF },
-        { coord: { x: 3, y: 1 }, type: TokenType.MAGE },
-        { coord: { x: 2, y: 3 }, type: TokenType.DWARF },
-        { coord: { x: 0, y: 2 }, type: TokenType.BARBARIAN }
-    ],
-    walls: [
-    ],
-    escalators: [
-    ],
-    barriers: [
-    ],
-    exits: []
-}
-
-const TUTORIAL_THIRD = {
-    items: [],
-    connections: [
-    ],
-    portals: [
-    ],
-    walls: [
-        { start: { x: 1, y: 0 }, end: { x: 1, y: 4 } },
-        { start: { x: 3, y: 0 }, end: { x: 3, y: 4 } }
-    ],
-    escalators: [
-        { start: { x: 1, y: 2 }, end: { x: 0, y: 1 } },
-        { start: { x: 2, y: 2 }, end: { x: 3, y: 1 } },
-    ],
-    barriers: [
-    ],
-    exits: [{ coord: { x: 0, y: 0 }, tokenType: TokenType.ELF },
-        { coord: { x: 3, y: 0 }, tokenType: TokenType.MAGE },
-        { coord: { x: 0, y: 3 }, tokenType: TokenType.BARBARIAN },
-        { coord: { x: 3, y: 3 }, tokenType: TokenType.DWARF }
-    ]
-}
-
-
 
 class GameSectionProvider {
-    constructor(isTutorial) {
+    constructor() {
         this.sectionDimensions = 4
-        if(isTutorial) {
-            this.sectionData = [FIRST].concat([TUTORIAL_SECOND, TUTORIAL_THIRD])
-        } else {
-            this.sectionData = [FIRST].concat(this.shuffle(otherSections))
-        }
-
+        this.sectionData = [FIRST].concat(this.shuffle(otherSections))
         this.remaining = this.sectionData.length
     }
 
@@ -410,7 +347,6 @@ class GameSectionProvider {
         this.addConnections(section, sectionData.connections)
         this.addEscalators(section, sectionData.escalators)
         this.addBarriers(section, sectionData.barriers)
-        sectionData.exits.forEach( exit => this.addExit(section, exit))
         this.addExit(section, sectionData.exit)
 
         this.remaining -= 1
