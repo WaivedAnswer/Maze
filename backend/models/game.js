@@ -20,6 +20,7 @@ class Game {
         this.onTimerFlip = () => {
             const newSeconds = 120 - this.remainingSeconds
             this.remainingSeconds = newSeconds
+            this.updateMovements()
         }
         this.onPickupWeapon = () => {
             this.pickupAllWeapons()
