@@ -295,14 +295,17 @@ html, body {
    padding: 0;
  }
 
-.menu {
+.menu, .tutorial {
    background: black;
-   width: 100%;
-   height: 100%;
    display: flex;
    justify-content: center;
    align-items: center;
    flex-direction: column;
+}
+
+.menu {
+   width: 100%;
+   height: 100%;
 }
 
 .menu > a {
@@ -310,7 +313,7 @@ html, body {
   
 }
 
-.menu > h1 {
+.gameTitle {
    color: dodgerblue;
    font-size: 5rem;
    margin-bottom: 4rem;
@@ -328,6 +331,48 @@ html, body {
    gap: 8px;
    margin-bottom: 2em;
 }
+
+.tutorial {
+   padding-right: 20%;
+   padding-left: 20%;
+}
+
+.tutorial-content {
+   color: white;
+}
+
+.header {
+   font-size: 3rem;
+   text-align: center;
+ }
+ 
+ .section {
+   margin: 20px 0;
+ }
+
+ .section-title {
+   color: dodgerblue;
+   font-size: 2rem;
+}
+ 
+ .section-content {
+   font-size: 16px;
+ }
+
+ .content-container {
+   display: flex;
+   flex-direction: row;
+   gap: 20%;
+ }
+ 
+ .image {
+   width: 100%;
+   max-width: 600px;
+ }
+ 
+ .conclusion {
+   font-style: italic;
+ }
 
 .inputText {
    font-size: 2rem;

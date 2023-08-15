@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
-import ReactDOM from 'react-dom';
-import Game from './components/game';
+import React, {useState} from 'react'
+import ReactDOM from 'react-dom'
+import Game from './components/game'
 import {
   BrowserRouter as Router,
   Routes, Route
 } from "react-router-dom"
-import Menu from './components/menu';
+import Menu from './components/menu'
+import Tutorial from './components/tutorial'
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/game/:gameId" element={<Game  realPlayerName = {playerName} />}/>
           <Route path="/" element={<Menu playerName={playerName} setPlayerName={setPlayerName}/>}/>
+          <Route path="/tutorial" element={<Tutorial/>}/>
          </Routes>
       </Router>
     );
