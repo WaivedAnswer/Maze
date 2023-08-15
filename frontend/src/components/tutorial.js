@@ -15,8 +15,16 @@ import sword from "../images/sword.png";
 import bow from "../images/arrows2.png";
 import potion from "../images/potion.png";
 
-const Header = ({ title }) => (
+import barbarian from "../images/warrior2.png";
+import elf from "../images/elf.png";
+import mage from "../images/mage.png";
+import dwarf from "../images/dwarf_right.png"
+
+const Header = ({ title, children  }) => (
+  <div className="header-section">
     <h1 className="header">{title}</h1>
+    <div className="section-content">{children}</div>
+  </div>
   );
   
 
@@ -25,7 +33,7 @@ const ImageRow = ({images}) => {
     return (<div style={{
         display: 'flex',
         flexDirection: 'row',
-        gap: '10px'
+        gap: '24px'
       }}>
         {images.map((image, index) => (
           <div
@@ -45,6 +53,26 @@ const ImageRow = ({images}) => {
         ))}
       </div>)
 }
+
+const Image = ({image, title}) => (
+  <img className="image" src={image.src} style={{width: image.scale, height: image.scale}} alt={title} />
+)
+
+const SubSection = ({ title, content, visualContent }) => (
+  <div >
+    <div className="subsection-content"> 
+    <div className="subsection-text">
+      <h3>{title}</h3>
+      <p>{content}</p>
+    </div>
+    {visualContent}
+    </div>
+
+
+
+  </div>
+);
+
 const Section = ({ title, children, image }) => (
 <div className="section">
     <h2 className="section-title">{title}</h2>
@@ -94,32 +122,42 @@ const weaponImages = [
 {path: potion, backgroundColor: "purple" },
 ]
 
+const tokenImages = [ 
+  {path: dwarf, backgroundColor: "orange" },
+  {path: barbarian, backgroundColor: "yellow" },
+  {path: elf, backgroundColor: "green" },
+  {path: mage, backgroundColor: "purple" }
+]
+
 const TutorialPage = () => (
 <div className="tutorial-page">
-<Header title="Welcome to Magic Maze Online" />
+  <Header title="Welcome to Magic Maze Online">
+    Play with up to 3 friends to explore the maze, find weapons, steal them, and escape before time runs out.
+  </Header>
     <Section title="Controls" image={{src: controls, scale: "33%"}}>
-      <p>You can control any and every character with the moves that you are allowed. You can see your allowed moves in the sidebar, as well as the moves that your fellow players can do.</p>
-      <p>To start you can select a character using either Q to cycle selection of the characters or click on a specific character that you want to control.</p>
-      <p>There are multiple available moves: move up, move down, move left, move right, use the stairs, or teleport to any matching portal. You will have to coordinate with your teammates in order to move the characters where they need to go. In your first rounds of playing you can converse to each other using a voice/video technology like Zoom, Discord, Facetime or similar, but after you have gotten the hang of the game you will only be able to discuss amongst yourself after you pick up an hourglass timer, but only until the first person makes the next move.</p>
+      <SubSection title="Select Characters" content="Press 'Q' to switch characters or click on a character." />
+      <SubSection title="Basic Movement" content={
+      <div>
+      <p>Press 'W' to move Up</p>
+      <p>Press 'A' to move Left</p>
+      <p>Press 'S' to move Down</p>
+      <p>Press 'D' to move Right</p>
+      </div>}/>
+      <SubSection title="Stairs" content="Press 'E' to traverse up or down stairs." />
+      <SubSection title="Portals" content="Press 'E' to toggle through available portals. Press Enter/Return to teleport to a selected portal." />
     </Section>
-    <TempSection title="Color Coding" visualContent={<ImageGrid/>}>
-      <p>Each player character has items or action tiles that correspond only to them, you can find them by matching colors. The Dwarf character corresponds to all tiles/items with an orange background, the Barbarian character corresponds to yellow, the Mage to purple, and the Elf to green. If a tile is color-coded to a character, no other character can use that tile.</p>
-    </TempSection>
-    <TempSection title="Exploring" visualContent={<ImageRow images={explorationImages}/>}>
-      <p>To explore the maze and reveal new tiles, the character tokens have to be navigated to the exploration tiles, these can be found at the edge of the existing maze sections and have arrows pointing outwards. Each exploration tile is also color-coded to a specific character.</p>
-    </TempSection>
-    <TempSection title="Weapons" visualContent={<ImageRow images={weaponImages}/>}>
-      <p>Each character has one specific weapon that they want to steal. There are two conditions before a weapon can be stolen: the sections have to all be explored, and all the characters have to be simultaneously standing on their weapon tiles.</p>
-    </TempSection>
-    <TempSection title="Escaping"  visualContent={<ImageRow images={exitImages}/>}>
-      <p>Each character has their own color-coded exit tile that they need to get to before time runs out, this occurs after the weapon stealing phase. After the weapons have been stolen, the teleportation tiles are disabled however, making it a race to the finish.</p>
-    </TempSection>
-    <Section title="Timers" image={{src: timerImg, scale: "20%"}}>
-      <p>The hourglass timers when picked up flip the timer. This means that the less time remaining when you pick up an hourglass, the more time you will have remaining afterwards. Example: when I pick up the timer with 5 seconds left, I will now have 1 min 55 seconds remaining; when I pick up the timer with 1:50 seconds left, I will now have 10 seconds remaining.</p>
+    <Section title="Communication">
+      <p>Use voice/video tech like Zoom, or Discord. For a challenge only talk after picking up an hourglass timer.</p>
     </Section>
-    <TempSection title="Teleportation Portals" visualContent={<ImageRow images={portalImages}/>}>
-      <p>A teleportation portal allows character tokens to teleport to any matching colors, but only the character that matches the color-coding can use this portal. Press E to toggle the selected destination portal, press Return/Enter in order to teleport to the selected portal.</p>
-    </TempSection>
+    <Section title="Gameplay">
+      <SubSection title="Color Coding" content="Each character has tiles or items available only to them, matched by color" visualContent={<ImageRow images={tokenImages}/>}/>
+      <SubSection title="Exploring" content="Navigate to exploration tiles to reveal new sections." visualContent={<ImageRow images={explorationImages}/>}/>
+      <SubSection title="Weapons" content="Steal weapons by exploring all sections and standing on weapon tiles." visualContent={<ImageRow images={weaponImages}/>}/>
+      <SubSection title="Escaping" content="Get to the exit tiles before time runs out." visualContent={<ImageRow images={exitImages}/>}/>
+      <SubSection title="Teleportation Portals" content="Teleport to matching colors using portals." visualContent={<ImageRow images={portalImages}/>} />
+      <SubSection title="Timers" content="Pick up hourglass timers to flip the timer." visualContent={<Image title="Timers" image={{src: timerImg, scale: "128px"}}/>}  />
+    </Section>
+
     <div className="conclusion">
       <p>Enjoy playing Magic Maze Online with your friends and explore the maze together!</p>
     </div>
