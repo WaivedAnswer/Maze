@@ -152,7 +152,7 @@ const TutorialPage = () => (
     <Section title="Gameplay">
       <SubSection title="Color Coding" content="Each character has tiles or items available only to them, matched by color" visualContent={<ImageRow images={tokenImages}/>}/>
       <SubSection title="Exploring" content="Navigate to exploration tiles to reveal new sections." visualContent={<ImageRow images={explorationImages}/>}/>
-      <SubSection title="Weapons" content="Steal weapons by exploring all sections and standing on weapon tiles." visualContent={<ImageRow images={weaponImages}/>}/>
+      <SubSection title="Weapons" content="Steal weapons after exploring all sections and standing on weapon tiles." visualContent={<ImageRow images={weaponImages}/>}/>
       <SubSection title="Escaping" content="Get to the exit tiles before time runs out." visualContent={<ImageRow images={exitImages}/>}/>
       <SubSection title="Teleportation Portals" content="Teleport to matching colors using portals." visualContent={<ImageRow images={portalImages}/>} />
       <SubSection title="Timers" content="Pick up hourglass timers to flip the timer." visualContent={<Image title="Timers" image={{src: timerImg, scale: "128px"}}/>}  />

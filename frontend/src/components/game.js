@@ -182,7 +182,7 @@ function Game({realPlayerName}) {
         <Toolbar gameState={gameState} tokens={tokens} board={updatedTiles} remaining={remainingSections} remainingSeconds={remainingSeconds}/>
         <div className="board-controls">
           <Moves playerName={realPlayerName} allowedMoves={allowedMoves} />
-          <h2 hidden={!otherPlayers.length}>Other Players:</h2>
+          <h2 hidden={!otherPlayers.length}>Other Players</h2>
           {
             otherPlayers.map(player => <OtherPlayer key={player.playerName}
               playerName={player.playerName}
