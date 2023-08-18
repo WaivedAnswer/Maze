@@ -12,7 +12,8 @@ import {BoardModel} from '../models/board'
 import { Tile, TileType } from '../models/tile'
 import { Item } from '../models/item'
 import { Token } from '../models/token'
-import OtherPlayer from './playerIndicator'
+import OtherPlayers from './otherPlayers'
+import Talk from './talk'
 import Moves from './moves'
 import Notification from './notification'
 import Toolbar from './toolbar'
@@ -101,6 +102,7 @@ function Game({realPlayerName}) {
   const [gameService, setGameService] = useState(null)
   const [remainingSections, setRemainingSections] = useState(0)
   const [gameState, setGameState] = useState(null)
+  const [canTalk, setCanTalk] = useState(false)
 
   const clearNotification = () => {
     setNotificationMessage(null)
@@ -126,6 +128,7 @@ function Game({realPlayerName}) {
       handle: (json) => {
         if (json.type === 'token-update') {
           setTokens(getTokens(json.data, realPlayerName))
+          setCanTalk(json.canTalk)
         } else if (json.type === 'board-update') {
           logger.debug('Board UPDATE')
           setTiles(getTiles(json.data.board.tiles))
@@ -165,7 +168,6 @@ function Game({realPlayerName}) {
   },
   [gameId])
 
-
   const reset = (_) => {
     gameService.reset()
   }
@@ -182,14 +184,7 @@ function Game({realPlayerName}) {
         <Toolbar gameState={gameState} tokens={tokens} board={updatedTiles} remaining={remainingSections} remainingSeconds={remainingSeconds}/>
         <div className="board-controls">
           <Moves playerName={realPlayerName} allowedMoves={allowedMoves} />
-          <h2 hidden={!otherPlayers.length}>Other Players</h2>
-          {
-            otherPlayers.map(player => <OtherPlayer key={player.playerName}
-              playerName={player.playerName}
-              allowedMoves={player.moves}
-              isSelf={false}
-              doSomething={doSomething} />)
-          }
+          {otherPlayers.length && canTalk ? <Talk/> : <OtherPlayers doSomething={doSomething} otherPlayers={otherPlayers}/> }
           <button className='button' id='reset-button' onClick={reset}>Reset</button>
         </div>
         <Board gameState={gameState} board={updatedTiles} tokens={tokens} escalators={escalators} walls={walls} gameService={gameService} />
