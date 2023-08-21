@@ -164,7 +164,7 @@ img {
    height: 100%;
    width: 100%;
    display: block;
-   animation: flash 3s linear infinite; /* Modify duration (1s) as needed */
+   opacity: 70%;
 }
 
 .tile-unknown {
