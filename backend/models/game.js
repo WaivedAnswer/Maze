@@ -21,6 +21,7 @@ class Game {
             const newSeconds = 120 - this.remainingSeconds
             this.remainingSeconds = newSeconds
             this.updateMovements()
+            this.canTalk = true
         }
         this.onPickupWeapon = () => {
             this.pickupAllWeapons()
@@ -113,6 +114,7 @@ class Game {
     reset() {
         this.sectionProvider = new GameSectionProvider()
         this.state = new State()
+        this.canTalk = false
         this.tokens = this.sectionProvider.getTokens()
         this.selectedTokens = new Map()
         this.board = new Board(this.sectionProvider, this.onBoardChange, this.onAllSectionsRevealed)
@@ -199,7 +201,8 @@ class Game {
     updateTokens() {
         this.sendGameMessage({
             type: 'token-update',
-            data: this.getTokenData()
+            data: this.getTokenData(),
+            canTalk: this.canTalk
         })
     }
 
@@ -219,6 +222,7 @@ class Game {
             .some(otherToken => otherToken.coordinate.getKey() === updatedCoords.getKey())) {
             return
         }
+        this.canTalk = false
         token.coordinate = updatedCoords
         const tile = board.getTile(token.coordinate)
 

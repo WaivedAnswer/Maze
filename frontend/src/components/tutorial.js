@@ -29,7 +29,6 @@ const Header = ({ title, children  }) => (
   
 
 const ImageRow = ({images}) => {
-    console.log(images)
     return (<div style={{
         display: 'flex',
         flexDirection: 'row',

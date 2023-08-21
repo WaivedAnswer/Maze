@@ -31,11 +31,9 @@ const OffScreenIndicator = ({indicatorImg, indicatorInfo }) => {
             containerClassName += " dwarf"
             break
         case TokenType.ELF:
-            console.log('ELF',indicatorImg,  indicatorInfo.tokenType)
             containerClassName += " elf"
             break
         case TokenType.MAGE:
-            console.log('MAGE',indicatorImg,  indicatorInfo.tokenType)
             containerClassName += " mage"
             break
         default:
