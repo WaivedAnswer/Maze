@@ -10,9 +10,9 @@ import NormalTile from "./tileNormal"
 
 const Portal = ({tile, gameState, selectedPortal }) => {
     const show = gameState === GameStates.EXPLORE || gameState === GameStates.STEAL
-    /*if(!show) {
+    if(!show) {
         return (<NormalTile tile = {tile}/>)
-    }*/
+    }
     let className = 'tile-portal'
     let tileImg
 
