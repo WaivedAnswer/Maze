@@ -8,7 +8,7 @@ import NormalTile from "./tileNormal"
 import UnknownTile from "./tileUnknown"
 
 
-const Tile = ({tile, getTileDirection, gameState }) => {
+const Tile = ({tile, getTileDirection, selectedPortal, gameState }) => {
     let content
     switch (tile.type) {
         case TileType.EXIT:
@@ -24,7 +24,7 @@ const Tile = ({tile, getTileDirection, gameState }) => {
             content = <Connect tile={tile} gameState={gameState} getTileDirection={getTileDirection} />
             break
         case TileType.PORTAL:
-            content = <Portal tile={tile} gameState={gameState}/>
+            content = <Portal selectedPortal={selectedPortal} tile={tile} gameState={gameState}/>
             break
         case TileType.NORMAL:
             content = <NormalTile tile={tile} gameState={gameState}/>

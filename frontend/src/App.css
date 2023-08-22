@@ -149,6 +149,7 @@ img {
 .tile-portal {
    background-color: lightslategray;
    display: flex;
+   position: relative;
 }
 
 @keyframes flash {
@@ -160,6 +161,20 @@ img {
    }
 }
 
+.portal-indicator {
+   background-color: black;
+   border-radius: 50%;
+   position: absolute;
+   align-self: center;
+   top: 0%;
+   left: 0%;
+   transform: translate(150%, 150%);
+   width: 25%;
+   height: 25%;
+   z-index: 5;
+   border-radius: 24px;
+   animation: flash 3s linear infinite;
+}
 .tile-portal .tile-image {
    height: 100%;
    width: 100%;

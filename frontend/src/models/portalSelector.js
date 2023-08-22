@@ -41,6 +41,14 @@ class PortalSelector {
         }
     }
 
+    getSelectedPortal() {
+        if(this.selectedIndex != null && this.selectablePortals.length) {
+            return this.selectablePortals[this.selectedIndex]
+        }
+
+        return null
+    }
+
     select() {
         if(this.state === SelectionState.INACTIVE) {
             throw new Error('Cannot choose selection while not selecting')

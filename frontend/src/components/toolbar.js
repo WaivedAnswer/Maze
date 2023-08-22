@@ -47,7 +47,7 @@ const Toolbar = ({ gameState, tokens, board, remaining, remainingSeconds }) => {
         <div className='toolbar'>
             <Timer remainingSeconds={remainingSeconds} />
             {message}
-            <div class='toolbar-icon-container'>
+            <div className='toolbar-icon-container'>
                 {gameState === GameStates.STEAL ? 
                 weapons.map( weapon => <WeaponIcon key={weapon.type} occupied={weapon.occupied} weaponType={weapon.type}/>) 
                 : ""}

@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react'
+import React, {useRef, useState, useEffect} from 'react'
 
 
 import BoardContext from './boardContext'
@@ -11,6 +11,7 @@ import Wall from './wall'
 
 const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => {
     const boardRef = useRef(null)
+    const [selectedPortal, setSelectedPortal] = useState(null)
 
     useEffect(() => {
         boardRef.current.focus();
@@ -80,6 +81,8 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
         if(!selecting) {
             board.portalSelector.cancel()
         }
+        const selectedPortal = board.portalSelector.getSelectedPortal()
+        setSelectedPortal(selectedPortal)
     }
     
     const handleKeyDown = (event) => {
@@ -123,7 +126,7 @@ const Board = ({ gameState, board, tokens, escalators, walls, gameService }) => 
                 {
                     board.grid.map((row, rowNum) =>
                             row.map((tile, colNum) =>
-                                <Tile key={tile.coord.toString()} tile = {tile} getTileDirection={getTileDirection} gameState={gameState} />
+                                <Tile key={tile.coord.toString()} selectedPortal={selectedPortal} tile = {tile} getTileDirection={getTileDirection} gameState={gameState} />
                             )
                     )}
                 {

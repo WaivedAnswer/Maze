@@ -8,11 +8,11 @@ import purplePortal from "../images/purple-portal.png"
 
 import NormalTile from "./tileNormal"
 
-const Portal = ({tile, gameState }) => {
+const Portal = ({tile, gameState, selectedPortal }) => {
     const show = gameState === GameStates.EXPLORE || gameState === GameStates.STEAL
-    if(!show) {
+    /*if(!show) {
         return (<NormalTile tile = {tile}/>)
-    }
+    }*/
     let className = 'tile-portal'
     let tileImg
 
@@ -33,9 +33,10 @@ const Portal = ({tile, gameState }) => {
             throw new Error('Unknown token type')
     }
 
-
+    const isSelected = selectedPortal ? selectedPortal.coord.toString() === tile.coord.toString() : false
     return (
         <div className={className}>
+            {isSelected ? <div className='portal-indicator'/> : ""}
             <img src={tileImg} className="tile-image" alt='' /> 
         </div>
     )
